@@ -10,6 +10,9 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from django.contrib.auth import get_user_model
 from accountapp.token import account_activation_token
 from accountapp.models import User
+from accountapp.serializers import AccountCreateSerializer
+from django.conf import settings
+from django.urls import reverse
 
 class AccountCreateAPI(APIView):
     def post(self, request):
@@ -21,14 +24,19 @@ class AccountCreateAPI(APIView):
 
             current_site = get_current_site(request)
             mail_subject = '[ Mongle ]이메일 인증을 완료해주세요!'
+            # URL 생성
+            activation_link = request.build_absolute_uri(
+                reverse('account:activate', kwargs={
+                    'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user)
+                })
+            )
             message = render_to_string('accountapp/validation_email.html', {
                 'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
+                'activation_link': activation_link,
             })
             to_email = serializer.validated_data['email']
-            send_mail(mail_subject, message, [to_email])
+            send_mail(mail_subject, message, 'dev.mongle@gmail.com', [to_email])
 
             return Response({'message': '회원가입이 완료되었습니다.'}, status=HTTP_201_CREATED)
         return Response(serializer.error, status=HTTP_400_BAD_REQUEST)
