@@ -3,6 +3,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 from accountapp.views import AccountCreateAPI
+from accountapp.views import ActivateAccountAPI
 
 app_name = 'account'
 

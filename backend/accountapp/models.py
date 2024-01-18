@@ -11,12 +11,13 @@ from django.utils import timezone
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user(self, username, email=None, password=None):
+    def create_user(self, username, email=None, password=None, school=None):
         if not username:
             raise ValueError('must have username')
         user=self.model(
             username=username,
-            email=email,
+            email=self.normalize_email(email),
+            school=school,
         )
         user.set_password(password)
         user.save()
@@ -100,4 +101,4 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_admin
     
-    
+

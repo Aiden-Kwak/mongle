@@ -13,8 +13,11 @@ from accountapp.models import User
 from accountapp.serializers import AccountCreateSerializer
 from django.conf import settings
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt # 배포시 해결할것
+
 
 class AccountCreateAPI(APIView):
+    @csrf_exempt # 배포시 해결할것
     def post(self, request):
         serializer = AccountCreateSerializer(data=request.data)
         if serializer.is_valid():
@@ -31,15 +34,21 @@ class AccountCreateAPI(APIView):
                     'token': account_activation_token.make_token(user)
                 })
             )
-            message = render_to_string('accountapp/validation_email.html', {
+            html_message = render_to_string('accountapp/validation_email.html', {
                 'user': user,
                 'activation_link': activation_link,
             })
             to_email = serializer.validated_data['email']
-            send_mail(mail_subject, message, 'dev.mongle@gmail.com', [to_email])
+            send_mail(
+                subject=mail_subject, 
+                message="", 
+                from_email='dev.mongle@gmail.com', 
+                recipient_list=[to_email], 
+                html_message=html_message
+            )
 
             return Response({'message': '회원가입이 완료되었습니다.'}, status=HTTP_201_CREATED)
-        return Response(serializer.error, status=HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
 # 계정활성화
 class ActivateAccountAPI(APIView):
