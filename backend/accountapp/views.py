@@ -47,7 +47,7 @@ class AccountCreateAPI(APIView):
                 html_message=html_message
             )
 
-            return Response({'message': '회원가입이 완료되었습니다.'}, status=HTTP_201_CREATED)
+            return Response({'message': '인증메일이 발송되었습니다. 링크를 통해 회원가입을 완료할 수 있습니다.'}, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
 # 계정활성화
