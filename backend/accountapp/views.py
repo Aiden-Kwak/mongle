@@ -14,7 +14,9 @@ from accountapp.serializers import AccountCreateSerializer
 from django.conf import settings
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt # 배포시 해결할것
-
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
+from rest_framework import status
 
 class AccountCreateAPI(APIView):
     @csrf_exempt # 배포시 해결할것
@@ -64,3 +66,16 @@ class ActivateAccountAPI(APIView):
             return Response({'message': '이메일 인증이 완료되었습니다.'})
         else:
             return Response({'message': '이메일 인증이 실패하였습니다.'})
+        
+# 로그인
+class LoginAPI(APIView):
+    #@csrf_exempt # 배포시 해결할것
+    def post(self, request, format=None):
+        username = request.data.get("username")
+        password = request.data.get("password")
+        user = authenticate(username=username, password=password)
+        if user:
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({"token": token.key}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "존재하지 않는 회원입니다."}, status=status.HTTP_400_BAD_REQUEST)

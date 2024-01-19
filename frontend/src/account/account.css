@@ -1,0 +1,70 @@
+/* SignupForm */
+
+body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px; 
+  background: #f0f0f0;
+}
+
+.signup-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  margin: 0 auto; /* 중앙 정렬 */
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+  
+  
+.signup-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.signup-container input,
+.signup-container select,
+.signup-container button {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box; 
+}
+
+.signup-container button {
+  background: #5c6bc0;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signup-container button:hover {
+  background: #3f51b5;
+}
+
+.signup-container input::placeholder {
+  color: #bbb;
+}
+
+.signup-container select {
+  background: white;
+  color: #333;
+}
+
+.signup-container select option {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .signup-container {
+    max-width: 90%;
+  }
+}
