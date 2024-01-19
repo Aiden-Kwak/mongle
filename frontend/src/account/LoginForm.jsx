@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -13,11 +15,9 @@ function LoginForm() {
                 password
             });
             localStorage.setItem('token', response.data.token);
-            // 로그인 상태 관리 로직 업데이트
-            // 예: 상태 관리 시스템에 로그인 상태 업데이트
+            navigate('/chat');
         } catch (error) {
             console.error('로그인 실패', error);
-            // 에러 처리 로직
         }
     };
 

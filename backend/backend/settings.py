@@ -34,6 +34,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+AUTH_USER_MODEL = 'accountapp.User'
 
 # Application definition
 
@@ -41,7 +42,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'channels',
+    'channels_redis',
     'accountapp',
+    'chatapp',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,6 +67,17 @@ MIDDLEWARE = [
     
 ]
 
+# Redis Channel Layer
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],  # Redis 서버 주소
+        },
+    },
+}
+# Channels ASGI interface 세팅
+ASGI_APPLICATION = 'backend.routing.application'
 
 #CORS_ALLOW_ORIGINS = [
 #    'http://localhost:3000',
