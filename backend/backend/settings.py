@@ -39,6 +39,7 @@ AUTH_USER_MODEL = 'accountapp.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -77,7 +78,7 @@ CHANNEL_LAYERS = {
     },
 }
 # Channels ASGI interface 세팅
-ASGI_APPLICATION = 'backend.routing.application'
+ASGI_APPLICATION = 'backend.asgi:application'
 
 #CORS_ALLOW_ORIGINS = [
 #    'http://localhost:3000',

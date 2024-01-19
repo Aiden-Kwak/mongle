@@ -10,7 +10,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.accept()
 
             # Redis에 연결
-            self.redis = await aioredis.create_redis_pool("redis://localhost")
+            self.redis = await aioredis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
 
             # 대기 목록에 사용자 추가
             await self.redis.sadd("waiting_users", self.user.username)
@@ -34,10 +34,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.redis.close()
 
         # 채팅방에서 사용자 제거
-        await self.channel_layer.group_discard(
-            self.room_name,
-            self.channel_name
-        )
+        if hasattr(self, 'room_name'):
+            await self.channel_layer.group_discard(
+                self.room_name,
+                self.channel_name
+            )
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
