@@ -30,8 +30,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         # 대기 목록에서 사용자 제거
-        await self.redis.srem("waiting_users", self.user.username)
-        await self.redis.close()
+        if hasattr(self, 'redis'):
+            await self.redis.srem("waiting_users", self.user.username)
+            await self.redis.close()
 
         # 채팅방에서 사용자 제거
         if hasattr(self, 'room_name'):

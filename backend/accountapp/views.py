@@ -17,6 +17,7 @@ from django.views.decorators.csrf import csrf_exempt # 배포시 해결할것
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework import status
+from django.contrib.auth import login
 
 class AccountCreateAPI(APIView):
     @csrf_exempt # 배포시 해결할것
@@ -75,7 +76,9 @@ class LoginAPI(APIView):
         password = request.data.get("password")
         user = authenticate(username=username, password=password)
         if user:
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({"token": token.key}, status=status.HTTP_200_OK)
+            login(request, user)
+            #token, created = Token.objects.get_or_create(user=user)
+            return Response({"message": "로그인 성공"}, status=status.HTTP_200_OK)
+            #return Response({"token": token.key}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "존재하지 않는 회원입니다."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "아이디/패스워드를 확인하세요."}, status=status.HTTP_400_BAD_REQUEST)
