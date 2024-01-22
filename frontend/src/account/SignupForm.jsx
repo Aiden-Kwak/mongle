@@ -54,17 +54,20 @@ function SignupForm() {
         { id: '35', name: '전남대학교' },
         { id: '36', name: '한동대학교' },
         { id: '37', name: '충남대학교' },
-        { id: '38', name: '부산대학교' }
+        { id: '38', name: '부산대학교' },
+        { id: '39', name: '한국교통대학교'},
 
     ];
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const csrfToken=getCookie('csrftoken');
         try {
             const response = await axios.post('http://localhost:8000/signup/', formData, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
                 }
             });
             console.log(response.data);
@@ -76,6 +79,21 @@ function SignupForm() {
             console.log('회원가입 실패');
         }
     };
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
     return (
         <div className="signup-container">

@@ -1,25 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import { UserContext } from '../UserContext';
 
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const csrfToken=getCookie('csrftoken');
         try {
             const response = await axios.post('http://localhost:8000/login/', {
                 username,
                 password
+            }, {
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                withCredentials: true
             });
-            localStorage.setItem('token', response.data.token);
+            setUser({ username: username });
             navigate('/chat');
         } catch (error) {
             console.error('로그인 실패', error);
         }
     };
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
     return (
         <form onSubmit={handleSubmit}>

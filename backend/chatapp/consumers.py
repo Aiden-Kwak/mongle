@@ -28,6 +28,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     self.channel_name
                 )
 
+                # 클라이언트에게 매칭 성공 메시지 전송
+                await self.send(text_data=json.dumps({
+                    'type': 'match_success',
+                    'message': '매칭되었습니다!'
+                }))
+
     async def disconnect(self, close_code):
         # 대기 목록에서 사용자 제거
         if hasattr(self, 'redis'):
