@@ -77,6 +77,7 @@ class User(AbstractBaseUser):
         ('36','한동대학교'),
         ('37','충남대학교'),
         ('38','부산대학교'),
+        ('39','한국교통대학교'),
     )
 
     username_pattern = RegexValidator(r'^[0-9a-zA-Z_]{5,20}$', '5-20글자 사이의 숫자,영문,언더바만 가능합니다!')
