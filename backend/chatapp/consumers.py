@@ -8,19 +8,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.user = self.scope['user']
         if self.user.is_authenticated:
             await self.accept()
+            print(f"{self.user.username} connected and trying to add to waiting list")
 
             # Redis에 연결
             self.redis = await aioredis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
-
+            
             # 대기 목록에 사용자 추가
             await self.redis.sadd("waiting_users", self.user.username)
 
             # 랜덤 매칭 시도
             waiting_users = await self.redis.smembers("waiting_users")
+            print(f"Current waiting users: {waiting_users}")
+
             if len(waiting_users) > 1:
                 peer_user = random.choice(list(waiting_users - {self.user.username}))
                 await self.redis.srem("waiting_users", self.user.username, peer_user)
-
+                print(f"Matched: {self.user.username} with {peer_user}")
+                
                 # 매칭된 사용자와 채팅 시작
                 self.room_name = f"chat_{self.user.username}_{peer_user}"
                 await self.channel_layer.group_add(
