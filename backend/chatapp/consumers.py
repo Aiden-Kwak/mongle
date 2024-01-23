@@ -6,6 +6,10 @@ import aioredis
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope['user']
+
+        #room_name이 항상 존재하도록 초기화
+        self.room_name = None
+
         if self.user.is_authenticated:
             await self.accept()
             print(f"{self.user.username} connected and trying to add to waiting list")
@@ -60,7 +64,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.redis.close()
 
         # 채팅방에서 사용자 제거
-        if hasattr(self, 'room_name'):
+        if hasattr(self, 'room_name') and self.room_name is not None:
             await self.channel_layer.group_discard(
                 self.room_name,
                 self.channel_name
@@ -70,14 +74,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
+        if self.room_name:
         # 채팅방에 메시지 전송
-        await self.channel_layer.group_send(
-            self.room_name,
-            {
-                'type': 'chat_message',
-                'message': message
-            }
-        )
+            await self.channel_layer.group_send(
+                self.room_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
 
     async def chat_message(self, event):
         message = event['message']

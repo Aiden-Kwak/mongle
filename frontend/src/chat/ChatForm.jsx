@@ -42,6 +42,7 @@ function ChatForm() {
             setWs(null);
             setIsConnected(false);
             setIsMatched(false);
+            setChat([]);
         }
     };
 
