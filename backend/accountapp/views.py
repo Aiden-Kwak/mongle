@@ -20,7 +20,7 @@ from rest_framework import status
 from django.contrib.auth import login
 
 class AccountCreateAPI(APIView):
-    @csrf_exempt # 배포시 해결할것
+    #@csrf_exempt # 배포시 해결할것
     def post(self, request):
         serializer = AccountCreateSerializer(data=request.data)
         if serializer.is_valid():
@@ -82,3 +82,6 @@ class LoginAPI(APIView):
             #return Response({"token": token.key}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "아이디/패스워드를 확인하세요."}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+

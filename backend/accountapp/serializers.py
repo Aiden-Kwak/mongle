@@ -54,7 +54,7 @@ class AccountCreateSerializer(serializers.ModelSerializer):
             '36': ['handong.edu'],
             '37': ['cnu.kr', 'cnu.ac.kr'],
             '38': ['pusan.ac.kr'],
-            '39': ['ut.ac.kr']
+            '39': ['ut.ac.kr'],
         }
 
         valid_email = validation.get(school, [])
