@@ -2,98 +2,82 @@ import json
 import random
 from channels.generic.websocket import AsyncWebsocketConsumer
 import aioredis
+import asyncio
+
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
+    lock = asyncio.Lock()
+
     async def connect(self):
         self.user = self.scope['user']
-
-        #room_name이 항상 존재하도록 초기화
         self.room_name = None
 
         if self.user.is_authenticated:
             await self.accept()
-            print(f"{self.user.username} connected and trying to add to waiting list")
-
             # Redis에 연결
             self.redis = await aioredis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
-            
-            # 사용자의 채널 이름을 Redis에 저장
+            # 매칭 로직 실행
+            asyncio.create_task(self.attempt_matching())
+
+    async def attempt_matching(self):
+        async with ChatConsumer.lock:
             await self.redis.set(f"channel_name_{self.user.username}", self.channel_name)
-
-            # 대기 목록에 사용자 추가
             await self.redis.sadd("waiting_users", self.user.username)
-
-            # 랜덤 매칭 시도
             waiting_users = await self.redis.smembers("waiting_users")
-            print(f"Current waiting users: {waiting_users}")
 
             if len(waiting_users) > 1:
                 peer_user = random.choice(list(waiting_users - {self.user.username}))
                 await self.redis.srem("waiting_users", self.user.username, peer_user)
-                print(f"Matched: {self.user.username} with {peer_user}")
 
-                # 매칭된 사용자와 채팅 시작
-                self.room_name = f"chat_{self.user.username}_{peer_user}"
-                await self.channel_layer.group_add(
-                    self.room_name,
-                    self.channel_name
-                )
+                sorted_usernames = sorted([self.user.username, peer_user])
+                room_name = f"chat_{sorted_usernames[0]}_{sorted_usernames[1]}"
+                await self.channel_layer.group_add(room_name, self.channel_name)
+                await self.redis.set(f"room_name_{self.user.username}", room_name)
 
-                # 매칭된 상대방의 채널이름 조회 및 상대방의 채널을 그룹에 추가하는 과정 필요
-                # 매칭된 상대방의 채널 이름 조회
                 peer_channel_name = await self.redis.get(f"channel_name_{peer_user}")
-
-                # 매칭된 상대방의 채널을 그룹에 추가
                 if peer_channel_name:
-                    await self.channel_layer.group_add(
-                        self.room_name,
-                        peer_channel_name
-                    )
+                    await self.channel_layer.group_add(room_name, peer_channel_name)
+                    await self.redis.set(f"room_name_{peer_user}", room_name)
 
-
-                # 매칭 성공 메시지 전송
-                await self.channel_layer.group_send(self.room_name, {
+                await self.channel_layer.group_send(room_name, {
                     'type': 'match_success_message',
                     'message': '매칭되었습니다!'
                 })
 
     async def disconnect(self, close_code):
-        # 대기 목록에서 사용자 제거
         if hasattr(self, 'redis'):
+            room_name = await self.redis.get(f"room_name_{self.user.username}")
+            if room_name:
+                await self.channel_layer.group_discard(room_name, self.channel_name)
             await self.redis.srem("waiting_users", self.user.username)
+            await self.redis.delete(f"room_name_{self.user.username}")
             await self.redis.close()
-
-        # 채팅방에서 사용자 제거
-        if hasattr(self, 'room_name') and self.room_name is not None:
-            await self.channel_layer.group_discard(
-                self.room_name,
-                self.channel_name
-            )
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
-        if self.room_name:
-        # 채팅방에 메시지 전송
-            await self.channel_layer.group_send(
-                self.room_name,
-                {
-                    'type': 'chat_message',
-                    'message': message
-                }
-            )
+        room_name = await self.redis.get(f"room_name_{self.user.username}")
+        if room_name:
+            await self.channel_layer.group_send(room_name, {
+                'type': 'chat_message',
+                'message': message
+            })
 
     async def chat_message(self, event):
         message = event['message']
-        # WebSocket 클라이언트에 JSON 객체로 메시지 전송
         await self.send(text_data=json.dumps({
             'type': 'chat',
             'message': message
         }))
 
     async def match_success_message(self, event):
+        # 매칭 성공 메시지 처리 로직
         message = event['message']
+        print(f"[match_success_message] Handling 'match_success_message' event: {message}")
+
+        # WebSocket 클라이언트에 매칭 성공 메시지 전송
         await self.send(text_data=json.dumps({
             'type': 'match_success',
             'message': message
