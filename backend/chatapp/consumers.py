@@ -54,15 +54,30 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
+        message_type = text_data_json['type']
 
+        if message_type == 'chat_message':
+            message = text_data_json['message']
+            room_name = await self.redis.get(f"room_name_{self.user.username}")
+            if room_name:
+                await self.channel_layer.group_send(room_name, {
+                    'type': 'chat_message',
+                    'message': message,
+                    'sender': self.user.username
+                })
+        elif message_type == 'chat_end':
+            await self.end_chat()
+    
+    async def end_chat(self):
         room_name = await self.redis.get(f"room_name_{self.user.username}")
         if room_name:
+            # 채팅 종료 알림을 채팅방의 모든 참여자에게 전송
             await self.channel_layer.group_send(room_name, {
-                'type': 'chat_message',
-                'message': message,
-                'sender': self.user.username
+                'type': 'chat_end_message',
             })
+            # 채팅방에서 사용자를 제거
+            await self.channel_layer.group_discard(room_name, self.channel_name)
+
 
     async def chat_message(self, event):
         message = event['message']
@@ -83,3 +98,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type': 'match_success',
             'message': message
         }))
+    
+    async def chat_end_message(self, event):
+        # 채팅 종료 처리 로직
+        await self.send(text_data=json.dumps({
+            'type': 'chat_end',
+            'message': '채팅이 종료되었습니다.'
+        }))
+

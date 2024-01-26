@@ -9,6 +9,9 @@ function ChatForm() {
     const [isConnected, setIsConnected] = useState(false);
     const [isMatched, setIsMatched] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isConfirmingEndChat, setIsConfirmingEndChat] = useState(false);
+
+
     const { user } = useContext(UserContext);
     const messagesEndRef = useRef(null);
 
@@ -43,6 +46,10 @@ function ChatForm() {
             } else if (data.type === 'match_success') {
                 setIsMatched(true);
                 setIsLoading(false);
+            } else if (data.type === 'chat_end') {
+                // 채팅 종료 메시지를 수신한 경우, 채팅 종료 처리
+                alert('채팅이 종료되었습니다.');
+                endChat(); // 채팅 종료 로직 실행
             }
         };
         
@@ -54,19 +61,25 @@ function ChatForm() {
         setWs(newWs);
     };
 
+    const confirmEndChat = () => {
+        setIsConfirmingEndChat(true); // 사용자가 처음 "대화 끝"을 클릭했을 때
+    };
+
     const endChat = () => {
         if (ws) {
+            ws.send(JSON.stringify({ type: 'chat_end' }));
             ws.close();
             setWs(null);
             setIsConnected(false);
             setIsMatched(false);
             setChat([]);
+            setIsConfirmingEndChat(false);
         }
     };
 
     const sendMessage = () => {
         if (ws && message) {
-            ws.send(JSON.stringify({ message }));
+            ws.send(JSON.stringify({ type: 'chat_message', message: message }));
             setMessage('');
         }
     };
@@ -76,6 +89,14 @@ function ChatForm() {
             sendMessage();
         }
     };
+
+    useEffect(() => {
+        return () => {
+            if (ws) {
+                ws.close();
+            }
+        };
+    }, [ws]);
 
     return (
         <div className="chat-container">
@@ -99,7 +120,12 @@ function ChatForm() {
                         ))}
                     </div>
                     <div className="chat-input">
-                        {isConnected && <button onClick={endChat}>대화 끝</button>}
+                        {isConnected &&
+                            (isConfirmingEndChat ? (
+                                <button onClick={endChat}>정말?</button> // 사용자가 확인해야 하는 경우
+                            ) : (
+                                <button onClick={confirmEndChat}>대화 끝</button> // 초기 상태
+                        ))}
                         <input 
                             type="text" 
                             value={message} 
