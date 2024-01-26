@@ -4,8 +4,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import aioredis
 import asyncio
 
-
-
 class ChatConsumer(AsyncWebsocketConsumer):
     lock = asyncio.Lock()
 
@@ -62,14 +60,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if room_name:
             await self.channel_layer.group_send(room_name, {
                 'type': 'chat_message',
-                'message': message
+                'message': message,
+                'sender': self.user.username
             })
 
     async def chat_message(self, event):
         message = event['message']
+        sender = event['sender']
         await self.send(text_data=json.dumps({
             'type': 'chat',
-            'message': message
+            'message': message,
+            'sender': sender
         }))
 
     async def match_success_message(self, event):

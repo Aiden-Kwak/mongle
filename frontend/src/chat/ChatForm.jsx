@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './chat.css';
+import { UserContext } from '../UserContext';
 
 function ChatForm() {
     const [message, setMessage] = useState('');
@@ -8,6 +9,7 @@ function ChatForm() {
     const [isConnected, setIsConnected] = useState(false);
     const [isMatched, setIsMatched] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { user } = useContext(UserContext);
 
     const startChat = () => {
         setIsLoading(true);
@@ -21,7 +23,7 @@ function ChatForm() {
             const data = JSON.parse(event.data);
             console.log(data);
             if (data.type === 'chat') {
-                setChat((prevChat) => [...prevChat, data.message]);
+                setChat((prevChat) => [...prevChat, { message: data.message, sender: data.sender }]);
             } else if (data.type === 'match_success') {
                 setIsMatched(true);
                 setIsLoading(false);
@@ -53,6 +55,12 @@ function ChatForm() {
         }
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    };
+
     return (
         <div className="chat-container">
             <div className="chat-header">
@@ -66,7 +74,12 @@ function ChatForm() {
                 <>
                     <div className="chat-messages">
                         {chat.map((msg, index) => (
-                            <p key={index}>{msg}</p>
+                            <div
+                                key={index}
+                                className={`message-bubble ${msg.sender === user.username ? 'my-message' : 'their-message'}`}
+                            >
+                                {msg.message}
+                            </div>
                         ))}
                     </div>
                     <div className="chat-input">
