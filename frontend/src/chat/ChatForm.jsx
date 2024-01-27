@@ -10,10 +10,12 @@ function ChatForm() {
     const [isMatched, setIsMatched] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isConfirmingEndChat, setIsConfirmingEndChat] = useState(false);
+    const [isTyping, setIsTyping] = useState(false); // 상대방의 타이핑 상태를 추적하는 상태 변수
 
 
     const { user } = useContext(UserContext);
     const messagesEndRef = useRef(null);
+    const typingTimeoutRef = useRef(null);
 
     useEffect(() => {
         if (messagesEndRef.current) {
@@ -50,6 +52,10 @@ function ChatForm() {
                 // 채팅 종료 메시지를 수신한 경우, 채팅 종료 처리
                 alert('채팅이 종료되었습니다.');
                 endChat(); // 채팅 종료 로직 실행
+            } else if (data.type === 'typing_start' && data.sender !== user.username) {
+                setIsTyping(true); // 상대방이 타이핑을 시작했음을 상태로 설정
+            } else if (data.type === 'typing_end' && data.sender !== user.username) {
+                setIsTyping(false); // 상대방이 타이핑을 멈췄음을 상태로 설정
             }
         };
         
@@ -79,10 +85,23 @@ function ChatForm() {
 
     const sendMessage = () => {
         if (ws && message) {
-            ws.send(JSON.stringify({ type: 'chat_message', message: message }));
+            const messageData = { type: 'chat_message', message: message };
+            console.log("Sending message to server:", messageData);
+            ws.send(JSON.stringify(messageData));
             setMessage('');
         }
     };
+
+    const handleTyping = () => {
+        if (ws) {
+            ws.send(JSON.stringify({ type: 'typing_start', sender: user.username }));
+            clearTimeout(typingTimeoutRef.current); // 이전 타이머 취소
+            typingTimeoutRef.current = setTimeout(() => { // 새 타이머 설정
+                ws.send(JSON.stringify({ type: 'typing_end', sender: user.username }));
+            }, 2000); // 2초 동안 추가 입력이 없으면 타이핑 종료로 간주
+        }
+    };
+    
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -100,26 +119,28 @@ function ChatForm() {
 
     return (
         <div className="chat-container">
+            
             <div className="chat-header">
                 <h2>랜덤 채팅</h2>
-                {!isConnected && <button onClick={startChat}>채팅 시작하기</button>}
-                
                 {isLoading && <p>매칭중...</p>}
                 {isMatched && <p>채팅이 연결되었습니다!</p>}
             </div>
-            {isMatched && (
-                <>
-                    <div className="chat-messages" ref={messagesEndRef}>
-                        {chat.map((msg, index) => (
-                            <div
-                                key={index}
-                                className={`message-bubble ${msg.sender === user.username ? 'my-message' : 'their-message'}`}
-                            >
-                                {msg.message}
-                            </div>
-                        ))}
+            <div className="chat-messages" ref={messagesEndRef}>
+                {chat.map((msg, index) => (
+                    <div
+                        key={index}
+                        className={`message-bubble ${msg.sender === user.username ? 'my-message' : 'their-message'}`}
+                    >
+                        {msg.message}
                     </div>
-                    <div className="chat-input">
+                ))}
+                {isTyping && (
+                    <div className="message-bubble their-message">...</div> // "..." 말풍선 표시
+                )}
+            </div>
+            <div className="chat-input">
+                {isMatched ? (
+                    <>
                         {isConnected &&
                             (isConfirmingEndChat ? (
                                 <button onClick={endChat}>정말?</button> // 사용자가 확인해야 하는 경우
@@ -129,13 +150,15 @@ function ChatForm() {
                         <input 
                             type="text" 
                             value={message} 
-                            onChange={(e) => setMessage(e.target.value)}
+                            onChange={(e) => {setMessage(e.target.value); handleTyping();}}
                             placeholder="메시지를 입력하세요"
                         />
                         <button onClick={sendMessage}>보내기</button>
-                    </div>
-                </>
-            )}
+                    </>
+                ) : (
+                    <button onClick={startChat} className="start-chat-button">채팅 시작하기</button>
+                )}
+            </div>
         </div>
     );
 }

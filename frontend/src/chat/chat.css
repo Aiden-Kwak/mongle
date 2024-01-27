@@ -1,5 +1,9 @@
 .chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     max-width: 600px;
+    min-width: 300px;
     margin: 30px auto;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -15,6 +19,7 @@
 
 .chat-messages {
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
     height: 300px;
     overflow-y: auto;
@@ -32,15 +37,15 @@
 
 .chat-input input {
     flex-grow: 1;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-right: 5px;
+    margin-left: 5px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 3px;
 }
 
 .chat-input button {
-    padding: 10px 20px;
+    padding: 10px 15px;
     background-color: #007bff;
     border: none;
     border-radius: 3px;
@@ -57,7 +62,7 @@
     display: block;
     padding: 10px 15px;
     border-radius: 20px;
-    margin-bottom: 5px;
+    margin-bottom: 1.5rem;
     display: inline-block;
     max-width: 80%;
 }
@@ -75,3 +80,38 @@
     margin-right: auto;
     border-bottom-left-radius: 0;
 }
+
+/* 기존 스타일 유지... */
+
+.start-chat-button {
+    padding: 10px 20px;
+    width: 100%; /* 버튼을 전체 너비로 확장 */
+    background-color: #007bff;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+}
+
+.start-chat-button:hover {
+    background-color: #0056b3;
+}
+/*
+@media screen and (max-width: 575px){
+    .width-control {
+        width: 574px;
+    }
+}
+
+@media screen and (max-width: 991px){
+    .width-control {
+        width: 950px;
+    }
+}
+
+@media screen and (max-width: 1400px){
+    .width-control {
+        width: 1000px;
+    }
+}
+*/

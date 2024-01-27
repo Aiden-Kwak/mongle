@@ -67,6 +67,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 })
         elif message_type == 'chat_end':
             await self.end_chat()
+
+        elif message_type in ['typing_start', 'typing_end']:
+            print(f"[receive] Handling '{message_type}' message: {text_data_json}")
+            room_name = await self.redis.get(f"room_name_{self.user.username}")
+            if room_name:
+                await self.channel_layer.group_send(room_name, {
+                    'type': f'{message_type}_message',
+                    'sender': self.user.username
+                })
     
     async def end_chat(self):
         room_name = await self.redis.get(f"room_name_{self.user.username}")
@@ -104,5 +113,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'chat_end',
             'message': '채팅이 종료되었습니다.'
+        }))
+    
+    async def typing_start_message(self, event):
+        # 클라이언트에 타이핑 시작 메시지 전송
+        await self.send(text_data=json.dumps({
+            'type': 'typing_start',
+            'sender': event['sender']
+        }))
+
+    async def typing_end_message(self, event):
+        # 클라이언트에 타이핑 종료 메시지 전송
+        await self.send(text_data=json.dumps({
+            'type': 'typing_end',
+            'sender': event['sender']
         }))
 
