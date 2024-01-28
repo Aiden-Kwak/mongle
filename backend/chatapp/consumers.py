@@ -69,7 +69,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.end_chat()
 
         elif message_type in ['typing_start', 'typing_end']:
-            print(f"[receive] Handling '{message_type}' message: {text_data_json}")
             room_name = await self.redis.get(f"room_name_{self.user.username}")
             if room_name:
                 await self.channel_layer.group_send(room_name, {

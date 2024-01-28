@@ -22,14 +22,14 @@ function ChatForm() {
             const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
             
             // 스크롤이 바닥에 거의 도달했는지 확인 (여유분을 두어 완전히 바닥이 아니어도 됨)
-            const isNearBottom = scrollHeight - scrollTop <= clientHeight + 50;
+            const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
     
             if (isNearBottom) {
                 // 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
                 messagesEndRef.current.scrollTop = scrollHeight;
             }
         }
-    }, [chat]); // chat 상태가 변경될 때마다 실행
+    }, [isTyping, chat]); // chat 상태가 변경될 때마다 실행
     
 
     const startChat = () => {
@@ -86,9 +86,8 @@ function ChatForm() {
     const sendMessage = () => {
         if (ws && message) {
             const messageData = { type: 'chat_message', message: message };
-            console.log("Sending message to server:", messageData);
             ws.send(JSON.stringify(messageData));
-            setMessage('');
+            //setMessage('');
         }
     };
 
@@ -98,14 +97,18 @@ function ChatForm() {
             clearTimeout(typingTimeoutRef.current); // 이전 타이머 취소
             typingTimeoutRef.current = setTimeout(() => { // 새 타이머 설정
                 ws.send(JSON.stringify({ type: 'typing_end', sender: user.username }));
-            }, 2000); // 2초 동안 추가 입력이 없으면 타이핑 종료로 간주
+            }, 1000); // 2초 동안 추가 입력이 없으면 타이핑 종료로 간주
         }
     };
     
 
     const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
+        if (e.nativeEvent.isComposing) return;
+        if (e.key === 'Enter' && message.trim() !== '') {
+            e.preventDefault();
+            console.log('Enter key pressed, sending message...');
             sendMessage();
+            setMessage('');
         }
     };
 
@@ -116,6 +119,7 @@ function ChatForm() {
             }
         };
     }, [ws]);
+    
 
     return (
         <div className="chat-container">
@@ -151,6 +155,7 @@ function ChatForm() {
                             type="text" 
                             value={message} 
                             onChange={(e) => {setMessage(e.target.value); handleTyping();}}
+                            onKeyDown={handleKeyDown}
                             placeholder="메시지를 입력하세요"
                         />
                         <button onClick={sendMessage}>보내기</button>
