@@ -1,0 +1,67 @@
+/* NavForm */
+
+/* nav.css */
+.nav-wrapper > .nav-logo > img {
+    height: 70px; /* 로고 이미지 높이 */
+    margin-right: 20px; /* 로고와 텍스트 사이의 마진 */
+}
+.nav-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff; /* 배경색을 흰색으로 설정 */
+    padding: 0 20px; /* 양쪽 패딩 설정 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none; /* 링크의 밑줄 제거 */
+}
+
+.nav-logo img {
+    height: 50px; /* 로고 이미지 높이 */
+    margin-right: 10px; /* 로고와 텍스트 사이의 마진 */
+}
+
+.nav-logo div {
+    display: flex;
+    flex-direction: column; /* 자식 요소들을 세로로 정렬 */
+}
+
+.nav-logo span:first-child {
+    font-size: 1.2em;
+    color: #333333; /* 상단 텍스트 색상 */
+    font-weight: bold; /* 글씨 굵기 */
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu a {
+    text-decoration: none; /* 링크의 밑줄 제거 */
+    color: #333333; /* 링크 색상 */
+    margin-right: 20px; /* 링크들 사이의 마진 */
+    font-size: 1em;
+}
+
+.nav-menu a:hover {
+    color: #F07489; /* 링크 호버 색상 */
+}
+
+.chat-button {
+    background-color: #F07489; /* 버튼 배경 색상 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px; /* 버튼 모서리 둥글게 */
+    cursor: pointer; /* 마우스 오버시 커서 변경 */
+    font-size: 1em;
+}
+
+.chat-button:hover {
+    background-color: #e0637c; /* 버튼 호버 배경 색상 */
+}

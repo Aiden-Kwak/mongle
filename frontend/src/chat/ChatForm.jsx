@@ -33,6 +33,8 @@ function ChatForm() {
     
 
     const startChat = () => {
+        setChat([]);//테스트
+        setMessage('');//테스트
         setIsLoading(true);
         const newWs = new WebSocket('ws://localhost:8000/ws/chat/');
         newWs.onopen = () => {
@@ -97,7 +99,7 @@ function ChatForm() {
             clearTimeout(typingTimeoutRef.current); // 이전 타이머 취소
             typingTimeoutRef.current = setTimeout(() => { // 새 타이머 설정
                 ws.send(JSON.stringify({ type: 'typing_end', sender: user.username }));
-            }, 1000); // 2초 동안 추가 입력이 없으면 타이핑 종료로 간주
+            }, 500); // .5초 동안 추가 입력이 없으면 타이핑 종료로 간주
         }
     };
     

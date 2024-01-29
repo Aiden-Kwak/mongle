@@ -1,13 +1,48 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: "ugro-bold";
+  src: url("static/font/SB어그로B.otf");
+}
+@font-face {
+  font-family: "ugro-light";
+  src: url("static/font/SB어그로L.otf");
+}
+@font-face {
+  font-family: "ugro-medium";
+  src: url("static/font/SB어그로M.otf");
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+font-family: ugro-light, Helvetica, Arial, sans-serif;
+font-size: 1.2rem;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+color: #2c3e50;
+animation-fill-mode: forwards;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+li {
+  list-style: none;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+
+  }
+  to {
+    opacity: 0;
+  }
 }
