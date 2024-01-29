@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import { UserContext } from '../UserContext';
@@ -11,6 +11,14 @@ function LoginForm() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const { setUser } = useContext(UserContext);
+
+    useEffect(() => {
+        // 로컬 스토리지에서 사용자 정보를 로드
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, [setUser]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,6 +33,7 @@ function LoginForm() {
                 },
                 withCredentials: true
             });
+            localStorage.setItem('user', JSON.stringify({ username: username }));
             setUser({ username: username });
             navigate('/chat');
         } catch (error) {

@@ -16,8 +16,8 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt # 배포시 해결할것
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from rest_framework import status
-from django.contrib.auth import login
+from rest_framework import status, permissions
+from django.contrib.auth import login, logout
 
 class AccountCreateAPI(APIView):
     #@csrf_exempt # 배포시 해결할것
@@ -84,4 +84,8 @@ class LoginAPI(APIView):
             return Response({"error": "아이디/패스워드를 확인하세요."}, status=status.HTTP_400_BAD_REQUEST)
         
 
-
+class LogoutAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated] 
+    def post(self, request):
+        logout(request) 
+        return Response({"message": "로그아웃 되었습니다."}, status=status.HTTP_200_OK)
