@@ -1,28 +1,28 @@
 /* SignupForm */
-/*
-body, html {
-  height: 100%;
-  margin: 0;
+
+.signup-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 360px;
+}
+
+.signup-container > .logo-img {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px; 
-  background: #f0f0f0;
 }
-*/
 
-.signup-container {
-  width: 100%;
-  max-width: 600px;
-  padding: 20px;
-  margin: 0 auto; /* 중앙 정렬 */
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+.signup-container > .logo-img > img {
+  height: 70px;
+  margin-right: .5rem;
 }
-  
-  
+.signup-container > .logo-img > .logo-span {
+  display: flex;
+  flex-direction: column;
+}
+
 .signup-container form {
   display: flex;
   flex-direction: column;
@@ -39,7 +39,7 @@ body, html {
 }
 
 .signup-container button {
-  background: #5c6bc0;
+  background: #F07489;
   color: white;
   font-size: 1rem;
   border: none;
@@ -67,5 +67,88 @@ body, html {
 @media (max-width: 768px) {
   .signup-container {
     max-width: 90%;
+  }
+}
+
+/* LoginForm */
+
+.login-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 360px;
+}
+
+form {
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.login-container > .logo-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container > .logo-img > img {
+  height: 70px;
+  margin-right: .5rem;
+}
+.login-container > .logo-img > .logo-span {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+input[type="text"],
+input[type="password"] {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #F07489;
+}
+
+button {
+  padding: 10px 15px;
+  color: white;
+  background-color: #F07489;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #e0637c;
+}
+
+button:active {
+  background-color: #d9534f;
+}
+
+.signup-link {
+  text-align: center;
+  text-decoration: none;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  form {
+    width: 90%;
   }
 }

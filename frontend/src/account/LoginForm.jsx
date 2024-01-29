@@ -2,6 +2,9 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import { UserContext } from '../UserContext';
+import { Link } from 'react-router-dom';
+
+import logo from '../static/img/logo.png';
 
 function LoginForm() {
     const [username, setUsername] = useState('');
@@ -45,23 +48,40 @@ function LoginForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                name="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-            />
-            <input
-                type="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-            />
-            <button type="submit">Login</button>
-        </form>
+        <div className='login-container'>
+            <div className='logo-img'>
+                <img src={logo} alt="Logo" />
+                <div className='logo-span'>
+                    <span style={{fontSize:".9rem", marginLeft:".2rem"}}>대학생 랜덤채팅</span>
+                    <span style={{fontSize:"2rem", fontFamily:"ugro-bold", color:"black"}}>
+                        몽글몽글
+                    </span>
+                </div>
+            </div>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    name="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="아이디"
+                />
+                <input
+                    type="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="비밀번호"
+                />
+                <button type="submit">로그인</button>
+            </form>
+            <Link to="/signup" className='signup-link'>
+                <p>몽글몽글에 처음이신가요? <span style={{color:"#F07489", marginLeft:"1rem"}}>회원가입</span></p>
+            </Link>
+        </div>
+        
+        
+        
     );
 }
 

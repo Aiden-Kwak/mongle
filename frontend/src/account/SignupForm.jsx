@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './account.css';
-//export { SignupForm };
+import logo from '../static/img/logo.png';
 
 function SignupForm() {
     const [formData, setFormData] = useState({
@@ -97,6 +97,15 @@ function SignupForm() {
 
     return (
         <div className="signup-container">
+            <div className='logo-img'>
+                <img src={logo} alt="Logo" />
+                <div className='logo-span'>
+                    <span style={{fontSize:".9rem", marginLeft:".2rem"}}>대학생 랜덤채팅</span>
+                    <span style={{fontSize:"2rem", fontFamily:"ugro-bold", color:"black"}}>
+                        몽글몽글
+                    </span>
+                </div>
+            </div>
             <form onSubmit={handleSubmit}>
                 <input
                     className="signup-input"
@@ -104,7 +113,7 @@ function SignupForm() {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    placeholder="Username"
+                    placeholder="아이디"
                 />
                 <input
                     className="signup-input"
@@ -112,7 +121,7 @@ function SignupForm() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="Email"
+                    placeholder="학교 이메일"
                 />
                 <input
                     className="signup-input"
@@ -120,7 +129,7 @@ function SignupForm() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="Password"
+                    placeholder="비밀번호"
                 />
                 <select
                     className="signup-select"
@@ -129,12 +138,18 @@ function SignupForm() {
                     onChange={handleChange}
                 >
                     <option value="">학교 선택</option>
-                    {schools.map(school => (
-                        <option key={school.id} value={school.id}>{school.name}</option>
-                    ))}
+                    {
+                        [...schools]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map(school => (
+                            <option key={school.id} value={school.id}>{school.name}</option>
+                        ))
+                    }
                 </select>
+
                 <button className="signup-button" type="submit">회원가입</button>
             </form>
+            <p style={{fontSize:".8rem"}}>본인의 학교가 선택창에 없는 경우, 연락을 주시면 빠른시일내에 업데이트하도록 하겠습니다!</p>
         </div>
     );
   
