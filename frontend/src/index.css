@@ -28,6 +28,15 @@ li {
   list-style: none;
 }
 
+/* 글자편의용 */
+.color {
+  color: #F07489;
+}
+
+.bold {
+  font-family: ugro-bold, Helvetica, Arial, sans-serif;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
