@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from accountapp.views import AccountCreateAPI
 from accountapp.views import ActivateAccountAPI
-from accountapp.views import LoginAPI, LogoutAPI
+from accountapp.views import LoginAPI, LogoutAPI, UserProfileUpdateAPI, UserProfileDetailAPI
 
 app_name = 'account'
 
@@ -13,4 +13,6 @@ urlpatterns = [
     path('activate/<uidb64>/<token>/', ActivateAccountAPI.as_view(), name='activate'),
     path('login/', LoginAPI.as_view(), name='login'),
     path('logout/', LogoutAPI.as_view(), name='logout'),
+    path('profile/<slug:slug>/', UserProfileDetailAPI.as_view(), name='profile_detail'),
+    path('profile/<slug:slug>/update/', UserProfileUpdateAPI.as_view(), name='profile_update'),
 ]

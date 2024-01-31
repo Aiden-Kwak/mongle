@@ -102,4 +102,19 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_admin
     
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        super().save(*args, **kwargs)
+        if is_new:
+            Profile.objects.create(user=self)
+    
 
+User = get_user_model()
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=50, blank=True, default='익명의 몽글')
+    profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True, default='default.png')
+    bio = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.user.username

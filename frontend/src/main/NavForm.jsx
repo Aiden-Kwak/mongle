@@ -10,11 +10,6 @@ function NavForm() {
     const { user } = useContext(UserContext);
 
     return (
-        /*
-        <nav>
-            {user ? <p>안녕하세요, {user.username}님</p> : <p>로그아웃 상태입니다...</p>}
-        </nav>
-        */
        <nav>
             <div className="nav-wrapper">
                 <Link to="/" className="nav-logo">
@@ -27,7 +22,7 @@ function NavForm() {
                 </div>
                 </Link>
                 <div className="nav-menu">
-                    <Link to="/"><span>프로필</span></Link>
+                    <Link to="/profile"><span>프로필</span></Link>
                     <Link to="/"><span>커뮤니티</span></Link>
                     <Link to="/"><span>친구관리</span></Link>
                     {user ?

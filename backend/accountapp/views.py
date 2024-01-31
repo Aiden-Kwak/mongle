@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -9,8 +9,8 @@ from rest_framework.views import APIView
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from django.contrib.auth import get_user_model
 from accountapp.token import account_activation_token
-from accountapp.models import User
-from accountapp.serializers import AccountCreateSerializer
+from accountapp.models import User, Profile
+from accountapp.serializers import AccountCreateSerializer, ProfileSerializer
 from django.conf import settings
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt # 배포시 해결할것
@@ -89,3 +89,27 @@ class LogoutAPI(APIView):
     def post(self, request):
         logout(request) 
         return Response({"message": "로그아웃 되었습니다."}, status=status.HTTP_200_OK)
+
+class UserProfileDetailAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, slug, format=None):
+        print(f"FUCK")
+        user = get_object_or_404(User, username=slug)
+        profile = get_object_or_404(Profile, user=user)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+
+class UserProfileUpdateAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, slug, format=None):
+        user = get_object_or_404(User, username=slug)  # username을 slug로 사용
+        if request.user != user:
+            return Response({'error': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+        profile, created = Profile.objects.get_or_create(user=user)
+        serializer = ProfileSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

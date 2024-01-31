@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {MainForm, NavForm} from './main';
 import { SignupForm, LoginForm, LogoutForm } from './account';
+import { ProfileForm } from './profile';
 import { ChatForm } from './chat';
 
 import { UserProvider } from './UserContext';
@@ -18,6 +19,7 @@ function App() {
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/logout" element={<LogoutForm />} />
                     <Route path="/chat" element={<ChatForm />} />
+                    <Route path="/profile" element={<ProfileForm />} />
                 </Routes>
             </div>
         </Router>
