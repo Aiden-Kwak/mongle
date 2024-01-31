@@ -10,6 +10,7 @@ function SignupForm() {
         password: '',
         school: '',
     });
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,6 +63,7 @@ function SignupForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         const csrfToken=getCookie('csrftoken');
         try {
             const response = await axios.post('http://localhost:8000/signup/', formData, {
@@ -74,9 +76,24 @@ function SignupForm() {
             // 회원가입 성공 처리 로직
             console.log('회원가입 성공');
         } catch (error) {
-            console.error(error);
-            // 에러 처리 로직
-            console.log('회원가입 실패');
+            if (error.response && error.response.data) {
+                // 서버로부터의 응답에 따라 오류 메시지 설정
+                console.log(error.response.data);
+                let error_msg = error.response.data;
+                if (error_msg.username) {
+                    setError(error_msg.username);
+                } else if (error_msg.email) {
+                    setError(error_msg.email);
+                } else if (error_msg.password) {
+                    setError(error_msg.password);
+                } else if (error_msg.school) {
+                    setError(error_msg.school);
+                } else {
+                    setError('회원가입 실패. 다시 시도해주세요.');
+                }
+            } else {
+                setError('서버 오류가 발생했습니다. 다시 시도해주세요.');
+            }
         }
     };
 
@@ -106,6 +123,7 @@ function SignupForm() {
                     </span>
                 </div>
             </div>
+            {error && <div className='error' style={{ color: 'red' }}>{error}</div>}
             <form onSubmit={handleSubmit}>
                 <input
                     className="signup-input"

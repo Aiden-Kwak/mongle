@@ -9,6 +9,7 @@ import logo from '../static/img/logo.png';
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const { setUser } = useContext(UserContext);
 
@@ -22,6 +23,7 @@ function LoginForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         const csrfToken=getCookie('csrftoken');
         try {
             const response = await axios.post('http://localhost:8000/login/', {
@@ -37,7 +39,13 @@ function LoginForm() {
             setUser({ username: username });
             navigate('/chat');
         } catch (error) {
-            console.error('로그인 실패', error);
+            if (error.response && error.response.data) {
+                // 서버로부터의 응답에 따라 오류 메시지 설정
+                console.log(error.response.data);
+                setError(error.response.data.error || '로그인 실패. 다시 시도해주세요.');
+            } else {
+                setError('서버 오류가 발생했습니다. 다시 시도해주세요.');
+            }
         }
     };
 
@@ -67,6 +75,7 @@ function LoginForm() {
                     </span>
                 </div>
             </div>
+            {error && <div className='error' style={{ color: 'red' }}>{error}</div>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"

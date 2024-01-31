@@ -31,6 +31,7 @@ function LogoutForm() {
                 },
                 withCredentials: true
             });
+            localStorage.removeItem('user');
             setUser(null);
             navigate('/');
         } catch (error) {
