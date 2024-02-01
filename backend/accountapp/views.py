@@ -94,7 +94,6 @@ class UserProfileDetailAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, slug, format=None):
-        print(f"FUCK")
         user = get_object_or_404(User, username=slug)
         profile = get_object_or_404(Profile, user=user)
         serializer = ProfileSerializer(profile)

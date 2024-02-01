@@ -45,8 +45,7 @@ function MainForm() {
                         />
                     ))}
                 </div>
-            </div>
-            
+            </div> 
             <div className='catchp'>
                 <p className='bold'><span className='color'>대학생</span>의,</p>
                 <p className='bold'>대학생에 의한,</p>

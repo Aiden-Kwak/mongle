@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from '../UserContext';
+
 import './profile.css';
 
 function ProfileForm() {
@@ -10,12 +12,15 @@ function ProfileForm() {
         profilePic: ''
     });
     const { user } = useContext(UserContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (user.username) {
+        if (!user){
+            navigate('/login');
+        } else if (user.username) {
             fetchProfile();
         }
-    }, [user.username]);
+    }, [user, navigate]);
 
     const fetchProfile = async () => {
         try {

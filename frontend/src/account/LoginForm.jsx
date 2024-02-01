@@ -41,7 +41,6 @@ function LoginForm() {
         } catch (error) {
             if (error.response && error.response.data) {
                 // 서버로부터의 응답에 따라 오류 메시지 설정
-                console.log(error.response.data);
                 setError(error.response.data.error || '로그인 실패. 다시 시도해주세요.');
             } else {
                 setError('서버 오류가 발생했습니다. 다시 시도해주세요.');

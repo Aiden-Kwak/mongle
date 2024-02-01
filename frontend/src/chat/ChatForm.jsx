@@ -1,4 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './chat.css';
 import { UserContext } from '../UserContext';
 
@@ -16,6 +17,14 @@ function ChatForm() {
     const { user } = useContext(UserContext);
     const messagesEndRef = useRef(null);
     const typingTimeoutRef = useRef(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // 로그인되지 않은 경우 로그인 페이지로 리디렉트
+        if (!user) {
+            navigate('/login');
+        }
+    }, [user, navigate]);
 
     useEffect(() => {
         if (messagesEndRef.current) {
