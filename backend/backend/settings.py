@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'channels_redis',
     'accountapp',
     'chatapp',
+    'friendapp',
 
     'django.contrib.admin',
     'django.contrib.auth',
