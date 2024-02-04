@@ -12,7 +12,10 @@ function ChatForm() {
     const [isLoading, setIsLoading] = useState(false);
     const [isConfirmingEndChat, setIsConfirmingEndChat] = useState(false);
     const [isTyping, setIsTyping] = useState(false); // 상대방의 타이핑 상태를 추적하는 상태 변수
-
+    const [friendRequestReceived, setFriendRequestReceived] = useState(false); // 친구 요청 받았는지 여부
+    const [friendRequestSent, setFriendRequestSent] = useState(false); // 친구 요청 보냈는지 여부
+    const [friendRequestFrom, setFriendRequestFrom] = useState(''); // 친구 요청을 보낸 사용자
+    const [peerUsername, setPeerUsername] = useState('');
 
     const { user } = useContext(UserContext);
     const messagesEndRef = useRef(null);
@@ -40,11 +43,7 @@ function ChatForm() {
         }
     }, [isTyping, chat]); // chat 상태가 변경될 때마다 실행
     
-
-    const startChat = () => {
-        setChat([]);//테스트
-        setMessage('');//테스트
-        setIsLoading(true);
+    useEffect(() => {
         const newWs = new WebSocket('ws://localhost:8000/ws/chat/');
         newWs.onopen = () => {
             console.log('채팅 서버에 연결되었습니다.');
@@ -53,20 +52,31 @@ function ChatForm() {
         
         newWs.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log(data);
-            if (data.type === 'chat') {
-                setChat((prevChat) => [...prevChat, { message: data.message, sender: data.sender }]);
-            } else if (data.type === 'match_success') {
-                setIsMatched(true);
-                setIsLoading(false);
-            } else if (data.type === 'chat_end') {
-                // 채팅 종료 메시지를 수신한 경우, 채팅 종료 처리
-                alert('채팅이 종료되었습니다.');
-                endChat(); // 채팅 종료 로직 실행
-            } else if (data.type === 'typing_start' && data.sender !== user.username) {
-                setIsTyping(true); // 상대방이 타이핑을 시작했음을 상태로 설정
-            } else if (data.type === 'typing_end' && data.sender !== user.username) {
-                setIsTyping(false); // 상대방이 타이핑을 멈췄음을 상태로 설정
+            switch (data.type) {
+                case 'chat':
+                    setChat((prevChat) => [...prevChat, { message: data.message, sender: data.sender }]);
+                    break;
+                case 'match_success':
+                    setIsMatched(true);
+                    setIsLoading(false);
+                    break;
+                case 'chat_end':
+                    alert('채팅이 종료되었습니다.');
+                    endChat();
+                    break;
+                case 'typing_start':
+                    if (data.sender !== user.username) setIsTyping(true);
+                    break;
+                case 'typing_end':
+                    if (data.sender !== user.username) setIsTyping(false);
+                    break;
+                case 'friend_request':
+                    setFriendRequestReceived(true);
+                    setFriendRequestFrom(data.from_username); // 친구 요청을 보낸 사용자 설정
+                    break;
+                    
+                default:
+                    console.log("Unknown message type:", data.type);
             }
         };
         
@@ -75,7 +85,20 @@ function ChatForm() {
             setIsConnected(false);
             setIsMatched(false);
         };
+        
         setWs(newWs);
+
+        return () => {
+            if (newWs) {
+                newWs.close();
+            }
+        };
+    }, [user, navigate]);
+
+    const startChat = () => {
+        setChat([]);
+        setMessage('');
+        setIsLoading(true);
     };
 
     const confirmEndChat = () => {
@@ -91,6 +114,8 @@ function ChatForm() {
             setIsMatched(false);
             setChat([]);
             setIsConfirmingEndChat(false);
+            setFriendRequestReceived(false);
+            setFriendRequestSent(false);
         }
     };
 
@@ -98,7 +123,7 @@ function ChatForm() {
         if (ws && message) {
             const messageData = { type: 'chat_message', message: message };
             ws.send(JSON.stringify(messageData));
-            //setMessage('');
+            setMessage('');
         }
     };
 
@@ -123,14 +148,43 @@ function ChatForm() {
         }
     };
 
-    useEffect(() => {
-        return () => {
-            if (ws) {
-                ws.close();
-            }
-        };
-    }, [ws]);
+    const sendFriendRequest = () => {
+        console.log('친구 요청을 보냅니다.');
+        if (ws) {
+            const friendRequestData = { type: 'send_friend_request', to_username: user.username }; // 여기서 상대방 사용자명 설정 필요
+            ws.send(JSON.stringify(friendRequestData));
+            setFriendRequestSent(true); // 친구 요청을 보냈다고 상태 업데이트
+            console.log('친구 요청을 보냈습니다.');
+        }
+    };
+
+    const acceptFriendRequest = () => {
+        if (ws && friendRequestFrom) {
+            const acceptionData = { type: 'accept_friend_request', from_username: friendRequestFrom };
+            ws.send(JSON.stringify(acceptionData));
+            console.log(acceptionData);
+            setFriendRequestReceived(false); // 친구 요청 수락 후 상태 초기화
+            console.log(`${friendRequestFrom}의 친구 요청을 수락했습니다.`);
+        }
+    };
     
+
+/*
+    // WebSocket 메시지 수신 처리 로직 수정
+    useEffect(() => {
+        // WebSocket 설정 및 메시지 수신 처리...
+        newWs.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'friend_request_received') {
+                // 친구 요청 받았을 때의 처리
+                setFriendRequestReceived(true);
+            }
+            // 기존 메시지 처리 로직...
+        };
+
+        // 기존 WebSocket 연결 종료 및 클린업 로직...
+    }, [ws, user, navigate]); // 필요한 의존성 추가
+*/
 
     return (
         <div className="chat-container">
@@ -154,24 +208,26 @@ function ChatForm() {
                 )}
             </div>
             <div className="chat-input">
-                {isMatched ? (
+                {isMatched && isConnected && (
                     <>
-                        {isConnected &&
-                            (isConfirmingEndChat ? (
-                                <button onClick={endChat}>정말?</button> // 사용자가 확인해야 하는 경우
-                            ) : (
-                                <button onClick={confirmEndChat}>대화 끝</button> // 초기 상태
-                        ))}
                         <input 
                             type="text" 
                             value={message} 
-                            onChange={(e) => {setMessage(e.target.value); handleTyping();}}
+                            onChange={(e) => setMessage(e.target.value)}
+                            onKeyUp={handleTyping}
                             onKeyDown={handleKeyDown}
                             placeholder="메시지를 입력하세요"
                         />
                         <button onClick={sendMessage}>보내기</button>
+                        {!friendRequestReceived && !friendRequestSent && (
+                            <button onClick={sendFriendRequest}>친구 요청 보내기</button>
+                        )}
+                        {friendRequestReceived && (
+                            <button onClick={acceptFriendRequest}>수락</button>
+                        )}
                     </>
-                ) : (
+                )}
+                {!isMatched && (
                     <button onClick={startChat} className="start-chat-button">채팅 시작하기</button>
                 )}
             </div>

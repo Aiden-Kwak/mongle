@@ -1,8 +1,11 @@
 import json
 import random
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
 import aioredis
 import asyncio
+from django.contrib.auth import get_user_model
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
     lock = asyncio.Lock()
@@ -19,29 +22,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
             asyncio.create_task(self.attempt_matching())
 
     async def attempt_matching(self):
-        async with ChatConsumer.lock:
-            await self.redis.set(f"channel_name_{self.user.username}", self.channel_name)
-            await self.redis.sadd("waiting_users", self.user.username)
-            waiting_users = await self.redis.smembers("waiting_users")
+        
+        await self.redis.set(f"channel_name_{self.user.username}", self.channel_name)
+        await self.redis.sadd("waiting_users", self.user.username)
+        waiting_users = await self.redis.smembers("waiting_users")
 
-            if len(waiting_users) > 1:
-                peer_user = random.choice(list(waiting_users - {self.user.username}))
-                await self.redis.srem("waiting_users", self.user.username, peer_user)
+        if len(waiting_users) > 1:
+            peer_user = random.choice(list(waiting_users - {self.user.username}))
+            await self.redis.srem("waiting_users", self.user.username, peer_user)
 
-                sorted_usernames = sorted([self.user.username, peer_user])
-                room_name = f"chat_{sorted_usernames[0]}_{sorted_usernames[1]}"
-                await self.channel_layer.group_add(room_name, self.channel_name)
-                await self.redis.set(f"room_name_{self.user.username}", room_name)
+            sorted_usernames = sorted([self.user.username, peer_user])
+            room_name = f"chat_{sorted_usernames[0]}_{sorted_usernames[1]}"
+            await self.channel_layer.group_add(room_name, self.channel_name)
+            await self.redis.set(f"room_name_{self.user.username}", room_name)
 
-                peer_channel_name = await self.redis.get(f"channel_name_{peer_user}")
-                if peer_channel_name:
-                    await self.channel_layer.group_add(room_name, peer_channel_name)
-                    await self.redis.set(f"room_name_{peer_user}", room_name)
+            peer_channel_name = await self.redis.get(f"channel_name_{peer_user}")
+            if peer_channel_name:
+                await self.channel_layer.group_add(room_name, peer_channel_name)
+                await self.redis.set(f"room_name_{peer_user}", room_name)
 
-                await self.channel_layer.group_send(room_name, {
-                    'type': 'match_success_message',
-                    'message': '매칭되었습니다!'
-                })
+            await self.channel_layer.group_send(room_name, {
+                'type': 'match_success_message',
+                'message': '매칭되었습니다!!!',
+            })
 
     async def disconnect(self, close_code):
         if hasattr(self, 'redis'):
@@ -75,6 +78,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'type': f'{message_type}_message',
                     'sender': self.user.username
                 })
+        
+        elif message_type == 'accept_friend_request' or message_type == 'reject_friend_request':
+            print(f"receive: {message_type}") # 여기 체크해보자. text_data_json 까보면 될듯. 아예 안받는디?
+            print(f"receive: {text_data_json}")
+            if 'from_username' in text_data_json:
+                if message_type == 'accept_friend_request':
+                    print(f"accept_friend_request: {text_data_json['from_username']}")
+                    await self.accept_friend_request(text_data_json['from_username'])
+                else:
+                    await self.reject_friend_request(text_data_json['from_username'])
+        elif message_type == 'send_friend_request':
+            if 'to_username' in text_data_json:
+                await self.handle_send_friend_request(text_data_json['to_username'])
     
     async def end_chat(self):
         room_name = await self.redis.get(f"room_name_{self.user.username}")
@@ -87,6 +103,78 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_discard(room_name, self.channel_name)
 
 
+    async def accept_friend_request(self, friend_username):
+        from friendapp.models import Friendship, FriendRequest
+        # 비동기로 친구 요청을 조회
+        friend_request = await self.get_friend_request(friend_username)
+        if friend_request:
+            # FriendRequest 인스턴스의 pk를 사용하여 from_user를 비동기적으로 가져옵니다.
+            # 여기서는 비동기 함수 호출의 결과를 기다린 후에 from_user에 접근합니다.
+            from_user_instance = await database_sync_to_async(FriendRequest.objects.get)(pk=friend_request.pk)
+            from_user = await database_sync_to_async(lambda: from_user_instance.from_user)()
+            
+            # 비동기로 친구 관계 생성
+            await database_sync_to_async(Friendship.create_friendship)(self.user, from_user)
+            
+            # 비동기로 FriendRequest 인스턴스 삭제
+            await database_sync_to_async(friend_request.delete)()
+
+
+    async def reject_friend_request(self, friend_username):
+        # 비동기로 친구 요청을 조회
+        friend_request = await self.get_friend_request(friend_username)
+        if friend_request:
+            # 비동기로 FriendRequest 인스턴스 삭제
+            await database_sync_to_async(friend_request.delete)()
+    
+    async def get_friend_request(self, friend_username):
+        from friendapp.models import FriendRequest
+        friend_request_query = await database_sync_to_async(FriendRequest.objects.filter)(
+            from_user__username=friend_username,
+            to_user=self.user
+        )
+        # 첫 번째 결과를 비동기적으로 반환합니다.
+        friend_request = await database_sync_to_async(friend_request_query.first)()
+        return friend_request
+
+
+        
+   
+    async def handle_send_friend_request(self, to_username):
+        # 매칭된 상대방의 username을 찾습니다.
+        room_name = await self.redis.get(f"room_name_{self.user.username}")
+        if room_name:
+            # room_name에서 상대방의 username을 추출합니다.
+            usernames = room_name.split("_")[1:]  # room_name이 "chat_user1_user2" 형식이라고 가정
+            peer_username = [username for username in usernames if username != self.user.username][0]
+            
+            # 상대방 사용자 객체를 가져옵니다.
+            User = get_user_model()
+            peer_user = await database_sync_to_async(User.objects.get)(username=peer_username)
+
+            # FriendRequest 인스턴스를 생성합니다.
+            from friendapp.models import FriendRequest
+            friend_request = await database_sync_to_async(FriendRequest.objects.create)(
+                from_user=self.scope['user'],
+                to_user=peer_user
+            )
+            
+            # 상대방의 channel_name을 찾습니다.
+            peer_channel_name = await self.redis.get(f"channel_name_{peer_username}")
+            if peer_channel_name:
+                # 상대방에게 친구 요청 메시지를 전송합니다.
+                await self.channel_layer.send(peer_channel_name, {
+                    "type": "friend_request",
+                    "from_username": self.user.username,
+                    "peer_username": peer_username
+                })
+
+
+    ###########################
+    #                         #
+    # 아래는 전부 처리로직들. 핸들러 #
+    #                         #
+    ###########################
     async def chat_message(self, event):
         message = event['message']
         sender = event['sender']
@@ -128,3 +216,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'sender': event['sender']
         }))
 
+    async def friend_request(self, event):
+        # 친구 요청 메시지를 클라이언트에 전송
+        await self.send(text_data=json.dumps({
+            'type': 'friend_request',
+            'from_username': event['from_username'],
+            'peer_username': event['peer_username']
+        }))

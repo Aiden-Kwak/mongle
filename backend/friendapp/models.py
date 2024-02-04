@@ -16,10 +16,16 @@ class Friendship(models.Model):
 
     @classmethod
     def create_friendship(cls, user1, user2):
-        # 두 사용자 간의 친구 관계를 생성하거나 가져오는 메소드
-        friendship, created = cls.objects.get_or_create()
-        friendship.users.add(user1, user2)
-        return friendship
+        # 이미 존재하는 친구 관계를 찾습니다.
+        friendships = cls.objects.filter(users=user1).filter(users=user2)
+        if friendships.exists():
+            # 이미 친구 관계가 존재하면 반환합니다.
+            return friendships.first(), False
+        else:
+            # 새로운 친구 관계를 생성합니다.
+            friendship = cls.objects.create()
+            friendship.users.add(user1, user2)
+            return friendship, True
 
     def remove_friendship(self):
         # 친구 관계를 삭제하는 메소드
