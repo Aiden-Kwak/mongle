@@ -44,12 +44,57 @@ function ChatForm() {
     }, [isTyping, chat]); // chat 상태가 변경될 때마다 실행
     
     useEffect(() => {
+        if (!user) return; // 사용자가 로그인하지 않았다면 실행하지 않음
+    
+        // WebSocket 연결이 이미 열려있고, 재사용 가능한 상태인지 확인
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            console.log('이미 WebSocket 연결이 열려 있습니다.');
+            return; // 이미 열려있는 연결을 재사용
+        }
+    
         const newWs = new WebSocket('ws://localhost:8000/ws/chat/');
+        
         newWs.onopen = () => {
             console.log('채팅 서버에 연결되었습니다.');
             setIsConnected(true);
         };
-        
+    
+        //newWs.onmessage = (event) => {
+        //    const data = JSON.parse(event.data);
+        //    // 메시지 처리 로직...
+        //};
+    
+        newWs.onclose = () => {
+            console.log('채팅 서버 연결이 끊어졌습니다.');
+            setIsConnected(false);
+            setIsMatched(false);
+        };
+    
+        setWs(newWs);
+        return () => newWs.close(); // 컴포넌트 언마운트 시 연결 종료
+    }, [user]); // `user` 상태에 따라 연결을 다시 시도합니다.
+
+    useEffect(() => {
+        return () => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
+        };
+    }, [ws]);
+    
+
+    const connectWebsocket = () => {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.close();
+        }
+
+        const newWs = new WebSocket('ws://localhost:8000/ws/chat/');
+        newWs.onopen = () => {
+            console.log('채팅 서버에 연결되었습니다.');
+            setIsConnected(true);
+            newWs.send(JSON.stringify({ type: 'start_chat' }));
+        };
+
         newWs.onmessage = (event) => {
             const data = JSON.parse(event.data);
             switch (data.type) {
@@ -61,7 +106,6 @@ function ChatForm() {
                     setIsLoading(false);
                     break;
                 case 'chat_end':
-                    alert('채팅이 종료되었습니다.');
                     endChat();
                     break;
                 case 'typing_start':
@@ -72,33 +116,28 @@ function ChatForm() {
                     break;
                 case 'friend_request':
                     setFriendRequestReceived(true);
-                    setFriendRequestFrom(data.from_username); // 친구 요청을 보낸 사용자 설정
+                    setFriendRequestFrom(data.from_username);
                     break;
-                    
                 default:
                     console.log("Unknown message type:", data.type);
             }
         };
-        
+
         newWs.onclose = () => {
             console.log('채팅 서버 연결이 끊어졌습니다.');
             setIsConnected(false);
             setIsMatched(false);
         };
-        
-        setWs(newWs);
 
-        return () => {
-            if (newWs) {
-                newWs.close();
-            }
-        };
-    }, [user, navigate]);
+        setWs(newWs);
+    };
+
 
     const startChat = () => {
         setChat([]);
         setMessage('');
         setIsLoading(true);
+        connectWebsocket();
     };
 
     const confirmEndChat = () => {
@@ -106,17 +145,20 @@ function ChatForm() {
     };
 
     const endChat = () => {
-        if (ws) {
+        if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify({ type: 'chat_end' }));
             ws.close();
-            setWs(null);
-            setIsConnected(false);
-            setIsMatched(false);
-            setChat([]);
-            setIsConfirmingEndChat(false);
-            setFriendRequestReceived(false);
-            setFriendRequestSent(false);
+            alert('채팅이 종료되었습니다.'); // WebSocket이 열려있을 때만 alert 호출
         }
+        // 연결 상태 초기화
+        setWs(null);
+        setIsConnected(false);
+        setIsMatched(false);
+        setChat([]);
+        setIsConfirmingEndChat(false);
+        setFriendRequestReceived(false);
+        setFriendRequestSent(false);
+        setIsLoading(false);
     };
 
     const sendMessage = () => {
@@ -167,32 +209,21 @@ function ChatForm() {
             console.log(`${friendRequestFrom}의 친구 요청을 수락했습니다.`);
         }
     };
-    
-
-/*
-    // WebSocket 메시지 수신 처리 로직 수정
-    useEffect(() => {
-        // WebSocket 설정 및 메시지 수신 처리...
-        newWs.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'friend_request_received') {
-                // 친구 요청 받았을 때의 처리
-                setFriendRequestReceived(true);
-            }
-            // 기존 메시지 처리 로직...
-        };
-
-        // 기존 WebSocket 연결 종료 및 클린업 로직...
-    }, [ws, user, navigate]); // 필요한 의존성 추가
-*/
 
     return (
         <div className="chat-container">
             
             <div className="chat-header">
-                <h2>랜덤 채팅</h2>
-                {isLoading && <p>매칭중...</p>}
-                {isMatched && <p>채팅이 연결되었습니다!</p>}
+                <div className='notice'>
+                    <p>매칭이 지연될 경우, 다시 로그인을 시도해보세요!</p>
+                </div>
+                <div className='status'>
+                    {isLoading && <p>매칭중...</p>}
+                    {isMatched && <p>채팅이 연결되었습니다!</p>}
+                </div>
+                <div className='friend-request-box'>
+
+                </div>
             </div>
             <div className="chat-messages" ref={messagesEndRef}>
                 {chat.map((msg, index) => (
@@ -210,6 +241,12 @@ function ChatForm() {
             <div className="chat-input">
                 {isMatched && isConnected && (
                     <>
+                        {isConnected &&
+                            (isConfirmingEndChat ? (
+                                <button onClick={endChat}>정말?</button> // 사용자가 확인해야 하는 경우
+                            ) : (
+                                <button onClick={confirmEndChat}>대화 끝</button> // 초기 상태
+                        ))}
                         <input 
                             type="text" 
                             value={message} 

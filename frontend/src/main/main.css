@@ -12,6 +12,32 @@
     padding: 0 20px; /* 양쪽 패딩 설정 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 }
+.logo-name-s {
+    font-size: .9rem !important;
+    margin-left: .2rem;
+}
+.logo-name-l {
+    font-size: 2rem !important;
+    font-family: 'ugro-bold' !important;
+    color: black;
+}
+@media screen and (max-width: 768px){
+    .logo-name-s {
+        font-size: .5rem !important;
+        margin-left: .1rem;
+    }
+    .logo-name-l {
+        font-size: 1.5rem !important;
+    }
+    .nav-menu {
+        font-size: 1rem;
+    }
+}
+
+.nav-wrapper > .logo-name-l {
+    font-size: 2rem;
+}
+
 
 .nav-logo {
     display: flex;

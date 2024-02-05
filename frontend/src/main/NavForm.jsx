@@ -14,9 +14,9 @@ function NavForm() {
             <div className="nav-wrapper">
                 <Link to="/" className="nav-logo">
                 <img src={logo} alt="Logo" />
-                <div>
-                    <span style={{fontSize:".9rem", marginLeft:".2rem"}}>대학생 랜덤채팅</span>
-                    <span style={{fontSize:"2rem", fontFamily:"ugro-bold", color:"black"}}>
+                <div className='logo-name-wrapper'>
+                    <span className="logo-name-s">대학생 랜덤채팅</span>
+                    <span className="logo-name-l" >
                         몽글몽글
                     </span>
                 </div>

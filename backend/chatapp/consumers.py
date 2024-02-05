@@ -68,6 +68,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'message': message,
                     'sender': self.user.username
                 })
+        elif message_type == 'start_chat':
+            await self.attempt_matching()
+
         elif message_type == 'chat_end':
             await self.end_chat()
 
@@ -99,6 +102,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(room_name, {
                 'type': 'chat_end_message',
             })
+            
             # 채팅방에서 사용자를 제거
             await self.channel_layer.group_discard(room_name, self.channel_name)
 
