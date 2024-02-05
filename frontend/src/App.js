@@ -4,6 +4,7 @@ import {MainForm, NavForm} from './main';
 import { SignupForm, LoginForm, LogoutForm } from './account';
 import { ProfileForm } from './profile';
 import { ChatForm } from './chat';
+import { FriendListForm } from './friend';
 
 import { UserProvider } from './UserContext';
 
@@ -20,6 +21,7 @@ function App() {
                     <Route path="/logout" element={<LogoutForm />} />
                     <Route path="/chat" element={<ChatForm />} />
                     <Route path="/profile" element={<ProfileForm />} />
+                    <Route path="/friend" element={<FriendListForm />} />
                 </Routes>
             </div>
         </Router>

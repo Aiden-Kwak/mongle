@@ -8,4 +8,11 @@ module.exports = (app) => {
       changeOrigin: true,
     }),
   );
+
+  app.use(
+    createProxyMiddleware("/friend/list", {
+      target: "http://localhost:8000",
+      changeOrigin: true,
+    }),
+  );
 };

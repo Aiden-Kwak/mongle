@@ -24,7 +24,7 @@ function NavForm() {
                 <div className="nav-menu">
                     <Link to="/profile"><span>프로필</span></Link>
                     <Link to="/"><span>커뮤니티</span></Link>
-                    <Link to="/"><span>친구관리</span></Link>
+                    <Link to="/friend"><span>친구관리</span></Link>
                     {user ?
                     <Link to="/logout"><span>로그아웃</span></Link>:
                     <Link to="/login"><span>로그인</span></Link>
