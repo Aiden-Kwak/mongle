@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {MainForm, NavForm} from './main';
 import { SignupForm, LoginForm, LogoutForm } from './account';
 import { ProfileForm } from './profile';
-import { ChatForm } from './chat';
+import { ChatForm, DMForm } from './chat';
 import { FriendListForm } from './friend';
 
 import { UserProvider } from './UserContext';
@@ -22,6 +22,7 @@ function App() {
                     <Route path="/chat" element={<ChatForm />} />
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/friend" element={<FriendListForm />} />
+                    <Route path="/dm/:id" element={<DMForm />} />
                 </Routes>
             </div>
         </Router>

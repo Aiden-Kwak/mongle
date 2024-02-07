@@ -12,17 +12,37 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.user = self.scope['user']
-        self.room_name = None
+        try:
+            self.room_name = self.scope['url_route']['kwargs']['room_name']
+        except:
+            self.room_name = None
 
         if self.user.is_authenticated:
             await self.accept()
             # Redis에 연결
             self.redis = await aioredis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
             # 매칭 로직 실행
-            asyncio.create_task(self.attempt_matching())
+            #asyncio.create_task(self.attempt_matching())
+
+            if self.room_name == None:
+                print("room_name is None")
+                await self.attempt_matching()
+            else:
+                print(f"room_name: {self.room_name}")
+                if "random" in self.room_name:
+                    await self.attempt_matching()
+                elif "dm" in self.room_name:
+                    await self.setup_direct_message()
+    
+    async def setup_direct_message(self, friend_username):
+        sorted_usernames = sorted([self.user.username, friend_username])
+        room_name = f"dm_{sorted_usernames[0]}_{sorted_usernames[1]}"
+        self.room_name = room_name
+        await self.channel_layer.group_add(room_name, self.channel_name)
+        await self.redis.set(f"dm_room_name_{self.user.username}", room_name)
+
 
     async def attempt_matching(self):
-        
         await self.redis.set(f"channel_name_{self.user.username}", self.channel_name)
         await self.redis.sadd("waiting_users", self.user.username)
         waiting_users = await self.redis.smembers("waiting_users")
@@ -68,6 +88,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'message': message,
                     'sender': self.user.username
                 })
+        elif message_type == 'dm_message':
+            message = text_data_json['message']
+            room_name = await self.redis.get(f"dm_room_name_{self.user.username}")
+            if room_name:
+                await self.channel_layer.group_send(room_name, {
+                    'type': 'dm_message',
+                    'message': message,
+                    'sender': self.user.username
+                })
+            #await database_sync_to_async(self.save_message)(self.user.username, room_name, message)
+            await self.save_message(self.user.username, room_name, message)
+
+        elif message_type == 'start_dm':
+            friend_username = text_data_json.get('friend_username')
+            print(f"start_dm체크!! friend_username: {friend_username}")
+            await self.setup_direct_message(friend_username)
+
         elif message_type == 'start_chat':
             await self.attempt_matching()
 
@@ -94,6 +131,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
         elif message_type == 'send_friend_request':
             if 'to_username' in text_data_json:
                 await self.handle_send_friend_request(text_data_json['to_username'])
+    
+    # 비동기로 바꿔야 할 함수를 동기 방식으로 정의
+    def save_message_sync(self, sender_username, room_name, message):
+        from .models import Message
+        User = get_user_model()
+        
+        # User 모델에서 sender와 receiver를 동기적으로 가져옴
+        sender = User.objects.get(username=sender_username)
+        _, first_username, second_username = room_name.split('_')
+        receiver_username = second_username if sender_username == first_username else first_username
+        receiver = User.objects.get(username=receiver_username)
+        
+        # 메시지를 데이터베이스에 저장
+        Message.objects.create(sender=sender, receiver=receiver, message=message)
+
+    # save_message_sync 함수를 비동기적으로 실행할 수 있도록 래핑
+    async def save_message(self, sender_username, room_name, message):
+        await database_sync_to_async(self.save_message_sync)(sender_username, room_name, message)
     
     async def end_chat(self):
         room_name = await self.redis.get(f"room_name_{self.user.username}")
@@ -227,3 +282,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'from_username': event['from_username'],
             'peer_username': event['peer_username']
         }))
+    
+    async def dm_message(self, event):
+        # 이벤트로부터 메시지 정보를 가져옵니다.
+        message = event['message']
+        sender = event['sender']
+
+        # WebSocket 클라이언트에 메시지를 전송합니다.
+        await self.send(text_data=json.dumps({
+            'type': 'dm_message',
+            'message': message,
+            'sender': sender
+        }))
+

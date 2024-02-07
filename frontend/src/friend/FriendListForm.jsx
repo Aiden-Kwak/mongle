@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../UserContext';
+import { useNavigate } from 'react-router-dom';
 
 function FriendListForm() {
     const [friends, setFriends] = useState([]);
     const { user } = useContext(UserContext);
+    const { setFriendUsername} = useContext(UserContext);
+    const { setFriendID } = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     function getCookie(name) {
         let cookieValue = null;
@@ -21,10 +26,21 @@ function FriendListForm() {
         return cookieValue;
     }
 
+    const initiateDM = (friendUsername, friendID) => {
+        setFriendUsername(friendUsername);
+        setFriendID(friendID);
+        navigate(`/dm/${friendID}`);
+    };
+
     useEffect(() => {
-        console.log("친구 목록을 불러옵니다0.");
+        // 로그인되지 않은 경우 로그인 페이지로 리디렉트
+        if (!user) {
+            navigate('/login');
+        }
+    }, [user, navigate]);
+
+    useEffect(() => {
         const fetchFriends = async () => {
-            console.log("친구 목록을 불러옵니다.!!!!!!");
             try {
                 const response = await axios.get('http://localhost:8000/friend/list', {
                     withCredentials: true
@@ -35,7 +51,6 @@ function FriendListForm() {
                 console.error("친구 목록을 불러오는 데 실패했습니다.", error);
             }
         };
-
         if (user) {
             fetchFriends();
         }
@@ -46,8 +61,9 @@ function FriendListForm() {
             <h2>My Friends</h2>
             <ul>
                 {friends.map((friend, index) => (
-                    <li key={index}>
+                    <li key={index} onClick={()=>initiateDM(friend.username, friend.id)}>
                         {friend.nickname}
+                        {friend.username}
                         <img src={`http://localhost:8000${friend.profile_pic}`} alt="Profile" style={{ width: 50, height: 50 }} />
                     </li>
                 ))}

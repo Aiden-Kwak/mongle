@@ -2,6 +2,7 @@ from rest_framework import serializers
 from accountapp.models import Profile
 
 class FriendProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
     class Meta:
         model = Profile
-        fields = ['nickname', 'profile_pic']
+        fields = ['id', 'nickname', 'profile_pic', 'username']

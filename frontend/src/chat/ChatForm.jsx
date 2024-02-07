@@ -52,17 +52,12 @@ function ChatForm() {
             return; // 이미 열려있는 연결을 재사용
         }
     
-        const newWs = new WebSocket('ws://localhost:8000/ws/chat/');
+        const newWs = new WebSocket('ws://localhost:8000/ws/chat/random/');
         
         newWs.onopen = () => {
             console.log('채팅 서버에 연결되었습니다.');
             setIsConnected(true);
         };
-    
-        //newWs.onmessage = (event) => {
-        //    const data = JSON.parse(event.data);
-        //    // 메시지 처리 로직...
-        //};
     
         newWs.onclose = () => {
             console.log('채팅 서버 연결이 끊어졌습니다.');
@@ -88,7 +83,7 @@ function ChatForm() {
             ws.close();
         }
 
-        const newWs = new WebSocket('ws://localhost:8000/ws/chat/');
+        const newWs = new WebSocket('ws://localhost:8000/ws/chat/random/');
         newWs.onopen = () => {
             console.log('채팅 서버에 연결되었습니다.');
             setIsConnected(true);

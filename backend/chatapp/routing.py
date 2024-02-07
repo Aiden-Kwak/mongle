@@ -3,7 +3,8 @@ from django.urls import path
 from chatapp import consumers
 
 websocket_urlpatterns = [
-    path('ws/chat/', consumers.ChatConsumer.as_asgi()),
+    path('ws/chat/random/', consumers.ChatConsumer.as_asgi()),
+    path('ws/chat/dm/', consumers.ChatConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter({
