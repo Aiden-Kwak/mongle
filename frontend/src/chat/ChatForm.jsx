@@ -45,27 +45,6 @@ function ChatForm() {
     }, [isTyping, chat]); // chat 상태가 변경될 때마다 실행
     
     
-    //useEffect(() => {
-    //    if (!user) return; // 사용자가 로그인하지 않았다면 실행하지 않음
-    //    // WebSocket 연결이 이미 열려있고, 재사용 가능한 상태인지 확인
-    //    if (ws && ws.readyState === WebSocket.OPEN) {
-    //        console.log('이미 WebSocket 연결이 열려 있습니다.');
-    //        return; // 이미 열려있는 연결을 재사용
-    //    } 
-    //    const newWs = new WebSocket('ws://localhost:8000/ws/chat/random/');     
-    //    newWs.onopen = () => {
-    //        console.log('채팅 서버에 연결되었습니다.');
-    //        setIsConnected(true);
-    //    };  
-    //    newWs.onclose = () => {
-    //        console.log('채팅 서버 연결이 끊어졌습니다.');
-    //        setIsConnected(false);
-    //        setIsMatched(false);
-    //    };
-    //    setWs(newWs);
-    //    return () => newWs.close(); // 컴포넌트 언마운트 시 연결 종료
-    //}, [user]); // `user` 상태에 따라 연결을 다시 시도합니다.
-
     useEffect(() => {
         return () => {
             if (ws && ws.readyState === WebSocket.OPEN) {
@@ -111,9 +90,6 @@ function ChatForm() {
                 case 'friend_request':
                     setFriendRequestReceived(true);
                     setFriendRequestFrom(data.from_username);
-                    break;
-                case 'ping':
-                    newWs.send(JSON.stringify({ type: 'pong' }));
                     break;
                 default:
                     console.log("Unknown message type:", data.type);

@@ -23,7 +23,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.redis = await aioredis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
             # 매칭 로직 실행
             #asyncio.create_task(self.attempt_matching())
-            self.ping_task = asyncio.create_task(self.send_ping())
 
             if self.room_name == None:
                 print("room_name is None")
@@ -75,8 +74,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.redis.srem("waiting_users", self.user.username)
             await self.redis.delete(f"room_name_{self.user.username}")
             await self.redis.close()
-        if hasattr(self, 'ping_task'):
-            self.ping_task.cancel()
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -92,20 +89,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'sender': self.user.username
                 })
         elif message_type == 'dm_message':
+            print("dm_message 받음!!!!!")
             message = text_data_json['message']
             room_name = await self.redis.get(f"dm_room_name_{self.user.username}")
             if room_name:
+                message = await self.save_message(self.user.username, room_name, message)
+                print(f"dm문제 확인중. message: {message.id}")
                 await self.channel_layer.group_send(room_name, {
+                    'message': [message.message, message.id],
                     'type': 'dm_message',
-                    'message': message,
-                    'sender': self.user.username
+                    'sender': message.sender.username,
                 })
             #await database_sync_to_async(self.save_message)(self.user.username, room_name, message)
-            await self.save_message(self.user.username, room_name, message)
+            
 
         elif message_type == 'start_dm':
             friend_username = text_data_json.get('friend_username')
-            print(f"start_dm체크!! friend_username: {friend_username}")
             await self.setup_direct_message(friend_username)
 
         elif message_type == 'start_chat':
@@ -113,9 +112,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         elif message_type == 'chat_end':
             await self.end_chat()
-
-        if message_type == 'pong':
-            print("퐁 메시지 받음")
 
         elif message_type in ['typing_start', 'typing_end']:
             room_name = await self.redis.get(f"room_name_{self.user.username}")
@@ -150,11 +146,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receiver = User.objects.get(username=receiver_username)
         
         # 메시지를 데이터베이스에 저장
-        Message.objects.create(sender=sender, receiver=receiver, message=message)
-
+        message=Message.objects.create(sender=sender, receiver=receiver, message=message)
+        return message
+    
     # save_message_sync 함수를 비동기적으로 실행할 수 있도록 래핑
     async def save_message(self, sender_username, room_name, message):
-        await database_sync_to_async(self.save_message_sync)(sender_username, room_name, message)
+        return await database_sync_to_async(self.save_message_sync)(sender_username, room_name, message)
     
     async def end_chat(self):
         room_name = await self.redis.get(f"room_name_{self.user.username}")
@@ -233,17 +230,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     "from_username": self.user.username,
                     "peer_username": peer_username
                 })
-    
-    async def send_ping(self):
-        while True:
-            try:
-                await self.send(text_data=json.dumps({'type': 'ping'}))
-                await asyncio.sleep(10)  # 10초마다 핑 메시지를 보냅니다. 필요에 따라 간격 조정
-            except asyncio.CancelledError:
-                break  # 루프 종료 시 예외 처리
-            except Exception as e:
-                print(f"Exception in send_ping: {e}")
-                break
 
 
 
