@@ -11,11 +11,33 @@ function NavForm() {
     const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 상태 관리 추가
     const location = useLocation();
     
-    const toggleMenu = () => {
-        console.log("Before toggle:", isMenuOpen);
+
+    const toggleMenu = (event) => {
+        event.stopPropagation(); // 메뉴 토글 함수에서 이벤트 전파를 막습니다.
         setIsMenuOpen(!isMenuOpen);
-        console.log("After toggle:", isMenuOpen);
     };
+
+    useEffect(() => {
+        // 메뉴가 열린 후 외부 클릭을 감지하기 위한 로직
+        const handleOutsideClick = (event) => {
+            // 클릭된 요소가 메뉴나 토글 버튼 외부인 경우 메뉴를 닫습니다.
+            if (!event.target.closest('.mb-nav-menu') && !event.target.closest('.hamburger-menu')) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        // 메뉴가 열린 경우, 외부 클릭 감지를 활성화합니다.
+        if (isMenuOpen) {
+            setTimeout(() => {
+                document.addEventListener('click', handleOutsideClick);
+            }, 10); // 메뉴가 열린 직후 외부 클릭에 의한 닫힘을 방지하기 위한 짧은 지연
+        }
+
+        // Cleanup 함수에서는 이벤트 리스너를 제거합니다.
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        };
+    }, [isMenuOpen]);
 
     useEffect(() => {
         setIsMenuOpen(false);
@@ -24,6 +46,7 @@ function NavForm() {
     return (
         <nav>
             <div className="nav-wrapper">
+                <div className={`overlay ${isMenuOpen ? 'show' : ''}`}></div>
                 <Link to="/" className="nav-logo">
                     <img src={logo} alt="Logo" />
                     <div className='logo-name-wrapper'>
@@ -52,6 +75,7 @@ function NavForm() {
                 </div>
             </div>
             <div className={`mb-nav-menu ${isMenuOpen ? 'open' : ''}`}>
+                <img src={logo} alt="Logo" />
                 <ul>
                     <li><Link to="/chat"><span>채팅시작</span></Link></li>
                     <li><Link to="/profile"><span>프로필</span></Link></li>
