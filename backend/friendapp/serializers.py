@@ -5,4 +5,4 @@ class FriendProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username')
     class Meta:
         model = Profile
-        fields = ['id', 'nickname', 'profile_pic', 'username']
+        fields = ['id', 'nickname', 'profile_pic', 'username', 'bio']

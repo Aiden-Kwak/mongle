@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../UserContext';
 import { useNavigate } from 'react-router-dom';
-
+import './friend.css';
 function FriendListForm() {
     const [friends, setFriends] = useState([]);
     const { user } = useContext(UserContext);
@@ -57,14 +57,15 @@ function FriendListForm() {
     }, [user]);
 
     return (
-        <div>
-            <h2>My Friends</h2>
-            <ul>
+        <div className="friendListForm-container">
+            <ul className="friendList">
                 {friends.map((friend, index) => (
-                    <li key={index} onClick={()=>initiateDM(friend.username, friend.id)}>
-                        {friend.nickname}
-                        {friend.username}
-                        <img src={`http://localhost:8000${friend.profile_pic}`} alt="Profile" style={{ width: 50, height: 50 }} />
+                    <li key={index} className="friendItem" onClick={()=>initiateDM(friend.username, friend.id)}>
+                        <img src={`http://localhost:8000${friend.profile_pic}`} alt="Profile" className="friendProfilePic" />
+                        <div className="friendInfo">
+                            <span className="friendNickname">{friend.nickname}</span>
+                            <span className="friendBio">{friend.bio}</span>
+                        </div>   
                     </li>
                 ))}
             </ul>
