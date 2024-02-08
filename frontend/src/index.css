@@ -11,6 +11,13 @@
   src: url("static/font/SB어그로M.otf");
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
 body {
 font-family: ugro-light, Helvetica, Arial, sans-serif;
 font-size: 1.2rem;
@@ -26,6 +33,7 @@ body::-webkit-scrollbar {
 
 li {
   list-style: none;
+  text-decoration-line : none!important;
 }
 
 /* 글자편의용 */

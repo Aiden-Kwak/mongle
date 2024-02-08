@@ -1,27 +1,46 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react'; // useState 추가
 import { UserContext } from '../UserContext';
-import { Link } from 'react-router-dom';
-
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../static/img/logo.png';
 import '../static/font/font.css';
 import './main.css';
+// 햄버거 아이콘 SVG 직접 import 하거나, 아이콘 컴포넌트 사용을 고려할 수 있음
 
 function NavForm() {
     const { user } = useContext(UserContext);
+    const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 상태 관리 추가
+    const location = useLocation();
+    
+    const toggleMenu = () => {
+        console.log("Before toggle:", isMenuOpen);
+        setIsMenuOpen(!isMenuOpen);
+        console.log("After toggle:", isMenuOpen);
+    };
+
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [location]);
 
     return (
-       <nav>
+        <nav>
             <div className="nav-wrapper">
                 <Link to="/" className="nav-logo">
-                <img src={logo} alt="Logo" />
-                <div className='logo-name-wrapper'>
-                    <span className="logo-name-s">대학생 랜덤채팅</span>
-                    <span className="logo-name-l" >
-                        몽글몽글
-                    </span>
-                </div>
+                    <img src={logo} alt="Logo" />
+                    <div className='logo-name-wrapper'>
+                        <span className="logo-name-s">대학생 랜덤채팅</span>
+                        <span className="logo-name-l">
+                            몽글몽글
+                        </span>
+                    </div>
                 </Link>
-                <div className="nav-menu">
+                <button className="hamburger-menu" onClick={toggleMenu}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 18L20 18" stroke="#000000" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M4 12L20 12" stroke="#000000" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M4 6L20 6" stroke="#000000" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                </button>
+                <div className='nav-menu'>
                     <Link to="/profile"><span>프로필</span></Link>
                     <Link to="/"><span>커뮤니티</span></Link>
                     <Link to="/friend"><span>친구관리</span></Link>
@@ -32,8 +51,18 @@ function NavForm() {
                     <Link to="/chat"><button className="chat-button">채팅시작</button></Link>
                 </div>
             </div>
+            <div className={`mb-nav-menu ${isMenuOpen ? 'open' : ''}`}>
+                <ul>
+                    <li><Link to="/chat"><span>채팅시작</span></Link></li>
+                    <li><Link to="/profile"><span>프로필</span></Link></li>
+                    <li><Link to="/friend"><span>친구관리</span></Link></li>
+                    {user ?
+                    <li><Link to="/logout"><span>로그아웃</span></Link></li>:
+                    <li><Link to="/login"><span>로그인</span></Link></li>
+                    }
+                </ul>
+            </div>
        </nav>
-        
     );
 }
 

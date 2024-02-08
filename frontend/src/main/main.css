@@ -9,8 +9,9 @@
     align-items: center;
     justify-content: space-between;
     background-color: #ffffff; /* 배경색을 흰색으로 설정 */
-    padding: 0 20px; /* 양쪽 패딩 설정 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    padding: 0 10px; /* 양쪽 패딩 설정 */
+    box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    z-index: 10;
 }
 .logo-name-s {
     font-size: .9rem !important;
@@ -20,18 +21,6 @@
     font-size: 2rem !important;
     font-family: 'ugro-bold' !important;
     color: black;
-}
-@media screen and (max-width: 768px){
-    .logo-name-s {
-        font-size: .5rem !important;
-        margin-left: .1rem;
-    }
-    .logo-name-l {
-        font-size: 1.5rem !important;
-    }
-    .nav-menu {
-        font-size: 1rem;
-    }
 }
 
 .nav-wrapper > .logo-name-l {
@@ -90,7 +79,65 @@
 .chat-button:hover {
     background-color: #e0637c; /* 버튼 호버 배경 색상 */
 }
+.hamburger-menu {
+    display: none; /* 기본적으로는 햄버거 메뉴를 숨깁니다 */
+    border: none;
+    background: none;
+    cursor: pointer;
+}
 
+.mb-nav-menu {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-100%); /* 메뉴를 위로 이동시켜 숨깁니다 */
+    transition: visibility 0s linear 0.5s, opacity 0.5s linear, transform 0.5s ease-out; /* transform 애니메이션 추가 */
+    background-color: #e9e9e9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    width: 100%;
+    top: 70px;
+    left: 0;
+    z-index: 11;
+}
+
+.mb-nav-menu.open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0%); /* 메뉴를 원래 위치로 되돌립니다 */
+    transition-delay: 0s; /* 트랜지션 지연 시간을 0으로 설정 */
+}
+.mb-nav-menu ul {
+    padding: 10px; /* 리스트 패딩 제거 */
+    margin: 0; /* 리스트 마진 제거 */
+}
+.mb-nav-menu li {
+    color: black; /* 글자색을 검은색으로 설정 */
+    text-align: center; /* 텍스트를 중앙으로 정렬 */
+    list-style: none; /* 리스트 스타일 제거 */
+    margin-bottom: 5px;
+}
+
+.mb-nav-menu li a {
+    text-decoration: none; /* 하이퍼링크의 밑줄 제거 */
+    color: black; /* 하이퍼링크의 글자색을 검은색으로 설정 */
+    display: block; /* 링크를 블록 요소로 만들어 전체 영역이 클릭 가능하게 함 */
+}
+
+@media screen and (max-width: 768px){
+    .hamburger-menu {
+        display: block; /* 모바일 화면에서만 햄버거 메뉴 버튼을 표시합니다 */
+    }
+    .logo-name-s {
+        font-size: .5rem !important;
+        margin-left: .1rem;
+    }
+    .logo-name-l {
+        font-size: 1.5rem !important;
+    }
+    .nav-menu {
+        display: none;
+    }
+}
 
 /* MainForm */
 /* MainForm */

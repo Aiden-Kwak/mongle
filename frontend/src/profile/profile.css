@@ -40,7 +40,7 @@
     display: block;
     width: 100%;
     padding: 10px;
-    background-color: #4CAF50;
+    background-color: #F07489;
     color: white;
     border: none;
     border-radius: 5px;
@@ -49,5 +49,5 @@
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: pink;
 }
