@@ -129,6 +129,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     print(f"accept_friend_request: {text_data_json['from_username']}")
                     await self.accept_friend_request(text_data_json['from_username'])
                 else:
+                    room_name = await self.redis.get(f"room_name_{self.user.username}")
+                    if room_name:
+                        await self.channel_layer.group_send(room_name, {
+                            'type': 'reject_friend_request'
+                        })
                     await self.reject_friend_request(text_data_json['from_username'])
         elif message_type == 'send_friend_request':
             if 'to_username' in text_data_json:
@@ -177,6 +182,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             
             # 비동기로 친구 관계 생성
             await database_sync_to_async(Friendship.create_friendship)(self.user, from_user)
+            room_name = await self.redis.get(f"room_name_{self.user.username}")
+            if room_name:
+                await self.channel_layer.group_send(room_name, {
+                    'type': 'send_friend_request_response',  # 이 메서드는 아래에 정의해야 합니다.
+                    'response_type': 'accept_friend_request'
+                })
             
             # 비동기로 FriendRequest 인스턴스 삭제
             await database_sync_to_async(friend_request.delete)()
@@ -186,6 +197,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # 비동기로 친구 요청을 조회
         friend_request = await self.get_friend_request(friend_username)
         if friend_request:
+            room_name = await self.redis.get(f"room_name_{self.user.username}")
+            if room_name:
+                await self.channel_layer.group_send(room_name, {
+                    'type': 'send_friend_request_response',  # 이 메서드는 아래에 정의해야 합니다.
+                    'response_type': 'reject_friend_request'
+                })
             # 비동기로 FriendRequest 인스턴스 삭제
             await database_sync_to_async(friend_request.delete)()
     
@@ -297,5 +314,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type': 'dm_message',
             'message': message,
             'sender': sender
+        }))
+
+    async def send_friend_request_response(self, event):
+        # 클라이언트로 보낼 메시지 구성
+        response_type = event['response_type']
+
+        # 클라이언트에게 메시지 전송
+        await self.send(text_data=json.dumps({
+            'type': response_type,  # 클라이언트가 이해할 수 있는 메시지 타입
         }))
 

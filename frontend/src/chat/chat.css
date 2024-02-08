@@ -17,7 +17,10 @@
     border-bottom: 1px solid #ddd;
     text-align: center;
 }
-
+.chat-header > .status p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 .chat-messages {
     display: flex;
     flex-grow: 1;
@@ -64,7 +67,7 @@
 /* 메시지 말풍선 스타일 */
 .message-bubble {
     display: block;
-    padding: 10px 15px;
+    padding: 8px 15px;
     border-radius: 20px;
     margin-bottom: 1.5rem;
     display: inline-block;
@@ -100,6 +103,52 @@
 .start-chat-button:hover {
     background-color: pink;
 }
+
+
+
+.friend-request-box {
+    display: flex;
+    justify-content: center; /* 요소들을 가운데 정렬합니다. */
+    align-items: center; /* 요소들을 세로 방향으로 중앙 정렬합니다. */
+    padding: 10px;
+    gap: 20px; /* 버튼 사이의 간격을 설정합니다. */
+}
+
+.friend-request-box p {
+    margin: 0; /* 기본 마진을 제거합니다. */
+    font-size: 1rem; /* 폰트 크기를 조정합니다. */
+}
+
+.friend-request-box button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 5px;
+}
+
+.friend-request-box img {
+    width: 24px; /* 이미지 크기를 설정합니다. */
+    height: 24px; /* 이미지 크기를 설정합니다. */
+}
+
+.temp-message {
+    position: fixed; /* 팝업을 화면에 고정 */
+    top: 20%; /* 상단에서부터의 위치 */
+    left: 50%; /* 왼쪽에서부터의 위치 */
+    transform: translate(-50%, -50%); /* 정확한 중앙 위치 조정 */
+    z-index: 1000; /* 다른 요소들 위에 표시 */
+    background-color: rgba(0, 0, 0, 0.7); /* 반투명 검정색 배경 */
+    color: #fff; /* 텍스트 색상 */
+    padding: 20px 40px; /* 내부 여백 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+    font-size: 1rem; /* 폰트 크기 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    max-width: 80%; /* 최대 너비 설정 */
+    word-wrap: break-word; /* 긴 텍스트 처리 */
+}
+
 /*
 @media screen and (max-width: 575px){
     .width-control {

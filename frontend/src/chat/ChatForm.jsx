@@ -1,6 +1,8 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './chat.css';
+import accept from '../static/img/accept.png';
+import reject from '../static/img/reject.png';
 import { UserContext } from '../UserContext';
 
 function ChatForm() {
@@ -16,6 +18,7 @@ function ChatForm() {
     const [friendRequestSent, setFriendRequestSent] = useState(false); // 친구 요청 보냈는지 여부
     const [friendRequestFrom, setFriendRequestFrom] = useState(''); // 친구 요청을 보낸 사용자
     const [peerUsername, setPeerUsername] = useState('');
+    const [tempMessage, setTempMessage] = useState('');
 
     const { user } = useContext(UserContext);
     const messagesEndRef = useRef(null);
@@ -70,6 +73,7 @@ function ChatForm() {
 
         newWs.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            console.log('데이터 타입:', data.type);
             switch (data.type) {
                 case 'chat':
                     setChat((prevChat) => [...prevChat, { message: data.message, sender: data.sender }]);
@@ -90,6 +94,14 @@ function ChatForm() {
                 case 'friend_request':
                     setFriendRequestReceived(true);
                     setFriendRequestFrom(data.from_username);
+                    break;
+                case 'accept_friend_request':
+                    console.log('친구 요청이 수락되어야함');
+                    showTempMessage('친구 요청이 수락되었습니다.');
+                    break;
+                case 'reject_friend_request':
+                    console.log('친구 요청이 거절되어야함');
+                    showTempMessage('친구 요청이 거절되었습니다.');
                     break;
                 default:
                     console.log("Unknown message type:", data.type);
@@ -178,28 +190,53 @@ function ChatForm() {
         if (ws && friendRequestFrom) {
             const acceptionData = { type: 'accept_friend_request', from_username: friendRequestFrom };
             ws.send(JSON.stringify(acceptionData));
-            console.log(acceptionData);
             setFriendRequestReceived(false); // 친구 요청 수락 후 상태 초기화
-            console.log(`${friendRequestFrom}의 친구 요청을 수락했습니다.`);
         }
     };
 
+    const rejectFriendRequest = () => {
+        if (ws && friendRequestFrom) {
+            const rejectionData = { type: 'reject_friend_request', from_username: friendRequestFrom };
+            ws.send(JSON.stringify(rejectionData));
+            setFriendRequestReceived(false); // 친구 요청 거절 후 상태 초기화
+        }
+    };
+
+    const showTempMessage = (message) => {
+        setTempMessage(message); // 메시지 설정
+        setTimeout(() => {
+            setTempMessage(''); // 2초 후 메시지 제거
+        }, 2500);
+    };
+    
+
     return (
         <div className="chat-container">
-            
+            {tempMessage && <div className="temp-message">{tempMessage}</div>}
             <div className="chat-header">
-                <div className='notice'>
-                    <p>매칭이 지연될 경우, 다시 로그인을 시도해보세요!</p>
-                </div>
                 <div className='status'>
                     {isLoading && <p>매칭중...</p>}
-                    {isMatched && <p>채팅이 연결되었습니다!</p>}
+                    {isMatched && <p><button onClick={sendFriendRequest}>친구 요청 보내기</button></p>}
                 </div>
+                <div className='quest-friend'></div>
                 <div className='friend-request-box'>
-
+                    {friendRequestReceived && (
+                        <div>
+                            <p>친구요청이 도착했습니다!</p>
+                            <button onClick={acceptFriendRequest}>
+                                <img src={accept} alt="수락" />
+                            </button>
+                            <button onClick={rejectFriendRequest}>
+                                <img src={reject} alt="거절" />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="chat-messages" ref={messagesEndRef}>
+                {isMatched && 
+                    <p>채팅이 연결되었습니다!</p>
+                }
                 {chat.map((msg, index) => (
                     <div
                         key={index}
@@ -230,12 +267,6 @@ function ChatForm() {
                             placeholder="메시지를 입력하세요"
                         />
                         <button onClick={sendMessage}>보내기</button>
-                        {!friendRequestReceived && !friendRequestSent && (
-                            <button onClick={sendFriendRequest}>친구 요청 보내기</button>
-                        )}
-                        {friendRequestReceived && (
-                            <button onClick={acceptFriendRequest}>수락</button>
-                        )}
                     </>
                 )}
                 {!isMatched && (
