@@ -23,6 +23,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.redis = await aioredis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
             # 매칭 로직 실행
             #asyncio.create_task(self.attempt_matching())
+            self.ping_task = asyncio.create_task(self.send_ping())
 
             if self.room_name == None:
                 print("room_name is None")
@@ -74,6 +75,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.redis.srem("waiting_users", self.user.username)
             await self.redis.delete(f"room_name_{self.user.username}")
             await self.redis.close()
+        if hasattr(self, 'ping_task'):
+            self.ping_task.cancel()
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -110,6 +113,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         elif message_type == 'chat_end':
             await self.end_chat()
+
+        if message_type == 'pong':
+            print("퐁 메시지 받음")
 
         elif message_type in ['typing_start', 'typing_end']:
             room_name = await self.redis.get(f"room_name_{self.user.username}")
@@ -227,6 +233,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     "from_username": self.user.username,
                     "peer_username": peer_username
                 })
+    
+    async def send_ping(self):
+        while True:
+            try:
+                await self.send(text_data=json.dumps({'type': 'ping'}))
+                await asyncio.sleep(10)  # 10초마다 핑 메시지를 보냅니다. 필요에 따라 간격 조정
+            except asyncio.CancelledError:
+                break  # 루프 종료 시 예외 처리
+            except Exception as e:
+                print(f"Exception in send_ping: {e}")
+                break
+
 
 
     ###########################

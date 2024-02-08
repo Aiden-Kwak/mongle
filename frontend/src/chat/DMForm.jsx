@@ -42,27 +42,14 @@ function DMForm() {
         })
     },[user]);
 
-    //useEffect(() => {
-    //    if (messagesEndRef.current) {
-    //        const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
-    //        const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
-    //        if (isNearBottom) {
-    //            messagesEndRef.current.scrollTop = scrollHeight;
-    //        }
-    //    }
-    //}, [isTyping, chat]);
-
     useEffect(() => {
         const scrollToBottom = () => {
             if (messagesEndRef.current) {
                 messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
             }
         };
-    
-        // 채팅 데이터 로드 이후 스크롤을 맨 아래로 내림
         scrollToBottom();
     
-        // isTyping 상태 변화에 따라 스크롤 조정 로직을 유지
         const handleScroll = () => {
             if (messagesEndRef.current) {
                 const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
@@ -72,13 +59,8 @@ function DMForm() {
                 }
             }
         };
-    
-        // 타이핑 상태가 변경될 때마다 스크롤 조정
         handleScroll();
-    
     }, [chat, isTyping]); // chat 또는 isTyping 상태가 변경될 때마다 이 useEffect가 실행됩니다.
-    
-
     
     useEffect(() => {
         if (!user) return; 
