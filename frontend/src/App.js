@@ -5,6 +5,7 @@ import { SignupForm, LoginForm, LogoutForm } from './account';
 import { ProfileForm } from './profile';
 import { ChatForm, DMForm } from './chat';
 import { FriendListForm } from './friend';
+import { NotFoundForm } from './snippets';
 
 import { UserProvider } from './UserContext';
 
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/friend" element={<FriendListForm />} />
                     <Route path="/dm/:id" element={<DMForm />} />
+                    <Route path="*" element={<NotFoundForm />} />
                 </Routes>
             </div>
         </Router>
