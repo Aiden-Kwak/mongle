@@ -5,6 +5,9 @@ from django.contrib.auth import get_user_model
 from .models import Friendship
 from accountapp.models import Profile
 from .serializers import FriendProfileSerializer
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+
 
 User = get_user_model()
 
@@ -33,3 +36,19 @@ class FriendListAPI(APIView):
         # Profile 정보를 직렬화합니다.
         serializer = FriendProfileSerializer(list(friends_profiles), many=True)
         return Response(serializer.data)
+
+class RemoveFriendAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, friend_username, format=None):
+        user = request.user
+        friend = get_object_or_404(User, username=friend_username)  # 친구의 사용자 객체를 가져옵니다.
+
+        # 해당 사용자 사이의 Friendship 인스턴스를 찾습니다.
+        friendship = Friendship.objects.filter(users=user).filter(users=friend)
+
+        if friendship.exists():
+            friendship.first().remove_friendship()  # Friendship 인스턴스를 삭제합니다.
+            return Response({"message": "Friendship removed successfully"}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error": "Friendship does not exist"}, status=status.HTTP_404_NOT_FOUND)

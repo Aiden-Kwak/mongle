@@ -4,6 +4,8 @@ import { UserContext } from '../UserContext';
 import { useNavigate } from 'react-router-dom';
 import { BackButton } from '../snippets';
 import './friend.css';
+import deleteIcon from '../static/img/delete.png';
+import chatIcon from '../static/img/chat.png';
 
 function FriendListForm() {
     const [friends, setFriends] = useState([]);
@@ -34,6 +36,27 @@ function FriendListForm() {
         navigate(`/dm/${friendID}`);
     };
 
+    const deleteFriend = async (friendUsername, friendNickname) => {
+        // 사용자에게 삭제 확인 요청
+        const isConfirmed = window.confirm(`정말로 "${friendNickname}"을(를) 친구 목록에서 삭제하시겠습니까? 삭제후엔 되돌릴 수 없습니다.`);
+        if (isConfirmed) {
+            try {
+                const csrfToken = getCookie('csrftoken');
+                await axios.delete(`http://localhost:8000/friend/remove/${friendUsername}/`, {
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    withCredentials: true
+                });
+                // 성공적으로 삭제되면 친구 목록에서 해당 친구 제거
+                setFriends(friends.filter(friend => friend.username !== friendUsername));
+            } catch (error) {
+                console.error("친구 삭제에 실패했습니다.", error);
+            }
+        }
+    };
+    
+
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
         if (!user) {
@@ -63,12 +86,16 @@ function FriendListForm() {
             <BackButton />
             <ul className="friendList">
                 {friends.map((friend, index) => (
-                    <li key={index} className="friendItem" onClick={()=>initiateDM(friend.username, friend.id)}>
+                    <li key={index} className="friendItem">
                         <img src={`http://localhost:8000${friend.profile_pic}`} alt="Profile" className="friendProfilePic" />
                         <div className="friendInfo">
                             <span className="friendNickname">{friend.nickname}</span>
                             <span className="friendBio">{friend.bio}</span>
-                        </div>   
+                        </div>
+                        <div className='friendManage'>
+                            <img src={chatIcon} className='icon chatIcon' onClick={()=>initiateDM(friend.username, friend.id)} alt="DM"></img>
+                            <img src={deleteIcon} className='icon deleteIcon' onClick={() => deleteFriend(friend.username, friend.nickname)} alt="Delete"></img>
+                        </div>
                     </li>
                 ))}
             </ul>

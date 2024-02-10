@@ -14,6 +14,19 @@
     margin-bottom: 15px;
     cursor: pointer;
 }
+.friendItem > .friendManage {
+    margin-left: auto;
+}
+.friendItem > .friendManage > .icon {
+    height: 2rem;
+    padding: .5rem;
+    margin-right: 1px;
+    border-radius: .5rem;
+}
+.friendItem > .friendManage > .icon:hover {
+    background-color: pink;
+    transition: .5s;
+}
 
 .friendInfo {
     margin-left: 15px;
