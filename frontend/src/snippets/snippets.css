@@ -22,12 +22,24 @@
 
 /* Footer.css */
 /* Footer.css */
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 전체 높이를 화면에 맞춤 */
+}
+
+.content-wrap {
+  flex: 1; /* 내용이 적을 때 푸터를 아래로 밀어내도록 flex-grow 사용 */
+}
+
 .footer-container {
     text-align: center;
     padding: 5px 0;
     color: #333;
     font-size: 0.9rem;
     box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    margin-top: auto;
   }
 
 /* BackButton.css */
