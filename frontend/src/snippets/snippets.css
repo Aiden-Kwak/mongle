@@ -19,4 +19,29 @@
     font-size: 1.2rem; /* 설명 텍스트 크기 설정 */
     color: #666; /* 설명 텍스트 색상 설정 */
   }
+
+/* Footer.css */
+/* Footer.css */
+.footer-container {
+    text-align: center;
+    padding: 5px 0;
+    color: #333;
+    font-size: 0.9rem;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+  }
+
+/* BackButton.css */
+.back-button {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    transition: background-color 0.3s; /* 배경색 변경 애니메이션 */
+    border-radius: .5rem;
+    padding: 5px;
+}
+
+.back-button:hover {
+  background-color: pink; /* hover 상태일 때 배경색 */
+}
+  
   

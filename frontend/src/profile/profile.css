@@ -1,53 +1,86 @@
+/* 프로필 페이지 컨테이너 기본 스타일 */
 .profile-page-container {
-    max-width: 500px;
-    margin: auto;
+    max-width: 600px;
+    margin: 1rem auto;
     padding: 20px;
-
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
 }
 
+.profile-page-container > form {
+    margin: 10px auto;
+}
+
+/* 프로필 헤더 스타일 */
 .profile-header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .profile-header img {
     width: 100px;
     height: 100px;
     border-radius: 50%;
+    object-fit: cover;
     margin-bottom: 10px;
 }
 
-.profile-header input[type="text"], 
-.profile-header input[type="file"] {
-    display: block;
-    width: 80%;
-    margin: 10px auto;
+/* 파일 업로드 래퍼 스타일 */
+.file-upload-wrapper {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: dashed 2px #ddd;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 4px;
+    display: inline-block;
+    width: 95.5%;
+    height: 3rem;
 }
 
-.profile-bio textarea {
+.file-upload-content {
+    color: #888;
+    font-size: 20px;
+    margin-top: .8rem;
+}
+
+/* 입력 필드 스타일 */
+.profile-header > input[type="text"], textarea {
     width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+textarea {
     height: 100px;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    resize: vertical;
 }
 
-.profile-page-container > button {
-    display: block;
+/* 버튼 스타일 */
+.profile-submit {
     width: 100%;
-    padding: 10px;
     background-color: #F07489;
     color: white;
+    padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
 }
 
-button:hover {
+.profile-submit:hover {
     background-color: pink;
+}
+
+@media (max-width: 768px) {
+    .file-upload-content {
+        font-size: 15px;
+    }
+
+    .file-upload-wrapper {
+        width: 93%;
+    }
 }

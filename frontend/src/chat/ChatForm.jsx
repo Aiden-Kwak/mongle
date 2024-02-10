@@ -4,6 +4,7 @@ import './chat.css';
 import accept from '../static/img/accept.png';
 import reject from '../static/img/reject.png';
 import { UserContext } from '../UserContext';
+import { BackButton } from '../snippets';
 
 function ChatForm() {
     const [message, setMessage] = useState('');
@@ -211,67 +212,70 @@ function ChatForm() {
     
 
     return (
-        <div className="chat-container">
-            {tempMessage && <div className="temp-message">{tempMessage}</div>}
-            <div className="chat-header">
-                <div className='status'>
-                    {isLoading && <p>매칭중...</p>}
-                    {isMatched && <p><button onClick={sendFriendRequest}>친구 요청 보내기</button></p>}
+        <div className="total-chat-container">
+            <BackButton />
+            <div className="chat-container">
+                {tempMessage && <div className="temp-message">{tempMessage}</div>}
+                <div className="chat-header">
+                    <div className='status'>
+                        {isLoading && <p>매칭중...</p>}
+                        {isMatched && <p><button onClick={sendFriendRequest}>친구 요청 보내기</button></p>}
+                    </div>
+                    <div className='quest-friend'></div>
+                    <div className='friend-request-box'>
+                        {friendRequestReceived && (
+                            <div>
+                                <p>친구요청이 도착했습니다!</p>
+                                <button onClick={acceptFriendRequest}>
+                                    <img src={accept} alt="수락" />
+                                </button>
+                                <button onClick={rejectFriendRequest}>
+                                    <img src={reject} alt="거절" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <div className='quest-friend'></div>
-                <div className='friend-request-box'>
-                    {friendRequestReceived && (
-                        <div>
-                            <p>친구요청이 도착했습니다!</p>
-                            <button onClick={acceptFriendRequest}>
-                                <img src={accept} alt="수락" />
-                            </button>
-                            <button onClick={rejectFriendRequest}>
-                                <img src={reject} alt="거절" />
-                            </button>
+                <div className="chat-messages" ref={messagesEndRef}>
+                    {isMatched && 
+                        <p>채팅이 연결되었습니다!</p>
+                    }
+                    {chat.map((msg, index) => (
+                        <div
+                            key={index}
+                            className={`message-bubble ${msg.sender === user.username ? 'my-message' : 'their-message'}`}
+                        >
+                            {msg.message}
                         </div>
+                    ))}
+                    {isTyping && (
+                        <div className="message-bubble their-message">...</div> // "..." 말풍선 표시
                     )}
                 </div>
-            </div>
-            <div className="chat-messages" ref={messagesEndRef}>
-                {isMatched && 
-                    <p>채팅이 연결되었습니다!</p>
-                }
-                {chat.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`message-bubble ${msg.sender === user.username ? 'my-message' : 'their-message'}`}
-                    >
-                        {msg.message}
-                    </div>
-                ))}
-                {isTyping && (
-                    <div className="message-bubble their-message">...</div> // "..." 말풍선 표시
-                )}
-            </div>
-            <div className="chat-input">
-                {isMatched && isConnected && (
-                    <>
-                        {isConnected &&
-                            (isConfirmingEndChat ? (
-                                <button onClick={endChat}>정말?</button> // 사용자가 확인해야 하는 경우
-                            ) : (
-                                <button onClick={confirmEndChat}>대화 끝</button> // 초기 상태
-                        ))}
-                        <input 
-                            type="text" 
-                            value={message} 
-                            onChange={(e) => setMessage(e.target.value)}
-                            onKeyUp={handleTyping}
-                            onKeyDown={handleKeyDown}
-                            placeholder="메시지를 입력하세요"
-                        />
-                        <button onClick={sendMessage}>보내기</button>
-                    </>
-                )}
-                {!isMatched && (
-                    <button onClick={startChat} className="start-chat-button">채팅 시작하기</button>
-                )}
+                <div className="chat-input">
+                    {isMatched && isConnected && (
+                        <>
+                            {isConnected &&
+                                (isConfirmingEndChat ? (
+                                    <button onClick={endChat}>정말?</button> // 사용자가 확인해야 하는 경우
+                                ) : (
+                                    <button onClick={confirmEndChat}>대화 끝</button> // 초기 상태
+                            ))}
+                            <input 
+                                type="text" 
+                                value={message} 
+                                onChange={(e) => setMessage(e.target.value)}
+                                onKeyUp={handleTyping}
+                                onKeyDown={handleKeyDown}
+                                placeholder="메시지를 입력하세요"
+                            />
+                            <button onClick={sendMessage}>보내기</button>
+                        </>
+                    )}
+                    {!isMatched && (
+                        <button onClick={startChat} className="start-chat-button">채팅 시작하기</button>
+                    )}
+                </div>
             </div>
         </div>
     );

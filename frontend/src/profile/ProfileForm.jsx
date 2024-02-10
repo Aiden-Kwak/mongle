@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from '../UserContext';
+import { BackButton } from '../snippets';
 
 import './profile.css';
 
@@ -9,7 +10,8 @@ function ProfileForm() {
     const [profile, setProfile] = useState({
         nickname: '',
         bio: '',
-        profilePic: ''
+        profilePic: '',
+        profilePicPreview: ''
     });
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
@@ -30,6 +32,18 @@ function ProfileForm() {
             setProfile(response.data);
         } catch (error) {
             console.error('프로필 정보를 불러오는데 실패했습니다', error);
+        }
+    };
+    const handleFileChange = (e) => {
+        if (e.target.files[0]) {
+            setProfile({ ...profile, profilePic: e.target.files[0] });
+
+            // 파일 미리보기를 위한 FileReader 사용
+            const reader = new FileReader();
+            reader.onload = () => {
+                setProfile(prevProfile => ({ ...prevProfile, profilePicPreview: reader.result }));
+            };
+            reader.readAsDataURL(e.target.files[0]);
         }
     };
 
@@ -83,9 +97,10 @@ function ProfileForm() {
 
     return (
         <div className='profile-page-container'>
+            <BackButton />
             <form onSubmit={handleSubmit}>
                 <div className='profile-header'>
-                    <img src={profile.profile_pic} alt="프로필 사진" />
+                    <img src={profile.profilePicPreview||profile.profile_pic} alt="프로필 사진" />
                     <input
                         type="text"
                         name="nickname"
@@ -93,11 +108,18 @@ function ProfileForm() {
                         onChange={handleInputChange}
                         placeholder="닉네임"
                     />
-                    <input
-                        type="file"
-                        name="profilePic"
-                        onChange={(e) => setProfile({ ...profile, profilePic: e.target.files[0] })}
-                    />
+                    <div className="file-upload-wrapper" onClick={() => document.getElementById('file-upload').click()}>
+                        <input
+                            id="file-upload"
+                            type="file"
+                            name="profilePic"
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                        />
+                        <div className="file-upload-content">
+                            여기에 프로필 이미지 추가하기
+                        </div>
+                    </div>
                 </div>
                 <div className='profile-bio'>
                     <textarea
@@ -107,7 +129,7 @@ function ProfileForm() {
                         placeholder="자기소개"
                     />
                 </div>
-                <button type="submit">프로필 업데이트</button>
+                <button type="submit" className='profile-submit'>프로필 업데이트</button>
             </form>
         </div>
     );

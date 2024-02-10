@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../UserContext';
 import { useNavigate } from 'react-router-dom';
+import { BackButton } from '../snippets';
 import './friend.css';
+
 function FriendListForm() {
     const [friends, setFriends] = useState([]);
     const { user } = useContext(UserContext);
@@ -58,6 +60,7 @@ function FriendListForm() {
 
     return (
         <div className="friendListForm-container">
+            <BackButton />
             <ul className="friendList">
                 {friends.map((friend, index) => (
                     <li key={index} className="friendItem" onClick={()=>initiateDM(friend.username, friend.id)}>

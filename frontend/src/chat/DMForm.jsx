@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './chat.css';
 import { UserContext } from '../UserContext';
+import { BackButton } from '../snippets';
 
 function DMForm() {
     const [message, setMessage] = useState('');
@@ -63,25 +64,6 @@ function DMForm() {
         };
         handleScroll();
     }, [chat, isTyping]); // chat 또는 isTyping 상태가 변경될 때마다 이 useEffect가 실행됩니다.
-    
-    //useEffect(() => {
-    //    if (!user) return; 
-    //    if (ws && ws.readyState === WebSocket.OPEN) {
-    //        console.log('이미 WebSocket 연결이 열려 있습니다.');
-    //        return;
-    //    }
-    //    const newWs = new WebSocket('ws://localhost:8000/ws/chat/dm/');   
-    //    newWs.onopen = () => {
-    //        console.log('채팅 서버에 연결되었습니다.');
-    //        setIsConnected(true);
-    //    };
-    //    newWs.onclose = () => {
-    //        console.log('채팅 서버 연결이 끊어졌습니다.');
-    //        setIsConnected(false);
-    //    };
-    //    setWs(newWs);
-    //    return () => newWs.close(); // 컴포넌트 언마운트 시 연결 종료
-    //}, [user]); // `user` 상태에 따라 연결을 다시 시도합니다.
 
     useEffect(() => {
         return () => {
@@ -91,8 +73,6 @@ function DMForm() {
         };
     }, [ws]);
 
-    
-    
 
     const connectWebsocket = () => {
         if (ws && ws.readyState === WebSocket.OPEN) {
@@ -118,12 +98,6 @@ function DMForm() {
                         setChat((prevChat) => [...prevChat, { id: dm_id, message: message, sender: data.sender }]);
                     }
                     break;
-                //case 'typing_start':
-                //    if (data.sender !== user.username) setIsTyping(true);
-                //    break;
-                //case 'typing_end':
-                //    if (data.sender !== user.username) setIsTyping(false);
-                //    break;
                 default:
                     console.log("Unknown message type:", data.type);
             }
@@ -167,7 +141,8 @@ function DMForm() {
     };
 
     return (
-        <div className="chat-container">
+        <div className="chat-container dm">
+            <BackButton />
             <div className="chat-messages" ref={messagesEndRef}>
                 {chat.map((msg, index) => (
                     <div

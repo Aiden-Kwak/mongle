@@ -164,3 +164,60 @@ button:active {
     width: 90%;
   }
 }
+
+/* FindForm */
+
+/* 공통 스타일 */
+.findaccount-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.findaccount-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.findaccount-container input[type="email"] {
+  margin-top: 5px;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.findaccount-container button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #F07489;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.findaccount-container button:hover {
+  background-color: pink;
+}
+
+.forgot-link p {
+  margin: 0;
+  padding: 10px;
+  cursor: pointer;
+  color: black; /* 클릭 이전 글자색 검은색 */
+  text-decoration: none; /* 밑줄 제거 */
+}
+
+/* 활성화된 링크 스타일 */
+.active-link {
+  color: red;
+  text-decoration: none; /* 밑줄 제거 */
+}

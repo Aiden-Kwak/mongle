@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,6 +18,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework import status, permissions
 from django.contrib.auth import login, logout
+from django.contrib.auth.tokens import default_token_generator
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 
 class AccountCreateAPI(APIView):
     #@csrf_exempt # 배포시 해결할것
@@ -112,3 +114,95 @@ class UserProfileUpdateAPI(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UsernameRecoveryAPI(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        user_model = get_user_model()
+        try:
+            user = user_model.objects.get(email=email)
+        except user_model.DoesNotExist:
+            return Response({'error': '해당 이메일로 등록된 사용자가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        current_site = get_current_site(request)
+        mail_subject = '[몽글몽글] 아이디 찾기 요청 결과입니다'
+        message = "귀하의 아이디 찾기 요청에 대한 정보입니다. 이 메일은 HTML 형식으로 보내진 메일입니다. 메일 클라이언트가 HTML을 지원하지 않는 경우, 이 텍스트 메시지를 보게 됩니다."
+        html_message = render_to_string('accountapp/recover_username_email.html', {
+            'username': user.username,
+            'domain': current_site.domain,
+        })
+        send_mail(
+            subject=mail_subject, 
+            message=message, 
+            from_email='noreply@yourdomain.com', 
+            recipient_list=[email], 
+            fail_silently=False,
+            html_message=html_message
+        )
+        
+        return Response({'message': '귀하의 아이디 정보를 이메일로 전송하였습니다.'}, status=status.HTTP_200_OK)
+
+
+
+class PasswordResetRequestAPI(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        user_model = get_user_model()
+        try:
+            user = user_model.objects.get(email=email)
+        except user_model.DoesNotExist:
+            return Response({'error': '해당 이메일로 등록된 사용자가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        current_site = get_current_site(request)
+        mail_subject = '[몽글몽글] 비밀번호 재설정 요청'
+        context = {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': default_token_generator.make_token(user),
+        }
+        # HTML 메시지
+        html_message = render_to_string('accountapp/password_reset_email.html', context)
+        # 일반 텍스트 메시지
+        message = "비밀번호를 재설정하려면 이메일에 포함된 링크를 클릭해주세요."
+
+        send_mail(
+            subject=mail_subject,
+            message=message,
+            from_email='noreply@yourdomain.com',
+            recipient_list=[email],
+            fail_silently=False,
+            html_message=html_message  # HTML 메시지 추가
+        )
+        
+        return Response({'message': '비밀번호 재설정 링크를 이메일로 전송하였습니다.'}, status=status.HTTP_200_OK)
+
+
+class PasswordResetConfirmAPI(APIView):
+    def post(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        
+        if user is not None and default_token_generator.check_token(user, token):
+            new_password = request.data.get('new_password')
+            user.set_password(new_password)
+            user.save()
+            return Response({'message': '비밀번호가 재설정되었습니다.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': '비밀번호 재설정 링크가 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = get_user_model().objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            return HttpResponseRedirect(f'http://localhost:3000/password-reset/{uidb64}/{token}')
+        else:
+            return HttpResponseBadRequest('비밀번호 재설정 요청이 유효하지 않습니다.')
+

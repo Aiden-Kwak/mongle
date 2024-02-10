@@ -95,6 +95,9 @@ function LoginForm() {
             <Link to="/signup" className='signup-link'>
                 <p>몽글몽글에 처음이신가요? <span style={{color:"#F07489", marginLeft:"1rem"}}>회원가입</span></p>
             </Link>
+            <Link to="/find-id" className='signup-link'>
+                <p style={{color:"#737373"}}>아이디/비밀번호 찾기</p>
+            </Link>
         </div>
         
         

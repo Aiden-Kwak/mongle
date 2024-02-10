@@ -1,4 +1,3 @@
-// NotFoundPage.js
 import React from 'react';
 import './snippets.css';
 

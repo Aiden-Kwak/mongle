@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {MainForm, NavForm} from './main';
-import { SignupForm, LoginForm, LogoutForm } from './account';
+import { SignupForm, LoginForm, LogoutForm, FindIDForm, FindPWForm, ResetPWForm } from './account';
 import { ProfileForm } from './profile';
 import { ChatForm, DMForm } from './chat';
 import { FriendListForm } from './friend';
-import { NotFoundForm } from './snippets';
+import { NotFoundForm, FooterForm } from './snippets';
 
 import { UserProvider } from './UserContext';
 
@@ -24,8 +24,12 @@ function App() {
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/friend" element={<FriendListForm />} />
                     <Route path="/dm/:id" element={<DMForm />} />
+                    <Route path="/find-id" element={<FindIDForm />} />
+                    <Route path="/find-pw" element={<FindPWForm />} />
+                    <Route path="/password-reset/:uidb64/:token" element={<ResetPWForm />} />
                     <Route path="*" element={<NotFoundForm />} />
                 </Routes>
+                <FooterForm />
             </div>
         </Router>
     </UserProvider>
