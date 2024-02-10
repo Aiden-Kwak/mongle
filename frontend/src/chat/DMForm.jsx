@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './chat.css';
+import './dm.css';
 import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
 
@@ -140,16 +140,31 @@ function DMForm() {
         }
     };
 
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const ampm = hours >= 12 ? '오후' : '오전';
+        const formattedHours = hours % 12 || 12; // 0시는 12시로 표시
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    
+        return `${ampm} ${formattedHours}:${formattedMinutes}`;
+    }
+
     return (
-        <div className="chat-container dm">
+        <div className="dm-container">
             <BackButton />
-            <div className="chat-messages" ref={messagesEndRef}>
+            <div className="dm-messages" ref={messagesEndRef}>
                 {chat.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`message-bubble ${msg.sender === user.username ? 'my-message' : 'their-message'}`}
-                    >
-                        {msg.message}
+                    <div key={index} className={`message-container ${msg.sender === user.username ? 'my-message' : 'their-message'}`}>
+                        <div className="message-content">
+                            <div className="message-bubble">
+                                <div className="message-text">{msg.message}</div>
+                            </div>
+                            <span className="message-timestamp">
+                                {formatTimestamp(msg.timestamp)}
+                            </span>
+                        </div>
                     </div>
                 ))}
                 {isTyping && (

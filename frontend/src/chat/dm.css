@@ -1,12 +1,6 @@
-.total-chat-container {
-    margin: 1rem 0;
-}
-.chat-container {
+.dm-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 800px;
-    min-width: 300px;
     height: 80vh;
     margin: 0px auto;
     border: 1px solid #ddd;
@@ -14,17 +8,7 @@
     overflow: hidden;
 }
 
-.chat-header {
-    background-color: #f9f9f9;
-    padding: 5px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
-}
-.chat-header > .status p {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-.chat-messages {
+.dm-messages {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
@@ -34,7 +18,7 @@
     background: #fafafa;
 }
 
-.chat-input {
+.dm-input {
     padding: 10px;
     background: #f9f9f9;
     display: flex;
@@ -53,7 +37,7 @@
     justify-content: center;
 }
 
-.chat-input button {
+.dm-input button {
     padding: 10px 15px;
     background-color: #F07489;
     border: none;
@@ -63,7 +47,7 @@
     margin: 0 .1rem 0 .1rem;
 }
 
-.chat-input button:hover {
+.dm-input button:hover {
     background-color: pink;
 }
 
@@ -76,16 +60,19 @@
     display: inline-block;
     max-width: 80%;
 }
+.my-message {
+    background-color: none!important;
+}
 
 /* 내 메시지 스타일 */
-.message-bubble > .my-message {
+.my-message > .message-content > .message-bubble{
     background-color: #dcf8c6;
     margin-left: auto;
     border-bottom-right-radius: 0;
 }
 
 /* 상대방 메시지 스타일 */
-.message-bubble > .their-message {
+.their-message > .message-content > .message-bubble{
     background-color: #ffffff;
     margin-right: auto;
     border-bottom-left-radius: 0;
@@ -152,28 +139,40 @@
     word-wrap: break-word; /* 긴 텍스트 처리 */
 }
 
-/*
-@media screen and (max-width: 575px){
-    .width-control {
-        width: 574px;
-    }
-}
-
-@media screen and (max-width: 991px){
-    .width-control {
-        width: 950px;
-    }
-}
-
-@media screen and (max-width: 1400px){
-    .width-control {
-        width: 1000px;
-    }
-}
-*/
-
 /* DM.css */
 .chat-container.dm {
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+.message-container {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.my-message .message-content, .their-message .message-content {
+    max-width: 80%;
+}
+
+.my-message {
+    justify-content: flex-end;
+}
+
+.their-message {
+    justify-content: flex-start;
+}
+
+.message-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.message-timestamp {
+    align-self: flex-end; /* 오른쪽 정렬을 위해 */
+    font-size: .8rem;
+    margin-top: -1rem; /* 메시지와의 간격 조정 */
+}
+
+.their-message .message-timestamp {
+    align-self: flex-start; /* 왼쪽 메시지의 타임스탬프를 위해 */
 }
