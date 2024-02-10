@@ -25,7 +25,7 @@ function FindPWForm() {
 
     return (
         <div className='findaccount-container'>
-            <div>
+            <div className='link-box'>
                 <Link to="/find-id" className='forgot-link'>
                     <p>아이디 찾기</p>
                 </Link>
@@ -41,9 +41,13 @@ function FindPWForm() {
                     onChange={handleEmailChange}
                     required
                 />
-                <button type="submit">비밀번호 재설정 링크 전송</button>
+                <button type="submit">비밀번호 찾기</button>
             </form>
             {message && <div>{message}</div>}
+            <div className='notice'>
+                <p>※ 비밀번호를 잊으셨나요? 이메일을 입력하시면 비밀번호 재설정 링크를 보내드립니다.</p>
+                <p>※ 만약 이메일이 오지 않는다면, 스펨메일함을 확인해주세요.</p>
+            </div>
         </div>
     );
 };

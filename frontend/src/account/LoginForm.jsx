@@ -12,6 +12,7 @@ function LoginForm() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const { setUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     useEffect(() => {
         // 로컬 스토리지에서 사용자 정보를 로드
@@ -20,6 +21,13 @@ function LoginForm() {
             setUser(JSON.parse(storedUser));
         }
     }, [setUser]);
+
+    useEffect(() => {
+        // 로그인되지 않은 경우 로그인 페이지로 리디렉트
+        if (user) {
+            navigate('/');
+        }
+    }, [user, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

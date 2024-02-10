@@ -26,10 +26,10 @@ function FindIDForm() {
     return (
         <div className='findaccount-container'>
             <div className='link-box'>
-                <Link to="/find-id" className='forgot-link'>
+                <Link to="/find-id" className='forgot-link active-link'>
                     <p>아이디 찾기</p>
                 </Link>
-                <Link to="/find-pw" className='forgot-link active-link'>
+                <Link to="/find-pw" className='forgot-link'>
                     <p>비밀번호 찾기</p>
                 </Link>
             </div>
@@ -44,6 +44,10 @@ function FindIDForm() {
                 <button type="submit">아이디 찾기</button>
             </form>
             {message && <p>{message}</p>}
+            <div className='notice'>
+                <p>※ 아이디를 잊으셨나요? 이메일을 입력하시면 가입된 아이디를 확인할 수 있습니다.</p>
+                <p>※ 만약 이메일이 오지 않는다면, 스펨메일함을 확인해주세요.</p>
+            </div>
         </div>
     );
 };
