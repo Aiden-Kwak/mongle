@@ -78,14 +78,14 @@
 }
 
 /* 내 메시지 스타일 */
-.message-bubble > .my-message {
+.message-bubble.my-message {
     background-color: #dcf8c6;
     margin-left: auto;
     border-bottom-right-radius: 0;
 }
 
 /* 상대방 메시지 스타일 */
-.message-bubble > .their-message {
+.message-bubble.their-message {
     background-color: #ffffff;
     margin-right: auto;
     border-bottom-left-radius: 0;
@@ -151,26 +151,6 @@
     max-width: 80%; /* 최대 너비 설정 */
     word-wrap: break-word; /* 긴 텍스트 처리 */
 }
-
-/*
-@media screen and (max-width: 575px){
-    .width-control {
-        width: 574px;
-    }
-}
-
-@media screen and (max-width: 991px){
-    .width-control {
-        width: 950px;
-    }
-}
-
-@media screen and (max-width: 1400px){
-    .width-control {
-        width: 1000px;
-    }
-}
-*/
 
 /* DM.css */
 .chat-container.dm {

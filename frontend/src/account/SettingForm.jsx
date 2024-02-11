@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../UserContext';
 
 function SettingForm() {
     const { setUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
     const navigate = useNavigate();
 
     const handleDeleteAccount = async () => {
@@ -30,6 +31,12 @@ function SettingForm() {
             }
         }
     };
+    useEffect(() => {
+        // 로그인되지 않은 경우 로그인 페이지로 리디렉트
+        if (!user) {
+            navigate('/login');
+        }
+    }, [user, navigate]);
 
     function getCookie(name) {
         let cookieValue = null;
