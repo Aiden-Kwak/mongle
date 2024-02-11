@@ -83,7 +83,7 @@ function FriendListForm() {
 
     return (
         <div className="friendListForm-container">
-            <BackButton />
+            <p className='back-btn'><BackButton /></p>
             <ul className="friendList">
                 {friends.map((friend, index) => (
                     <li key={index} className="friendItem">
