@@ -321,7 +321,18 @@ button:active {
   width: 100%;
   max-width: 400px;
 }
-
+.currentpw {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.currentpw > input {
+  margin-bottom: 1rem;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+}
 .newpw {
   display: flex;
   flex-direction: column;

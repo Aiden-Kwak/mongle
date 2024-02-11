@@ -19,6 +19,7 @@ from django.contrib.auth import authenticate
 from rest_framework import status, permissions
 from django.contrib.auth import login, logout
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 
 class AccountCreateAPI(APIView):
@@ -213,3 +214,21 @@ class AccountDeleteAPI(APIView):
         user = request.user
         user.delete()
         return Response({"message": "계정이 성공적으로 삭제되었습니다."}, status=status.HTTP_200_OK)
+
+class ChangePasswordAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        
+        if not user.check_password(old_password):
+            return Response({'error': '현재 비밀번호가 잘못되었습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.set_password(new_password)
+        user.save()
+        # 세션 업데이트를 통해 사용자가 로그아웃되지 않도록 합니다.
+        update_session_auth_hash(request, user)
+        
+        return Response({'message': '비밀번호가 성공적으로 변경되었습니다.'}, status=status.HTTP_200_OK)
