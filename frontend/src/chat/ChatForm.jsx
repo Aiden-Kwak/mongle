@@ -217,28 +217,27 @@ function ChatForm() {
             <div className="chat-container">
                 {tempMessage && <div className="temp-message">{tempMessage}</div>}
                 <div className="chat-header">
-                    <div className='status'>
-                        {isLoading && <p>매칭중...</p>}
-                        {isMatched && <p><button onClick={sendFriendRequest}>친구 요청 보내기</button></p>}
-                    </div>
-                    <div className='quest-friend'></div>
+                    {isLoading && <p className='status'>매칭중...</p>}
+                    {friendRequestReceived && (
                     <div className='friend-request-box'>
-                        {friendRequestReceived && (
                             <div>
                                 <p>친구요청이 도착했습니다!</p>
-                                <button onClick={acceptFriendRequest}>
-                                    <img src={accept} alt="수락" />
-                                </button>
-                                <button onClick={rejectFriendRequest}>
-                                    <img src={reject} alt="거절" />
-                                </button>
+                                <p>
+                                    <button onClick={acceptFriendRequest}>
+                                        <img src={accept} alt="수락" />
+                                    </button>
+                                    <button onClick={rejectFriendRequest}>
+                                        <img src={reject} alt="거절" />
+                                    </button>
+                                </p>
                             </div>
-                        )}
                     </div>
+                    )}
+                    {isMatched && <p className='friend-btn'><button onClick={sendFriendRequest}>친구 요청</button></p>}
                 </div>
                 <div className="chat-messages" ref={messagesEndRef}>
                     {isMatched && 
-                        <p>채팅이 연결되었습니다!</p>
+                        <p className='first-message'>채팅이 연결되었습니다!</p>
                     }
                     {chat.map((msg, index) => (
                         <div

@@ -45,6 +45,10 @@ a {color: #2c3e50; text-decoration: none; outline: none}
   font-family: ugro-bold, Helvetica, Arial, sans-serif;
 }
 
+p {
+  margin: 0;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

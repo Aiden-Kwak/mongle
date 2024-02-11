@@ -93,34 +93,6 @@
     background-color: pink;
 }
 
-
-
-.friend-request-box {
-    display: flex;
-    justify-content: center; /* 요소들을 가운데 정렬합니다. */
-    align-items: center; /* 요소들을 세로 방향으로 중앙 정렬합니다. */
-    padding: 10px;
-    gap: 20px; /* 버튼 사이의 간격을 설정합니다. */
-}
-
-.friend-request-box p {
-    margin: 0; /* 기본 마진을 제거합니다. */
-    font-size: 1rem; /* 폰트 크기를 조정합니다. */
-}
-
-.friend-request-box button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 5px;
-}
-
-.friend-request-box img {
-    width: 24px; /* 이미지 크기를 설정합니다. */
-    height: 24px; /* 이미지 크기를 설정합니다. */
-}
-
 .temp-message {
     position: fixed; /* 팝업을 화면에 고정 */
     top: 20%; /* 상단에서부터의 위치 */
