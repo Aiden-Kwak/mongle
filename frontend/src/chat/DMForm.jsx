@@ -141,7 +141,7 @@ function DMForm() {
     };
 
     const formatTimestamp = (timestamp) => {
-        const date = new Date(timestamp);
+        const date = new Date(timestamp || Date.now());
         const hours = date.getHours();
         const minutes = date.getMinutes();
         const ampm = hours >= 12 ? '오후' : '오전';
