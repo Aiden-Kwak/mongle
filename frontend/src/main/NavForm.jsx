@@ -65,7 +65,7 @@ function NavForm() {
                 </button>
                 <div className='nav-menu'>
                     <Link to="/profile"><span>프로필</span></Link>
-                    <Link to="/"><span>커뮤니티</span></Link>
+                    <Link to="/setting"><span>계정관리</span></Link>
                     <Link to="/friend"><span>친구관리</span></Link>
                     {user ?
                     <Link to="/logout"><span>로그아웃</span></Link>:

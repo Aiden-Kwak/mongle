@@ -262,3 +262,108 @@ button:active {
   flex-direction: row;
   text-decoration: none;
 }
+
+/* settingForm.css */
+.setting-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5rem auto;
+  padding: 20px;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 35%;
+}
+.setting-box {
+  width: 100%;
+}
+.setting-box div {
+  cursor: pointer;
+}
+.setting-box .setPassword {
+  border-bottom: 1px solid #ddd;
+}
+.setting-box div > p:nth-child(2){
+  color: #808080;
+  font-size: 1rem;
+}
+@media (max-width: 768px) {
+  .setting-container {
+    width: 60%;
+  }
+}
+
+/* PWResetForm */
+.pwreset-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5rem auto;
+  padding: 20px;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 35%;
+}
+.pwreset-container input {
+  box-sizing: border-box; /* padding과 border를 너비 계산에 포함 */
+}
+
+.pwreset-container p {
+  font-size: 1rem;
+  color: #808080;
+  margin: .5rem 0;
+}
+.pwreset-container > form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.newpw {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.newpw > input {
+  margin-bottom: 1rem;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.pwconfirm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.pwconfirm > input {
+  margin-bottom: 1rem;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+}
+.pwreset-btn {
+  padding: 10px 20px;
+  background-color: #F07489;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .pwreset-container {
+    box-shadow: none;
+    width: 100%;
+    padding: 0;
+  }
+  .pwreset-container > form {
+    max-width: 300px;
+  }
+}

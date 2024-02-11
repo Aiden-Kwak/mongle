@@ -206,3 +206,10 @@ class PasswordResetConfirmAPI(APIView):
         else:
             return HttpResponseBadRequest('비밀번호 재설정 요청이 유효하지 않습니다.')
 
+class AccountDeleteAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        user.delete()
+        return Response({"message": "계정이 성공적으로 삭제되었습니다."}, status=status.HTTP_200_OK)

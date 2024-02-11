@@ -37,10 +37,13 @@
     text-align: center;
     padding: 5px 0;
     color: #333;
-    font-size: 0.9rem;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    font-size: 0.7rem;
     margin-top: auto;
-  }
+}
+
+.footer-container p {
+  margin: .5rem 0;
+}
 
 /* BackButton.css */
 .back-button {

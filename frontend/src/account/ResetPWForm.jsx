@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import './account.css';
 
 function ResetPWForm() {
     const { uidb64, token } = useParams();
@@ -33,11 +34,11 @@ function ResetPWForm() {
     };
 
     return (
-        <div>
-            <h2>비밀번호 재설정</h2>
+        <div className='pwreset-container'>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="password">새 비밀번호:</label>
+                <div className='newpw'>
+                    <label htmlFor="password">비밀번호 변경</label>
+                    <p>새로운 비밀번호를 입력하세요</p>
                     <input
                         type="password"
                         id="password"
@@ -46,8 +47,9 @@ function ResetPWForm() {
                         required
                     />
                 </div>
-                <div>
-                    <label htmlFor="confirmPassword">비밀번호 확인:</label>
+                <div className='pwconfirm'>
+                    <label htmlFor="confirmPassword">비밀번호 확인</label>
+                    <p>새로운 비밀번호를 다시 입력하세요</p>
                     <input
                         type="password"
                         id="confirmPassword"
@@ -56,7 +58,7 @@ function ResetPWForm() {
                         required
                     />
                 </div>
-                <button type="submit">비밀번호 재설정</button>
+                <button type="submit" className='pwreset-btn'>비밀번호 재설정</button>
             </form>
             {message && <p>{message}</p>}
         </div>
