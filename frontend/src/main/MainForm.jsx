@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import slide1 from '../static/img/slide1.png';
 import slide2 from '../static/img/slide2.png';
+import bubbleText from '../static/img/bubble.svg';
 
 function MainForm() {
     // 이미지 배열
@@ -51,6 +52,9 @@ function MainForm() {
                 <p className='bold'>대학생에 의한,</p>
                 <p className='bold'>대학생을 위한</p>
                 <p className='bold'>"단 하나뿐인 안전한 <span className='color'>랜덤채팅</span>"</p>
+            </div>
+            <div>
+                <img src={bubbleText} alt="bubble" className='bubbleIcon' />
             </div>
         </div>
     );

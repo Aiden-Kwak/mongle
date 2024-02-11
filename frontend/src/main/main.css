@@ -19,7 +19,7 @@
 }
 .logo-name-l {
     font-size: 2rem !important;
-    font-family: 'ugro-bold' !important;
+    font-family: 'TTHakgyoansimMonggeulmonggeulR' !important;
     color: black;
 }
 
@@ -70,10 +70,11 @@
     background-color: #F07489; /* 버튼 배경 색상 */
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 20px; /* 버튼 모서리 둥글게 */
+    padding: 8px 15px;
+    border-radius: 15px; /* 버튼 모서리 둥글게 */
     cursor: pointer; /* 마우스 오버시 커서 변경 */
     font-size: 1em;
+    font-family: 'TTHakgyoansimMonggeulmonggeulR';
 }
 
 .chat-button:hover {
@@ -84,6 +85,7 @@
     border: none;
     background: none;
     cursor: pointer;
+    padding: .5rem;
 }
 
 .mb-nav-menu {
@@ -109,18 +111,24 @@
     transition-delay: 0s; /* 트랜지션 지연 시간을 0으로 설정 */
 }
 .mb-nav-menu img {
-    height: 150px;
-    margin-left: 50px;
+    height: 60px;
+    margin-left: 2.5rem;
+}
+.mb-nav-menu > .nav-logo {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
 }
 .mb-nav-menu ul {
-    padding: 10px; /* 리스트 패딩 제거 */
-    margin: 0; /* 리스트 마진 제거 */
+    padding: 10px;
+    margin: 0;
+    margin-top: 3rem;
 }
 .mb-nav-menu li {
     color: black; /* 글자색을 검은색으로 설정 */
     text-align: center; /* 텍스트를 중앙으로 정렬 */
     list-style: none; /* 리스트 스타일 제거 */
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .mb-nav-menu li a:hover {
@@ -179,7 +187,7 @@
     flex-direction: column; /* 아이템들을 세로로 정렬 */
     align-items: center; /* 가로축을 중심으로 중앙 정렬 */
     justify-content: flex-start; /* 세로축을 중심으로 중앙 정렬 */
-    height: 100vh; /* 컨테이너 높이를 브라우저 창 높이와 동일하게 설정 */
+    height: 100%; /* 컨테이너 높이를 브라우저 창 높이와 동일하게 설정 */
 }
 
 .img-container {
@@ -220,7 +228,20 @@
 }
 
 .catchp {
-    margin-top: 1rem;
+    margin-top: 2rem;
     font-size: 1.2em;
     text-align: center; /* 텍스트 중앙 정렬 */
+    font-family: 'TTHakgyoansimMonggeulmonggeulR' !important;
+}
+.catchp p {
+    margin: .5rem 0;
+    font-family: 'TTHakgyoansimMonggeulmonggeulR';
+}
+
+.bubbleIcon {
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+    color: #F07489;
+    background-color: white;
 }

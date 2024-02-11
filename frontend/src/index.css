@@ -1,14 +1,8 @@
 @font-face {
-  font-family: "ugro-bold";
-  src: url("static/font/SB어그로B.otf");
-}
-@font-face {
-  font-family: "ugro-light";
-  src: url("static/font/SB어그로L.otf");
-}
-@font-face {
-  font-family: "ugro-medium";
-  src: url("static/font/SB어그로M.otf");
+  font-family: 'TTHakgyoansimMonggeulmonggeulR';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
 }
 
 html, body {
@@ -19,7 +13,7 @@ html, body {
 }
 
 body {
-font-family: ugro-light, Helvetica, Arial, sans-serif;
+font-family: TTHakgyoansimMonggeulmonggeulR, Helvetica, Arial, sans-serif;
 font-size: 1.2rem;
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;

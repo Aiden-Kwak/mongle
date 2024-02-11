@@ -163,11 +163,18 @@ button:active {
   text-decoration: none;
   color: #333;
 }
+.signup-link > p {
+  margin: .5rem 0;
+}
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  form {
-    width: 90%;
+  .login-container > form {
+    width: 80%;
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin-top: 0;
   }
 }
 

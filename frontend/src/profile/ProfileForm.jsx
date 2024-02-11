@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
+import defaultImg from '../static/img/logo.png';
 
 import './profile.css';
 
@@ -82,6 +83,9 @@ function ProfileForm() {
             // 파일이 있는 경우에만 추가
             if (profile.profilePic) {
                 formData.append('profile_pic', profile.profilePic);
+            }
+            else {
+                formData.append('profile_pic', {defaultImg});
             }
             await axios.post(`http://localhost:8000/profile/${user.username}/update/`, formData, {
                 headers: {

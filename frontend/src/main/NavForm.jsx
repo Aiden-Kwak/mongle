@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'; // useState 추�
 import { UserContext } from '../UserContext';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../static/img/logo.png';
-import '../static/font/font.css';
 import './main.css';
-// 햄버거 아이콘 SVG 직접 import 하거나, 아이콘 컴포넌트 사용을 고려할 수 있음
+
 
 function NavForm() {
     const { user } = useContext(UserContext);
@@ -75,7 +74,15 @@ function NavForm() {
                 </div>
             </div>
             <div className={`mb-nav-menu ${isMenuOpen ? 'open' : ''}`}>
-                <img src={logo} alt="Logo" />
+                <Link to="/" className="nav-logo">
+                    <img src={logo} alt="Logo" />
+                    <div className='logo-name-wrapper'>
+                        <span className="logo-name-s">대학생 랜덤채팅</span>
+                        <span className="logo-name-l">
+                            몽글몽글
+                        </span>
+                    </div>
+                </Link>
                 <ul>
                     <li><Link to="/chat"><span>채팅시작</span></Link></li>
                     <li><Link to="/profile"><span>프로필</span></Link></li>

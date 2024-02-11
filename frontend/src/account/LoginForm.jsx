@@ -77,7 +77,7 @@ function LoginForm() {
                 <img src={logo} alt="Logo" />
                 <div className='logo-span'>
                     <span style={{fontSize:".9rem", marginLeft:".2rem"}}>대학생 랜덤채팅</span>
-                    <span style={{fontSize:"2rem", fontFamily:"ugro-bold", color:"black"}}>
+                    <span style={{fontSize:"2rem", fontFamily:'TTHakgyoansimMonggeulmonggeulR', color:"black"}}>
                         몽글몽글
                     </span>
                 </div>
