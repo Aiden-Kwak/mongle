@@ -71,6 +71,8 @@ class ActivateAccountAPI(APIView):
         else:
             return Response({'message': '이메일 인증이 실패하였습니다.'})
         
+        #HttpResponseRedirect(f'http://localhost:3000/activate/{uidb64}/{token}')
+        
 # 로그인
 class LoginAPI(APIView):
     #@csrf_exempt # 배포시 해결할것

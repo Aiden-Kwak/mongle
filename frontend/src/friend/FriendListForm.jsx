@@ -84,23 +84,29 @@ function FriendListForm() {
     return (
         <div className="friendListForm-container">
             <p className='back-btn'><BackButton /></p>
-            <ul className="friendList">
-                {friends.map((friend, index) => (
-                    <li key={index} className="friendItem">
-                        <img src={`http://localhost:8000${friend.profile_pic}`} alt="Profile" className="friendProfilePic" />
-                        <div className="friendInfo">
-                            <span className="friendNickname">{friend.nickname}</span>
-                            <span className="friendBio">{friend.bio}</span>
-                        </div>
-                        <div className='friendManage'>
-                            <img src={chatIcon} className='icon chatIcon' onClick={()=>initiateDM(friend.username, friend.id)} alt="DM"></img>
-                            <img src={deleteIcon} className='icon deleteIcon' onClick={() => deleteFriend(friend.username, friend.nickname)} alt="Delete"></img>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            {friends.length > 0 ? (
+                <ul className="friendList">
+                    {friends.map((friend, index) => (
+                        <li key={index} className="friendItem">
+                            <img src={`http://localhost:8000${friend.profile_pic}`} alt="Profile" className="friendProfilePic" />
+                            <div className="friendInfo">
+                                <span className="friendNickname">{friend.nickname}</span>
+                                <span className="friendBio">{friend.bio}</span>
+                            </div>
+                            <div className='friendManage'>
+                                <img src={chatIcon} className='icon chatIcon' onClick={()=>initiateDM(friend.username, friend.id)} alt="DM"></img>
+                                <img src={deleteIcon} className='icon deleteIcon' onClick={() => deleteFriend(friend.username, friend.nickname)} alt="Delete"></img>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <div className="no-friends-message">
+                    <p>아직 추가된 친구가 없어요</p>
+                </div>
+            )}
         </div>
-    );
+    );    
 }
 
 export default FriendListForm;

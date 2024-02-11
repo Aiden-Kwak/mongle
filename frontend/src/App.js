@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {MainForm, NavForm} from './main';
-import { SignupForm, LoginForm, LogoutForm, FindIDForm, FindPWForm, ResetPWForm, SettingForm } from './account';
+import { SignupForm, LoginForm, LogoutForm, FindIDForm, FindPWForm, ResetPWForm, SettingForm, SignupRedirect } from './account';
 import { ProfileForm } from './profile';
 import { ChatForm, DMForm } from './chat';
 import { FriendListForm } from './friend';
@@ -29,6 +29,7 @@ function App() {
                     <Route path="/password-reset/:uidb64/:token" element={<ResetPWForm />} />
                     <Route path="/password-change" element={<ResetPWForm />} />
                     <Route path="/setting" element={<SettingForm />} />
+                    <Route path="/activate/:uidb64/:token" element={<SignupRedirect />} />
                     <Route path="*" element={<NotFoundForm />} />
                 </Routes>
                 <FooterForm />

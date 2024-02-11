@@ -1,0 +1,31 @@
+import React, { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+
+function SignupRedirect({match}) {
+    const navigate = useNavigate();
+    const { uidb64, token } = useParams();
+
+    useEffect(() => {
+        const activateEmail = async () => {
+          try {
+            const response = await axios.get(`http://localhost:8000/activate/${uidb64}/${token}/`);
+            console.log(response.data);
+            localStorage.removeItem('user');
+            // 이메일 인증 성공 시 로그인 페이지로 리디렉션
+            navigate('/login');
+          } catch (error) {
+            console.error('이메일 인증 실패:', error.response);
+          }
+        };
+        activateEmail();
+      }, [navigate, uidb64, token]);
+  
+    return (
+        <div>
+          <p>이메일 인증 중입니다...</p>
+        </div>
+    );
+}
+
+export default SignupRedirect;

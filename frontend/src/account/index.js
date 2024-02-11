@@ -5,3 +5,4 @@ export {default as FindIDForm} from './FindIDForm';
 export {default as FindPWForm} from './FindPWForm';
 export {default as ResetPWForm} from './ResetPWForm';
 export {default as SettingForm} from './SettingForm';
+export {default as SignupRedirect} from './SignupRedirect';
