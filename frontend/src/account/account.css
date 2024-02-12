@@ -8,12 +8,6 @@
   width: 400px;
 }
 
-.signup-container > .error {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
 .signup-container > .logo-img {
   display: flex;
   justify-content: center;
@@ -60,7 +54,7 @@
 }
 
 .signup-container button:hover {
-  background: #3f51b5;
+  background: pink;
 }
 
 .signup-container input::placeholder {
@@ -92,10 +86,21 @@
   width: 400px;
 }
 
-.login-container > .error {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+.login-container > .error, .signup-container > .error {
+  position: fixed; /* 팝업을 화면에 고정 */
+  top: 20%; /* 상단에서부터의 위치 */
+  left: 50%; /* 왼쪽에서부터의 위치 */
+  transform: translate(-50%, -50%); /* 정확한 중앙 위치 조정 */
+  z-index: 1000; /* 다른 요소들 위에 표시 */
+  background-color: rgba(0, 0, 0, 0.7); /* 반투명 검정색 배경 */
+  color: #fff; /* 텍스트 색상 */
+  padding: 20px 40px; /* 내부 여백 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  font-size: 1rem; /* 폰트 크기 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  max-width: 80%; /* 최대 너비 설정 */
+  word-wrap: break-word; /* 긴 텍스트 처리 */
 }
 
 .login-container > form {
@@ -148,14 +153,15 @@ button {
   border-radius: 3px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: Dovemayo_gothic;
 }
 
 button:hover {
-  background-color: #e0637c;
+  background-color: pink;
 }
 
 button:active {
-  background-color: #d9534f;
+  background-color: #F07489;
 }
 
 .signup-link {

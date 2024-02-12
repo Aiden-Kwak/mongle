@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './account.css';
 import logo from '../static/img/logo.png';
@@ -11,6 +11,8 @@ function SignupForm() {
         school: '',
     });
     const [error, setError] = useState('');
+    const [tempMessage, setTempMessage] = useState('');
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -112,6 +114,19 @@ function SignupForm() {
         return cookieValue;
     }
 
+    const showTempMessage = (error) => {
+        setTempMessage(error); // 메시지 설정
+        setTimeout(() => {
+            setTempMessage(''); // 2초 후 메시지 제거
+        }, 1500);
+    };
+
+    useEffect(() => {
+        if (error) {
+            showTempMessage(error);
+        }
+    }, [error]);
+
     return (
         <div className="signup-container">
             <div className='logo-img'>
@@ -123,7 +138,7 @@ function SignupForm() {
                     </span>
                 </div>
             </div>
-            {error && <div className='error' style={{ color: 'red' }}>{error}</div>}
+            {tempMessage && <div className='error'>{tempMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <input
                     className="signup-input"

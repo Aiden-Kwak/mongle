@@ -13,6 +13,7 @@ function LoginForm() {
     const navigate = useNavigate();
     const { setUser } = useContext(UserContext);
     const { user } = useContext(UserContext);
+    const [tempMessage, setTempMessage] = useState('');
 
     useEffect(() => {
         // 로컬 스토리지에서 사용자 정보를 로드
@@ -71,6 +72,19 @@ function LoginForm() {
         return cookieValue;
     }
 
+    const showTempMessage = (error) => {
+        setTempMessage(error); // 메시지 설정
+        setTimeout(() => {
+            setTempMessage(''); // 2초 후 메시지 제거
+        }, 1500);
+    };
+
+    useEffect(() => {
+        if (error) {
+            showTempMessage(error);
+        }
+    }, [error]);
+
     return (
         <div className='login-container'>
             <div className='logo-img'>
@@ -82,7 +96,7 @@ function LoginForm() {
                     </span>
                 </div>
             </div>
-            {error && <div className='error' style={{ color: 'red' }}>{error}</div>}
+            {tempMessage && <div className='error'>{tempMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"

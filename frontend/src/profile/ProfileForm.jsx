@@ -84,9 +84,6 @@ function ProfileForm() {
             if (profile.profilePic) {
                 formData.append('profile_pic', profile.profilePic);
             }
-            else {
-                formData.append('profile_pic', {defaultImg});
-            }
             await axios.post(`http://localhost:8000/profile/${user.username}/update/`, formData, {
                 headers: {
                     'X-CSRFToken': csrfToken
