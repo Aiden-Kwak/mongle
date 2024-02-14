@@ -20,6 +20,8 @@ function ChatForm() {
     const [friendRequestFrom, setFriendRequestFrom] = useState(''); // 친구 요청을 보낸 사용자
     const [peerUsername, setPeerUsername] = useState('');
     const [tempMessage, setTempMessage] = useState('');
+    const [peerInfo, setPeerInfo] = useState('');
+
 
     const { user } = useContext(UserContext);
     const messagesEndRef = useRef(null);
@@ -74,7 +76,7 @@ function ChatForm() {
 
         newWs.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log('데이터 타입:', data.type);
+            console.log('데이터 타입:', data);
             switch (data.type) {
                 case 'chat':
                     setChat((prevChat) => [...prevChat, { message: data.message, sender: data.sender }]);
@@ -82,6 +84,8 @@ function ChatForm() {
                 case 'match_success':
                     setIsMatched(true);
                     setIsLoading(false);
+                    const peerData = data.message.find(info => info.username !== user.username);
+                    setPeerInfo(peerData);
                     break;
                 case 'chat_end':
                     endChat();
@@ -236,8 +240,8 @@ function ChatForm() {
                     {isMatched && <p className='friend-btn'><button onClick={sendFriendRequest}>친구 요청</button></p>}
                 </div>
                 <div className="chat-messages" ref={messagesEndRef}>
-                    {isMatched && 
-                        <p className='first-message'>채팅이 연결되었습니다!</p>
+                    {isMatched &&
+                        <p className='first-message'>{`"${peerInfo.school}"의 누군가와 연결되었습니다!`}</p>
                     }
                     {!isMatched &&
                         <>

@@ -5,6 +5,7 @@ from channels.db import database_sync_to_async
 import aioredis
 import asyncio
 from django.contrib.auth import get_user_model
+from utils.school_loader import load_schools_from_json
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -41,6 +42,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(room_name, self.channel_name)
         await self.redis.set(f"dm_room_name_{self.user.username}", room_name)
 
+    @database_sync_to_async
+    def get_user_school(self, username):
+        User = get_user_model()
+        user = User.objects.filter(username=username).first()
+
+        schools = load_schools_from_json()
+        school_id_to_name = {str(school['id']): school['name'] for school in schools}
+
+        if user and user.school in school_id_to_name:
+            return school_id_to_name[user.school]
+        return "알 수 없는 학교"
 
     async def attempt_matching(self):
         await self.redis.set(f"channel_name_{self.user.username}", self.channel_name)
@@ -61,9 +73,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await self.channel_layer.group_add(room_name, peer_channel_name)
                 await self.redis.set(f"room_name_{peer_user}", room_name)
 
+            peer_school = await self.get_user_school(peer_user)
+            your_school = await self.get_user_school(self.user.username)
             await self.channel_layer.group_send(room_name, {
                 'type': 'match_success_message',
-                'message': '매칭되었습니다!!!',
+                'message': [{"username":peer_user, "school":peer_school}, 
+                            {"username":self.user.username, "school":your_school}]
             })
 
     async def disconnect(self, close_code):

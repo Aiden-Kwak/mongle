@@ -91,6 +91,7 @@ function FriendListForm() {
                             <img src={`http://localhost:8000${friend.profile_pic}`} alt="Profile" className="friendProfilePic" />
                             <div className="friendInfo">
                                 <span className="friendNickname">{friend.nickname}</span>
+                                <span className="friendSchool">{friend.school}</span>
                                 <span className="friendBio">{friend.bio}</span>
                             </div>
                             <div className='friendManage'>
