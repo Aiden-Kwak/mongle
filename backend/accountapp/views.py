@@ -21,6 +21,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from utils.school_loader import load_schools_from_json
 
 class AccountCreateAPI(APIView):
     #@csrf_exempt # 배포시 해결할것
@@ -234,3 +235,11 @@ class ChangePasswordAPI(APIView):
         update_session_auth_hash(request, user)
         
         return Response({'message': '비밀번호가 성공적으로 변경되었습니다.'}, status=status.HTTP_200_OK)
+
+class SchoolListView(APIView):
+    def get(self, request, format=None):
+        try:
+            schools = load_schools_from_json()
+            return Response(schools, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
+from utils.school_loader import load_schools_from_json
 from .models import User, Profile
+import json
 
 class AccountCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,55 +13,27 @@ class AccountCreateSerializer(serializers.ModelSerializer):
         }
 
     def validate_email(self, value):
-        # 이메일 유효성 검사 로직
+        school_domains = load_schools_from_json()
+
         domain = value.split('@')[1]
         school = self.initial_data['school']
-        validation = {
-            '0': ['skku.edu', 'g.skku.edu'],
-            '1': ['gist.ac.kr','gm.gist.ac.kr'],
-            '2': ['sogang.ac.kr'],
-            '3': ['unist.ac.kr'],
-            '4': ['cau.ac.kr'],
-            '5': ['kaist.ac.kr'],
-            '6': ['hanyang.ac.kr'],
-            '7': ['snu.ac.kr'],
-            '8': ['yonsei.ac.kr'],
-            '9': ['korea.ac.kr'],
-            '10': ['khu.ac.kr'],
-            '11': ['hufs.ac.kr'],
-            '12': ['uos.ac.kr'],
-            '13': ['catholic.ac.kr'],
-            '14': ['konkuk.ac.kr'],
-            '15': ['kw.ac.kr'],
-            '16': ['kookmin.ac.kr'],
-            '17': ['dgu.ac.kr', 'dongguk.edu'],
-            '18': ['seoultech.ac.kr'],
-            '19': ['sju.ac.kr', 'sejong.ac.kr'],
-            '20': ['soongsil.ac.kr'],
-            '21': ['hongik.ac.kr'],
-            '22': ['gachon.ac.kr'],
-            '23': ['inha.edu', 'inha.ac.kr'],
-            '24': ['ajou.ac.kr'],
-            '25': ['kau.ac.kr', ' kau.kr'],
-            '26': ['ewhain.net', 'ewha.ac.kr'],
-            '27': ['sungshin.ac.kr'],
-            '28': ['swu.ac.kr', 'swuo365.onmicrosoft.com'],
-            '29': ['sookmyung.ac.kr', 'sm.ac.kr'],
-            '30': ['dongduk.ac.kr'],
-            '31': ['duksung.ac.kr'],
-            '32': ['knua.ac.kr', 'karts.ac.kr'],
-            '33': ['dgist.ac.kr'],
-            '34': ['postech.ac.kr'],
-            '35': ['jnu.ac.kr'],
-            '36': ['handong.edu'],
-            '37': ['cnu.kr', 'cnu.ac.kr'],
-            '38': ['pusan.ac.kr'],
-            '39': ['ut.ac.kr'],
-        }
 
-        valid_email = validation.get(school, [])
-        if domain not in valid_email:
+        try:
+            school_id = int(school)
+        except ValueError:
+            raise ValidationError("학교 ID가 유효하지 않습니다.")
+
+        # 학교 ID를 기반으로 도메인 정보 찾기
+        school_domain_info = next((item for item in school_domains if item['id'] == school_id), None)
+        print("get school domain info:", school_domain_info)
+        # 학교 정보가 없거나 도메인 영역이 빈 배열일 경우 예외 처리
+        if school_domain_info is None or not school_domain_info['domains']:
+            raise ValidationError("해당 학교는 아직 준비중입니다.")
+
+        # 도메인 검증
+        if domain not in school_domain_info['domains']:
             raise ValidationError("자신의 학교 계정 이메일을 입력해주세요!")
+
         return value
 
     def create(self, validated_data):

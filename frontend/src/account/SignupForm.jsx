@@ -12,56 +12,39 @@ function SignupForm() {
     });
     const [error, setError] = useState('');
     const [tempMessage, setTempMessage] = useState('');
-
+    const [schoolItem, setSchoolItem] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const schools = [
-        { id: '0', name: '성균관대학교' },
-        { id: '1', name: '광주과학기술원' },
-        { id: '2', name: '서강대학교' },
-        { id: '3', name: '울산과학기술원' },
-        { id: '4', name: '중앙대학교' },
-        { id: '5', name: '한국과학기술원' },
-        { id: '6', name: '한양대학교' },
-        { id: '7', name: '서울대학교' },
-        { id: '8', name: '연세대학교' },
-        { id: '9', name: '고려대학교' },
-        { id: '10', name: '경희대학교' },
-        { id: '11', name: '한국외국어대학교' },
-        { id: '12', name: '서울시립대학교' },
-        { id: '13', name: '가톨릭대학교' },
-        { id: '14', name: '건국대학교' },
-        { id: '15', name: '광운대학교' },
-        { id: '16', name: '국민대학교' },
-        { id: '17', name: '동국대학교' },
-        { id: '18', name: '서울과학기술대학교' },
-        { id: '19', name: '세종대학교' },
-        { id: '20', name: '숭실대학교' },
-        { id: '21', name: '홍익대학교' },
-        { id: '22', name: '가천대학교' },
-        { id: '23', name: '인하대학교' },
-        { id: '24', name: '아주대학교' },
-        { id: '25', name: '한국항공대학교' },
-        { id: '26', name: '이화여자대학교' },
-        { id: '27', name: '성신여자대학교' },
-        { id: '28', name: '서울여자대학교' },
-        { id: '29', name: '숙명여자대학교' },
-        { id: '30', name: '동덕여자대학교' },
-        { id: '31', name: '덕성여자대학교' },
-        { id: '32', name: '한국예술종합학교' },
-        { id: '33', name: '대구경북과학기술원' },
-        { id: '34', name: '포항공과대학교' },
-        { id: '35', name: '전남대학교' },
-        { id: '36', name: '한동대학교' },
-        { id: '37', name: '충남대학교' },
-        { id: '38', name: '부산대학교' },
-        { id: '39', name: '한국교통대학교'},
+    useEffect(() => {
+        const fetchSchools = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/get-schools/');
+                setSchoolItem(response.data);
+            } catch (error) {
+                console.error("학교 목록을 불러오는 데 실패했습니다.", error);
+            }
+        };
+        fetchSchools();
+    }, []);
 
-    ];
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value); // 검색어 상태 업데이트
+    };
 
+    const filteredSchools = searchTerm.length > 0
+        ? schoolItem.filter(school =>
+            school.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : [];
+    
+    const handleSchoolSelect = (school) => {
+        setFormData({ ...formData, school: school.id }); // 선택한 학교의 ID를 formData에 설정
+        setSearchTerm(school.name); // 검색창에 학교 이름 표시
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -164,21 +147,26 @@ function SignupForm() {
                     onChange={handleChange}
                     placeholder="비밀번호"
                 />
-                <select
-                    className="signup-select"
-                    name="school"
-                    value={formData.school}
-                    onChange={handleChange}
-                >
-                    <option value="">학교 선택</option>
-                    {
-                        [...schools]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map(school => (
-                            <option key={school.id} value={school.id}>{school.name}</option>
-                        ))
-                    }
-                </select>
+                <input
+                    className="signup-input"
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="학교 검색"
+                />
+                {searchTerm.length > 0 && (
+                    <ul className="search-results">
+                        {filteredSchools.map(school => (
+                            <li
+                                key={school.id}
+                                onClick={() => handleSchoolSelect(school)}
+                                style={{cursor: 'pointer'}} // 마우스를 올렸을 때 커서 변경
+                            >
+                                {school.name}
+                            </li>
+                        ))}
+                    </ul>
+                )}
 
                 <button className="signup-button" type="submit">회원가입</button>
             </form>
