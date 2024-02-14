@@ -51,13 +51,18 @@ function SignupForm() {
         setError('');
         const csrfToken=getCookie('csrftoken');
         try {
+            setTempMessage("인증메일을 전송중입니다. 잠시만 기다려주세요");
             const response = await axios.post('http://localhost:8000/signup/', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken,
                 }
             });
-            console.log(response.data);
+            setTempMessage("인증메일이 전송되었습니다. 도착하지 않은 경우 스팸메일함을 확인해주세요"); // 메시지 설정
+            console.log(tempMessage);
+            setTimeout(() => {
+                setTempMessage(''); // 2초 후 메시지 제거
+            }, 10000);
             // 회원가입 성공 처리 로직
             console.log('회원가입 성공');
         } catch (error) {
@@ -116,7 +121,7 @@ function SignupForm() {
                 <img src={logo} alt="Logo" />
                 <div className='logo-span'>
                     <span style={{fontSize:".9rem", marginLeft:".2rem"}}>대학생 랜덤채팅</span>
-                    <span style={{fontSize:"2rem", fontFamily:"ugro-bold", color:"black"}}>
+                    <span style={{fontSize:"2rem", fontFamily:"TTHakgyoansimMonggeulmonggeulR", color:"black"}}>
                         몽글몽글
                     </span>
                 </div>
@@ -154,23 +159,27 @@ function SignupForm() {
                     onChange={handleSearchChange}
                     placeholder="학교 검색"
                 />
-                {searchTerm.length > 0 && (
+                {searchTerm.length > 0 && filteredSchools.length > 0 ? (
                     <ul className="search-results">
                         {filteredSchools.map(school => (
                             <li
                                 key={school.id}
                                 onClick={() => handleSchoolSelect(school)}
-                                style={{cursor: 'pointer'}} // 마우스를 올렸을 때 커서 변경
+                                style={{cursor: 'pointer'}}
+                                className='search-item'
                             >
                                 {school.name}
                             </li>
                         ))}
                     </ul>
-                )}
+                ): searchTerm.length > 0 && filteredSchools.length === 0 ? (
+                    <ul className="search-results">
+                        <li>학교 검색 결과가 없습니다.</li>
+                    </ul>
+                ) : null}
 
                 <button className="signup-button" type="submit">회원가입</button>
             </form>
-            <p style={{fontSize:".8rem"}}>본인의 학교가 선택창에 없는 경우, 연락을 주시면 빠른시일내에 업데이트하도록 하겠습니다!</p>
         </div>
     );
   
