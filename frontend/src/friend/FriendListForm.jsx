@@ -98,6 +98,10 @@ function FriendListForm() {
                                 <img src={chatIcon} className='icon chatIcon' onClick={()=>initiateDM(friend.username, friend.id)} alt="DM"></img>
                                 <img src={deleteIcon} className='icon deleteIcon' onClick={() => deleteFriend(friend.username, friend.nickname)} alt="Delete"></img>
                             </div>
+                            <div className='friendManage-fold'>
+                                <img src={chatIcon} className='icon chatIcon' onClick={()=>initiateDM(friend.username, friend.id)} alt="DM"></img>
+                                <img src={deleteIcon} className='icon deleteIcon' onClick={() => deleteFriend(friend.username, friend.nickname)} alt="Delete"></img>
+                            </div>
                         </li>
                     ))}
                 </ul>

@@ -35,7 +35,9 @@ function LogoutForm() {
             setUser(null);
             navigate('/');
         } catch (error) {
-            console.error('로그아웃 실패', error);
+            localStorage.removeItem('user');
+            setUser(null);
+            navigate('/');
         }
     }, [setUser, navigate]);
 

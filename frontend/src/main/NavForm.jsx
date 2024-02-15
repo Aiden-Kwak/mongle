@@ -86,6 +86,7 @@ function NavForm() {
                 <ul>
                     <li><Link to="/chat"><span>채팅시작</span></Link></li>
                     <li><Link to="/profile"><span>프로필</span></Link></li>
+                    <li><Link to="/setting"><span>계정관리</span></Link></li>
                     <li><Link to="/friend"><span>친구관리</span></Link></li>
                     {user ?
                     <li><Link to="/logout"><span>로그아웃</span></Link></li>:

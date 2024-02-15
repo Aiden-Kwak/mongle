@@ -18,7 +18,7 @@
     margin-left: .2rem;
 }
 .logo-name-l {
-    font-size: 2.5rem !important;
+    font-size: 2.2rem !important;
     font-family: 'TTHakgyoansimMonggeulmonggeulR' !important;
     color: black;
 }
@@ -64,6 +64,7 @@
 
 .nav-menu a:hover {
     color: #F07489; /* 링크 호버 색상 */
+    transition: .3s;
 }
 
 .chat-button {
@@ -74,7 +75,6 @@
     border-radius: 15px; /* 버튼 모서리 둥글게 */
     cursor: pointer; /* 마우스 오버시 커서 변경 */
     font-size: 1em;
-    font-family: 'TTHakgyoansimMonggeulmonggeulR';
 }
 
 .chat-button:hover {
@@ -161,7 +161,7 @@
         display: block; /* 모바일 화면에서만 햄버거 메뉴 버튼을 표시합니다 */
     }
     .logo-name-s {
-        font-size: .5rem !important;
+        font-size: .65rem !important;
         margin-left: .1rem;
     }
     .logo-name-l {
@@ -169,6 +169,9 @@
     }
     .nav-menu {
         display: none;
+    }
+    .nav-wrapper > .nav-logo > img {
+        margin-right: 10px;
     }
 }
 

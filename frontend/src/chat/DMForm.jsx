@@ -119,15 +119,15 @@ function DMForm() {
         }
     };
 
-    const handleTyping = () => {
-        if (ws) {
-            ws.send(JSON.stringify({ type: 'typing_start', sender: user.username }));
-            clearTimeout(typingTimeoutRef.current); // 이전 타이머 취소
-            typingTimeoutRef.current = setTimeout(() => { // 새 타이머 설정
-                ws.send(JSON.stringify({ type: 'typing_end', sender: user.username }));
-            }, 500); // .5초 동안 추가 입력이 없으면 타이핑 종료로 간주
-        }
-    };
+    //const handleTyping = () => {
+    //    if (ws) {
+    //        ws.send(JSON.stringify({ type: 'typing_start', sender: user.username }));
+    //        clearTimeout(typingTimeoutRef.current); // 이전 타이머 취소
+    //        typingTimeoutRef.current = setTimeout(() => { // 새 타이머 설정
+    //            ws.send(JSON.stringify({ type: 'typing_end', sender: user.username }));
+    //        }, 500); // .5초 동안 추가 입력이 없으면 타이핑 종료로 간주
+    //    }
+    //};
     
 
     const handleKeyDown = (e) => {
@@ -176,7 +176,6 @@ function DMForm() {
                     type="text" 
                     value={message} 
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyUp={handleTyping}
                     onKeyDown={handleKeyDown}
                     placeholder="메시지를 입력하세요"
                 />

@@ -19,6 +19,10 @@
     width: 100%;
 }
 
+.friendList > li {
+    margin-bottom: 2rem;
+}
+
 .friendItem {
     display: flex;
     align-items: center;
@@ -26,16 +30,16 @@
     cursor: pointer;
     margin: 0 1rem;
 }
-.friendItem > .friendManage {
+.friendItem .friendManage {
     margin-left: auto;
 }
-.friendItem > .friendManage > .icon {
+.friendItem .friendManage > .icon {
     height: 2rem;
     padding: .5rem;
     margin-right: 1px;
     border-radius: .5rem;
 }
-.friendItem > .friendManage > .icon:hover {
+.friendItem .friendManage > .icon:hover {
     background-color: pink;
     transition: .5s;
 }
@@ -62,6 +66,7 @@
     font-size: 0.8rem;
     color: #7f8c8d;
     margin-top: 5px;
+    max-width: 30rem;
 }
 
 .friendProfilePic {
@@ -71,27 +76,78 @@
     border-radius: 50%; /* Makes the profile picture circular */
 }
 
+.friendManage-fold {
+    display: none;
+}
+
+@media (max-width: 968px) {
+    .friendBio {
+        font-size: 0.8rem;
+        width: 19rem;
+    }
+}
+
 @media (max-width: 768px) {
     .friendListForm-container {
         width: 90%;
         box-shadow: none;
+        margin-top: 0;
     }
     .friendItem {
         margin: 0;
     }
-    .friendItem > .friendManage > .icon {
+    .friendItem .friendManage > .icon {
         height: 1.8rem;
+    }
+    .friendBio {
+        font-size: 0.8rem;
+        width: 20rem;
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
     .friendNickname {
         font-size: .9rem;
     }
     .friendBio {
         font-size: 0.8rem;
+        width: 11.9rem;
     }
     .friendItem > .friendManage > .icon {
         height: 1.5rem;
+        padding: 4px;
+    }
+}
+
+@media (max-width: 400px) {
+    .friendSchool {
+        display: block;
+        width: 10rem!important;
+    }
+}
+
+@media (max-width: 300px) {
+    .friendManage {
+        display: none;
+    }
+    .friendManage-fold {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin-top: 1rem;
+        margin-left: -1.8rem;
+    }
+    .friendManage-fold > .icon {
+        height: 1.5rem;
+        padding: 4px;
+    }
+    .friendItem {
+        display: block;
+    }
+    .friendItem > img {
+        margin-left: 1.5rem;
+    }
+    .friendInfo {
+        margin-left: 2rem;
     }
 }

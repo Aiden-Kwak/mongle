@@ -72,7 +72,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=13, blank=True, default='익명의 몽글')
     profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True, default='default.png')
-    bio = models.TextField(blank=True, max_length=200)
+    bio = models.TextField(blank=True, max_length=100)
 
     def __str__(self):
         return self.user.username
