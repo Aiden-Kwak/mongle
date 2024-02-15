@@ -11,6 +11,8 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 
 function MainForm() {
     const canvasRef = useRef();
+    let rotationDirection = 0.00025; // 초기 회전 방향
+    let lastDirectionChangeTime = Date.now();
     
 
     useEffect(() => {
@@ -29,14 +31,14 @@ function MainForm() {
         controls.dampingFactor = 0.25;
         controls.enableZoom = true;
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.4;
+        controls.autoRotateSpeed = 0.3;
 
         scene.background = new THREE.Color('#191919');
         const group = new THREE.Group();
 
         const composer = new EffectComposer(renderer);
         composer.addPass(new RenderPass(scene, camera));
-        const unrealBloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 1, 0.85);
+        const unrealBloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 2.5, 1, 0.85);
         composer.addPass(unrealBloom);
 
         // 환경 조명 추가
@@ -44,11 +46,11 @@ function MainForm() {
         scene.add(ambientLight);
 
         // 방향 조명 추가
-        const directionalLight = new THREE.DirectionalLight(0xE75690, 3);
+        const directionalLight = new THREE.DirectionalLight(0xE75690, 5);
         directionalLight.position.set(10, 10, 10);
         scene.add(directionalLight);
 
-        const hemisphereLight = new THREE.HemisphereLight(0xE75690, 0x080820, 2);
+        const hemisphereLight = new THREE.HemisphereLight(0xE75690, 0x080820, 1);
         scene.add(hemisphereLight);
 
         // GLTFLoader를 사용하여 모델 로드
@@ -79,9 +81,13 @@ function MainForm() {
 
         function animate() {
             requestAnimationFrame(animate);
+            const currentTime = Date.now();
+            if (currentTime - lastDirectionChangeTime > 6000) { // 5초마다 회전 방향 변경
+                rotationDirection *= -1; // 회전 방향 반대로 변경
+                lastDirectionChangeTime = currentTime;
+            }
             controls.update();
-            // 그룹의 Z축을 중심으로 회전
-            //group.rotation.z += 0.001;
+            group.rotation.z += rotationDirection; 
             composer.render();
         }
 

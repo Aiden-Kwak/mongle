@@ -260,6 +260,11 @@
     font-family: Dovemayo_gothic;
 }
 
+.rendered-name > .mongle:hover {
+    color: pink;
+    transition: 5s;
+}
+
 .rendered-name .para {
     margin-top: 3rem;
     font-size: 2rem;
@@ -267,10 +272,10 @@
 
 @media screen and (max-width: 768px){
     .rendered-name{
-        font-size: 7rem;
+        font-size: 6rem;
     }
     .rendered-name .para {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         margin-left: 1rem;
     }
 }
