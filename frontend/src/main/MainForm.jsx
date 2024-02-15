@@ -5,23 +5,17 @@ import slide2 from '../static/img/slide2.png';
 import bubbleText from '../static/img/bubble.svg';
 
 function MainForm() {
-    // 이미지 배열
     const slides = [slide1, slide2];
-    // 현재 보여지는 이미지의 인덱스
     const [currentSlide, setCurrentSlide] = useState(0);
-
-    // 자동으로 다음 이미지로 전환하는 함수
     const nextSlide = () => {
         setCurrentSlide((prev) => (prev + 1) % slides.length);
     };
 
-    // 1초마다 이미지가 변경되도록 설정
     useEffect(() => {
         const interval = setInterval(nextSlide, 5000);
         return () => clearInterval(interval);
     }, []);
 
-    // 이미지를 수동으로 변경할 수 있는 버튼을 위한 함수
     const goToSlide = (index) => {
         setCurrentSlide(index);
     };
@@ -52,9 +46,6 @@ function MainForm() {
                 <p className='bold'>대학생에 의한,</p>
                 <p className='bold'>대학생을 위한</p>
                 <p className='bold'>"단 하나뿐인 안전한 <span className='color'>랜덤채팅</span>"</p>
-            </div>
-            <div>
-                <img src={bubbleText} alt="bubble" className='bubbleIcon' />
             </div>
         </div>
     );

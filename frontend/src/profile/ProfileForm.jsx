@@ -14,6 +14,9 @@ function ProfileForm() {
         profilePic: '',
         profilePicPreview: ''
     });
+    const [error, setError] = useState('');
+    const [tempMessage, setTempMessage] = useState('');
+
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
 
@@ -32,6 +35,7 @@ function ProfileForm() {
             });
             setProfile(response.data);
         } catch (error) {
+            setError(error.response.data.message);
             console.error('프로필 정보를 불러오는데 실패했습니다', error);
         }
     };
@@ -90,15 +94,37 @@ function ProfileForm() {
                 },
                 withCredentials: true
             });
-            alert('프로필이 업데이트되었습니다.');
+            const successMessage = '프로필이 업데이트되었습니다.';
+            setError(successMessage);
+            setTempMessage(successMessage);
+            setTimeout(() => setTempMessage(''), 5000);
+
         } catch (error) {
-            console.error('프로필 업데이트에 실패했습니다.', error);
+            const errorMessage = '닉네임: 13자, 소개: 250자 이하로 작성해주세요.';
+            setError(errorMessage); // 오류 메시지 상태 설정
+            // showTempMessage 함수 호출 대신 직접 tempMessage 상태를 설정하여 오류 메시지 표시
+            setTempMessage(errorMessage);
+            setTimeout(() => setTempMessage(''), 5000);
         }
     };
+
+    const showTempMessage = (error) => {
+        setTempMessage(error); // 메시지 설정
+        setTimeout(() => {
+            setTempMessage(''); // 2초 후 메시지 제거
+        }, 2000);
+    };
+
+    useEffect(() => {
+        if (error) {
+            showTempMessage(error);
+        }
+    }, [error]);
 
     return (
         <div className='profile-page-container'>
             <BackButton />
+            {tempMessage && <div className='error'>{tempMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <div className='profile-header'>
                     <img src={profile.profilePicPreview||profile.profile_pic} alt="프로필 사진" />

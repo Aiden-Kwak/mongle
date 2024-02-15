@@ -56,7 +56,6 @@ function ChatForm() {
             if (ws && ws.readyState === WebSocket.OPEN) {
                 endChat();
                 ws.close();
-                console.log('채팅 서버 종료.');
             }
         };
     }, [ws, location]);
@@ -69,14 +68,12 @@ function ChatForm() {
 
         const newWs = new WebSocket('ws://localhost:8000/ws/chat/random/');
         newWs.onopen = () => {
-            console.log('채팅 서버에 연결되었습니다.');
             setIsConnected(true);
             newWs.send(JSON.stringify({ type: 'start_chat' }));
         };
 
         newWs.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log('데이터 타입:', data);
             switch (data.type) {
                 case 'chat':
                     setChat((prevChat) => [...prevChat, { message: data.message, sender: data.sender }]);
@@ -101,20 +98,17 @@ function ChatForm() {
                     setFriendRequestFrom(data.from_username);
                     break;
                 case 'accept_friend_request':
-                    console.log('친구 요청이 수락되어야함');
                     showTempMessage('친구 요청이 수락되었습니다.');
                     break;
                 case 'reject_friend_request':
-                    console.log('친구 요청이 거절되어야함');
                     showTempMessage('친구 요청이 거절되었습니다.');
                     break;
                 default:
-                    console.log("Unknown message type:", data.type);
+                    break;
             }
         };
 
         newWs.onclose = () => {
-            console.log('채팅 서버 연결이 끊어졌습니다.');
             setIsConnected(false);
             setIsMatched(false);
             endChat();
@@ -138,6 +132,7 @@ function ChatForm() {
     const endChat = () => {
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify({ type: 'chat_end' }));
+            rejectFriendRequest();
             ws.close();
             alert('채팅이 종료되었습니다.'); // WebSocket이 열려있을 때만 alert 호출
         }
@@ -175,19 +170,16 @@ function ChatForm() {
         if (e.nativeEvent.isComposing) return;
         if (e.key === 'Enter' && message.trim() !== '') {
             e.preventDefault();
-            console.log('Enter key pressed, sending message...');
             sendMessage();
             setMessage('');
         }
     };
 
     const sendFriendRequest = () => {
-        console.log('친구 요청을 보냅니다.');
         if (ws) {
             const friendRequestData = { type: 'send_friend_request', to_username: user.username }; // 여기서 상대방 사용자명 설정 필요
             ws.send(JSON.stringify(friendRequestData));
-            setFriendRequestSent(true); // 친구 요청을 보냈다고 상태 업데이트
-            console.log('친구 요청을 보냈습니다.');
+            setFriendRequestSent(true);
         }
     };
 

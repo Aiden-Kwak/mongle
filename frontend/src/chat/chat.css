@@ -29,7 +29,9 @@
 }
 .chat-header >  .status {
     margin: 0;
+    margin-left: 1rem;
     text-align: center;
+    font-family: Dovemayo_gothic;
 }
 .chat-header >  .friend-btn {
     margin: 0;
@@ -178,6 +180,7 @@
 .first-message {
     font-size: 1rem;
     margin: .5rem .8rem;
+    font-family: Dovemayo_gothic;
 }
 
 /* DM.css */
