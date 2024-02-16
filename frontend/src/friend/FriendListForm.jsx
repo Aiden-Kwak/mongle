@@ -92,29 +92,28 @@ function FriendListForm() {
         return cookieValue;
     }
 
+    const fetchFriends = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/friend/list', {
+                withCredentials: true
+            });
+            console.log(response.data);
+            setFriends(response.data);
+        } catch (error) {
+            console.error("친구 목록을 불러오는 데 실패했습니다.", error);
+        }
+    };
+
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
         if (!user) {
             navigate('/login');
+            return;
         }
+        fetchFriends(); // 최초 로드 시 친구 목록 가져오기
+        const intervalId = setInterval(fetchFriends, 60000); // 5초마다 친구 목록 갱신
+        return () => clearInterval(intervalId); 
     }, [user, navigate]);
-
-    useEffect(() => {
-        const fetchFriends = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/friend/list', {
-                    withCredentials: true
-                });
-                console.log(response.data);
-                setFriends(response.data);
-            } catch (error) {
-                console.error("친구 목록을 불러오는 데 실패했습니다.", error);
-            }
-        };
-        if (user) {
-            fetchFriends();
-        }
-    }, [user]);
 
     return (
         <div className="friendListForm-container">
