@@ -8,6 +8,7 @@ from .models import Message
 from .serializers import MessageSerializer
 from notificationapp.models import Notification
 from rest_framework.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 
 class SendMessageAPI(APIView):
     permission_classes = [IsAuthenticated]
@@ -50,3 +51,21 @@ class MessageListAPI(APIView):
         ).order_by('timestamp')
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
+
+class RemoveMessageAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, friend_username, format=None):
+        user = request.user
+        print("delete 들어옴")
+        friend = get_object_or_404(User, username=friend_username)
+        print("user and friend : ", user, friend)
+        messages = Message.objects.filter(
+            Q(sender=user, receiver=friend) | 
+            Q(sender=friend, receiver=user)
+        )
+        print("messages : ", messages)
+        messages.delete()
+        print("delete 완료")
+
+        return Response({"message": "Messages removed successfully."})

@@ -48,10 +48,21 @@ function FriendListForm() {
         if (isConfirmed) {
             try {
                 const csrfToken = getCookie('csrftoken');
+                // 친구삭제요청
                 await axios.delete(`http://localhost:8000/friend/remove/${friendUsername}/`, {
                     headers: {
                         'X-CSRFToken': csrfToken
                     },
+                    withCredentials: true
+                });
+                // 메세지삭제요청
+                await axios.delete(`http://localhost:8000/chat/remove-messages/${friendUsername}/`, {
+                    headers: {'X-CSRFToken': csrfToken},
+                    withCredentials: true
+                });
+                // 양쪽 알림삭제
+                await axios.delete(`http://localhost:8000/notification/delete-both/dm/${friendUsername}/`, {
+                    headers: {'X-CSRFToken': csrfToken},
                     withCredentials: true
                 });
                 // 성공적으로 삭제되면 친구 목록에서 해당 친구 제거
@@ -111,7 +122,7 @@ function FriendListForm() {
             return;
         }
         fetchFriends(); // 최초 로드 시 친구 목록 가져오기
-        const intervalId = setInterval(fetchFriends, 60000); // 5초마다 친구 목록 갱신
+        const intervalId = setInterval(fetchFriends, 60000); // 1분마다 친구 목록 갱신
         return () => clearInterval(intervalId); 
     }, [user, navigate]);
 
