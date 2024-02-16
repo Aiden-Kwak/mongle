@@ -81,7 +81,6 @@ function DMForm() {
 
         const newWs = new WebSocket('ws://localhost:8000/ws/chat/dm/');
         newWs.onopen = () => {
-            console.log('채팅 서버에 연결되었습니다.');
             setIsConnected(true);
             newWs.send(JSON.stringify({ type: 'start_dm', friend_username: friendUsername }));
         };

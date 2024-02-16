@@ -67,6 +67,22 @@
     transition: .3s;
 }
 
+.notification-dot {
+    display: inline-block;
+    margin-left: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #F07489;
+    animation: blinkAnimation 2s infinite; /* 깜빡임 애니메이션 추가 */
+}
+
+@keyframes blinkAnimation {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 .chat-button {
     background-color: #F07489; /* 버튼 배경 색상 */
     color: white;
@@ -258,6 +274,7 @@
     color: white;
     font-size: 9rem;
     font-family: Dovemayo_gothic;
+    text-align: center;
 }
 
 .rendered-name > .mongle:hover {
@@ -268,6 +285,11 @@
 .rendered-name .para {
     margin-top: 3rem;
     font-size: 2rem;
+    text-align: center;
+}
+
+.start {
+    display: none;
 }
 
 @media screen and (max-width: 768px){
@@ -276,7 +298,17 @@
     }
     .rendered-name .para {
         font-size: 1.1rem;
+        font-weight: bold;
         margin-left: 1rem;
+    }
+    .start {
+        display: inline-block;
+        background-color: #F07489;
+        border-radius: 15px;
+        padding: .5rem;
+        font-size: 2rem;
+        color: white;
+        text-align: center;
     }
 }
 

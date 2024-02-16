@@ -238,8 +238,9 @@ function ChatForm() {
                     {!isMatched &&
                         <>
                             <p className='first-message'>상대방에겐 자신의 학교명만이 노출됩니다.</p>
-                            <p className='first-message'>"채팅 시작하기"를 눌러 다양한 학교의 친구들을 만나보세요.</p>
+                            <p className='first-message'>채팅 시작하기"를 눌러 다양한 학교의 친구들을 만나보세요.</p>
                             <p className='first-message'>대화를 끝내거나, 페이지를 벗어날 경우 채팅이 종료됩니다.</p>
+                            <p className='first-message'>채팅이 여러번 전송될땐, 로그인을 다시 시도해보세요.</p>
                         </>
                     }
                     {chat.map((msg, index) => (

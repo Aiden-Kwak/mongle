@@ -9,6 +9,12 @@ import chatIcon from '../static/img/chat.png';
 
 function FriendListForm() {
     const [friends, setFriends] = useState([]);
+    //const [ dmFriendNickname, setDMFriendNickname] = useState('');
+    //const [ dmFriendSchool, setDMFriendSchool] = useState('');
+    //const [ dmFriendBio, setDMFriendBio] = useState('');
+    //const [ dmFriendProfilePic, setDMFriendProfilePic] = useState('');
+    //const [ dmFriendRecentMessage, setDMFriendRecentMessage] = useState('');
+    //const [ dmFriendUnreadCount, setDMFriendUnreadCount] = useState(0);
     const { user } = useContext(UserContext);
     const { setFriendUsername} = useContext(UserContext);
     const { setFriendID } = useContext(UserContext);
@@ -55,7 +61,36 @@ function FriendListForm() {
             }
         }
     };
+
+    const deleteNotification = async (friendUsername) => {
+        try {
+            const csrfToken = getCookie('csrftoken');
+            await axios.post(`http://localhost:8000/notification/delete/dm/${friendUsername}/`, {}, { // 두 번째 인자로 빈 객체를 전달
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                withCredentials: true
+            });
+        } catch (error) {
+            console.error("알림 삭제에 실패했습니다.", error);
+        }
+    };
     
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
@@ -90,19 +125,22 @@ function FriendListForm() {
                         <li key={index} className="friendItem">
                             <img src={`http://localhost:8000${friend.profile_pic}`} alt="Profile" className="friendProfilePic" />
                             <div className="friendInfo">
-                                <span className="friendNickname">{friend.nickname}</span>
+                                <span className="friendNickname">{friend.nickname}
+                                    {friend.unread_count > 0 && <span className="unreadDot">{friend.unread_count}</span>}
+                                </span>
                                 <span className="friendSchool">{friend.school}</span>
                                 <span className="friendBio">{friend.bio}</span>
+                                {friend.recent_message && <div className='last-message'>{friend.recent_message}...</div>}
                             </div>
                             <div className='friendManage'>
-                                <img src={chatIcon} className='icon chatIcon' onClick={()=>initiateDM(friend.username, friend.id)} alt="DM"></img>
+                                <img src={chatIcon} className='icon chatIcon' onClick={()=>{initiateDM(friend.username, friend.id); deleteNotification(friend.username);}} alt="DM"></img>
                                 <img src={deleteIcon} className='icon deleteIcon' onClick={() => deleteFriend(friend.username, friend.nickname)} alt="Delete"></img>
                             </div>
                             <div className='friendManage-fold'>
-                                <img src={chatIcon} className='icon chatIcon' onClick={()=>initiateDM(friend.username, friend.id)} alt="DM"></img>
+                                <img src={chatIcon} className='icon chatIcon' onClick={()=>{initiateDM(friend.username, friend.id); deleteNotification(friend.username);}} alt="DM"></img>
                                 <img src={deleteIcon} className='icon deleteIcon' onClick={() => deleteFriend(friend.username, friend.nickname)} alt="Delete"></img>
                             </div>
-                        </li>
+                        </li> 
                     ))}
                 </ul>
             ) : (

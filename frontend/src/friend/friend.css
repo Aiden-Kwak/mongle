@@ -20,7 +20,7 @@
 }
 
 .friendList > li {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .friendItem {
@@ -29,12 +29,14 @@
     margin-bottom: 15px;
     cursor: pointer;
     margin: 0 1rem;
+    padding-bottom: 15px;
+    border-bottom: solid 1px #eee;
 }
 .friendItem .friendManage {
     margin-left: auto;
 }
 .friendItem .friendManage > .icon {
-    height: 2rem;
+    height: 1.8rem;
     padding: .5rem;
     margin-right: 1px;
     border-radius: .5rem;
@@ -66,7 +68,18 @@
     font-size: 0.8rem;
     color: #7f8c8d;
     margin-top: 5px;
+    margin-bottom: .3rem;
     max-width: 30rem;
+}
+
+.last-message {
+    display: inline-block; /* 내부 콘텐츠 크기에 맞춰 너비 조정 */
+    font-size: 1rem;
+    color: #2C3E50;
+    padding: 5px 10px;
+    background-color: #dcf8c6;
+    border-radius: .5rem;
+    border-bottom-left-radius: 0;
 }
 
 .friendProfilePic {
@@ -78,6 +91,26 @@
 
 .friendManage-fold {
     display: none;
+}
+
+.unreadDot {
+    display: inline-block;
+    margin-left: 5px;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: pink;
+    color: black;
+    font-size: .9rem;
+    font-weight: 300;
+    text-align: center;
+}
+
+/* 깜빡이는 애니메이션 */
+@keyframes blinkAnimation {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 @media (max-width: 968px) {
@@ -113,9 +146,22 @@
         font-size: 0.8rem;
         width: 11.9rem;
     }
+    .friendSchool {
+        font-size: .9rem;
+        word-break: keep-all;
+    }
     .friendItem > .friendManage > .icon {
         height: 1.5rem;
         padding: 4px;
+    }
+    .last-message {
+        font-size: .9rem;
+        color: #2C3E50;
+        max-width: 10rem;
+        border-radius: .5rem;
+        padding: 5px 10px;
+        background-color: #dcf8c6;
+        border-bottom-left-radius: 0;
     }
 }
 

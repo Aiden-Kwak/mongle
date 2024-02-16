@@ -45,6 +45,19 @@
   margin: .5rem 0;
 }
 
+.main-footer, .email {
+  font-size: 0.8rem;
+}
+
+.email {
+  font-family: Arial;
+}
+
+.copyright {
+  color: #666;
+  margin: 0!important;
+}
+
 /* BackButton.css */
 .back-button {
     cursor: pointer;

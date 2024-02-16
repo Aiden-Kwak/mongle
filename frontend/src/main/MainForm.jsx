@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -11,7 +12,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 
 function MainForm() {
     const canvasRef = useRef();
-    let rotationDirection = 0.00025; // 초기 회전 방향
+    let rotationDirection = 0.000005; // 초기 회전 방향
     let lastDirectionChangeTime = Date.now();
     
 
@@ -31,14 +32,14 @@ function MainForm() {
         controls.dampingFactor = 0.25;
         controls.enableZoom = true;
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.3;
+        controls.autoRotateSpeed = 0.05;
 
         scene.background = new THREE.Color('#191919');
         const group = new THREE.Group();
 
         const composer = new EffectComposer(renderer);
         composer.addPass(new RenderPass(scene, camera));
-        const unrealBloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 2.5, 1, 0.85);
+        const unrealBloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
         composer.addPass(unrealBloom);
 
         // 환경 조명 추가
@@ -60,8 +61,8 @@ function MainForm() {
             (gltf) => {
                 gltf.scene.traverse((object) => {
                     if (object.isMesh && object.material) {
-                        object.material.transparent = false;
-                        object.material.opacity = 1.0;
+                        object.material.transparent = true;
+                        object.material.opacity = 1.2;
                     }
                 });
                 gltf.scene.rotation.x = Math.PI / 8;
@@ -79,8 +80,9 @@ function MainForm() {
         group.position.set(0, 6, 60);
         scene.add(group);
 
+        let animationFrameId; // 애니메이션 프레임 ID를 저장할 변수
         function animate() {
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
             const currentTime = Date.now();
             if (currentTime - lastDirectionChangeTime > 6000) { // 5초마다 회전 방향 변경
                 rotationDirection *= -1; // 회전 방향 반대로 변경
@@ -93,10 +95,25 @@ function MainForm() {
 
         animate();
 
-        // 컴포넌트 언마운트 시 정리
         return () => {
+            cancelAnimationFrame(animationFrameId);
             scene.clear();
+            scene.traverse(function (object) {
+                if (object.isMesh) {
+                    if (object.geometry) {
+                        object.geometry.dispose();
+                    }
+                    if (object.material) {
+                        if (object.material instanceof Array) {
+                            object.material.forEach(material => material.dispose());
+                        } else {
+                            object.material.dispose();
+                        }
+                    }
+                }
+            });
             renderer.dispose();
+            controls.dispose();
         };
     }, []);
 
@@ -106,6 +123,9 @@ function MainForm() {
             <div className='rendered-name'>
                 <p className='mongle'>Mongle</p>
                 <p className='para'>다른 학교에서 새로운 친구를 만나보세요</p>
+                <Link to="/chat" className="start">
+                    <p className='start-p'>시작하기</p>
+                </Link>
             </div>
         </div>
     );

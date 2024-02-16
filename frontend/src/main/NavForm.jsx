@@ -2,14 +2,30 @@ import React, { useContext, useEffect, useState } from 'react'; // useState 추�
 import { UserContext } from '../UserContext';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../static/img/logo.png';
+import axios from 'axios';
 import './main.css';
 
 
 function NavForm() {
     const { user } = useContext(UserContext);
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 상태 관리 추가
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [hasNotification, setHasNotification] = useState(false);
     const location = useLocation();
     
+    const checkNotifications = async () => {
+        if (user) {
+            try {
+                const response = await axios.get('http://localhost:8000/notification/check-notification', { withCredentials: true });
+                setHasNotification(response.data.message === "You have notifications");
+            } catch (error) {
+                console.error("알림 상태 확인 실패", error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        checkNotifications();
+    }, [user, location]);
 
     const toggleMenu = (event) => {
         event.stopPropagation(); // 메뉴 토글 함수에서 이벤트 전파를 막습니다.
@@ -65,7 +81,10 @@ function NavForm() {
                 <div className='nav-menu'>
                     <Link to="/profile"><span>프로필</span></Link>
                     <Link to="/setting"><span>계정관리</span></Link>
-                    <Link to="/friend"><span>친구관리</span></Link>
+                    <Link to="/friend">
+                        <span>친구관리</span>
+                        {hasNotification && <span className="notification-dot"></span>}
+                    </Link>
                     {user ?
                     <Link to="/logout"><span>로그아웃</span></Link>:
                     <Link to="/login"><span>로그인</span></Link>
@@ -87,7 +106,12 @@ function NavForm() {
                     <li><Link to="/chat"><span>채팅시작</span></Link></li>
                     <li><Link to="/profile"><span>프로필</span></Link></li>
                     <li><Link to="/setting"><span>계정관리</span></Link></li>
-                    <li><Link to="/friend"><span>친구관리</span></Link></li>
+                    <li>
+                        <Link to="/friend">
+                            <span>친구관리</span>
+                            {hasNotification && <span className="notification-dot"></span>}
+                        </Link>
+                    </li>
                     {user ?
                     <li><Link to="/logout"><span>로그아웃</span></Link></li>:
                     <li><Link to="/login"><span>로그인</span></Link></li>
