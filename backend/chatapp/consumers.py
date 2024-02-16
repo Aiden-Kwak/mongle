@@ -6,6 +6,7 @@ import aioredis
 import asyncio
 from django.contrib.auth import get_user_model
 from utils.school_loader import load_schools_from_json
+import notificationapp
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -171,7 +172,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     # save_message_sync 함수를 비동기적으로 실행할 수 있도록 래핑
     async def save_message(self, sender_username, room_name, message):
-        return await database_sync_to_async(self.save_message_sync)(sender_username, room_name, message)
+        message_instance = await database_sync_to_async(self.save_message_sync)(sender_username, room_name, message)
+        await self.create_notification(message_instance)
+        return message_instance
+    
+    async def create_notification(self, message_instance):
+        # 비동기적으로 알림을 생성하는 메서드입니다.
+        await database_sync_to_async(self.create_notification_sync)(message_instance)
+
+    def create_notification_sync(self, message_instance):
+        # 실제로 알림을 생성하는 동기 메서드입니다.
+        notificationapp.models.Notification.objects.create(
+            notification_type=0,  # 'dm'에 해당하는 코드
+            sender=message_instance.sender,
+            receiver=message_instance.receiver,
+            text_preview=message_instance.message[:20],  # 필요에 따라 조정
+            user_has_seen=False
+        )
+    
     
     async def end_chat(self):
         room_name = await self.redis.get(f"room_name_{self.user.username}")

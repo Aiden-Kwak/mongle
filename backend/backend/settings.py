@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'accountapp',
     'chatapp',
     'friendapp',
+    'notificationapp',
 
     'django.contrib.admin',
     'django.contrib.auth',

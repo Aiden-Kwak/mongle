@@ -48,7 +48,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    school = models.CharField(choices=SCHOOL_CHOICES, max_length=2, null=True)
+    school = models.CharField(choices=SCHOOL_CHOICES, max_length=20, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'username'

@@ -6,17 +6,34 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from .models import Message
 from .serializers import MessageSerializer
+from notificationapp.models import Notification
+from rest_framework.exceptions import ValidationError
 
 class SendMessageAPI(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = MessageSerializer(data=request.data, context={'request': request})
+        print(request.data)
         if serializer.is_valid():
-            serializer.save(sender=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                message_instance = serializer.save(sender=request.user)
+                # 메시지 저장 후 알림 생성
+                Notification.objects.create(
+                    notification_type=0,
+                    sender=request.user,
+                    receiver=message_instance.receiver,
+                    text_preview=message_instance.message[:100],
+                    user_has_seen=False
+                )
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except ValidationError as e:
+                # 유효성 검사 예외 처리
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                # 기타 예외 처리
+                return Response({"error": "Notification creation failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 User = get_user_model()
 class MessageListAPI(APIView):
