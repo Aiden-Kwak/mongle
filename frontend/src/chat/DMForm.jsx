@@ -80,6 +80,25 @@ function DMForm() {
             ws.send(JSON.stringify(endDmData));
         }
     };
+
+    useEffect(() => {
+        // beforeunload 이벤트 리스너를 추가하는 함수
+        const handleBeforeUnload = (event) => {
+            // 웹소켓이 열려있고, 채팅이 시작된 상태라면 endChat 함수 호출
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                exitDMPage();
+            }
+        };
+    
+        // 이벤트 리스너 등록
+        window.addEventListener('beforeunload', handleBeforeUnload);
+    
+        // 컴포넌트 언마운트 시 이벤트 리스너 제거
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [ws]); 
+    
     useEffect(() => { // 이거 지우면 안됨
         return () => {
             exitDMPage();
