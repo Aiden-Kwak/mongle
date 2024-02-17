@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './dm.css';
 import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
@@ -17,6 +17,7 @@ function DMForm() {
     const { user } = useContext(UserContext);
     const { friendUsername} = useContext(UserContext);
     const { friendID } = useContext(UserContext);
+    const location = useLocation();
 
     const messagesEndRef = useRef(null);
     const typingTimeoutRef = useRef(null);
@@ -37,7 +38,6 @@ function DMForm() {
             withCredentials: true
         })
         .then(response => {
-            console.log(response.data);
             setChat(response.data);
         })
         .catch(error => {
@@ -68,10 +68,23 @@ function DMForm() {
     useEffect(() => {
         return () => {
             if (ws && ws.readyState === WebSocket.OPEN) {
+                exitDMPage();
                 ws.close();
             }
         };
-    }, [ws]);
+    }, [ws, location]);
+
+    const exitDMPage = () => {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            const endDmData = { type: 'end_dm', friend_username: friendUsername };
+            ws.send(JSON.stringify(endDmData));
+        }
+    };
+    useEffect(() => { // 이거 지우면 안됨
+        return () => {
+            exitDMPage();
+        };
+    }, [ws, friendUsername, location]);
 
 
     const connectWebsocket = () => {

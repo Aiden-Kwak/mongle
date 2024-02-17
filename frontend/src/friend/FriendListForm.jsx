@@ -9,12 +9,7 @@ import chatIcon from '../static/img/chat.png';
 
 function FriendListForm() {
     const [friends, setFriends] = useState([]);
-    //const [ dmFriendNickname, setDMFriendNickname] = useState('');
-    //const [ dmFriendSchool, setDMFriendSchool] = useState('');
-    //const [ dmFriendBio, setDMFriendBio] = useState('');
-    //const [ dmFriendProfilePic, setDMFriendProfilePic] = useState('');
-    //const [ dmFriendRecentMessage, setDMFriendRecentMessage] = useState('');
-    //const [ dmFriendUnreadCount, setDMFriendUnreadCount] = useState(0);
+    const [ws, setWs] = useState(null);
     const { user } = useContext(UserContext);
     const { setFriendUsername} = useContext(UserContext);
     const { setFriendID } = useContext(UserContext);
@@ -108,7 +103,6 @@ function FriendListForm() {
             const response = await axios.get('http://localhost:8000/friend/list', {
                 withCredentials: true
             });
-            console.log(response.data);
             setFriends(response.data);
         } catch (error) {
             console.error("친구 목록을 불러오는 데 실패했습니다.", error);
@@ -122,9 +116,30 @@ function FriendListForm() {
             return;
         }
         fetchFriends(); // 최초 로드 시 친구 목록 가져오기
-        const intervalId = setInterval(fetchFriends, 60000); // 1분마다 친구 목록 갱신
-        return () => clearInterval(intervalId); 
+        //const intervalId = setInterval(fetchFriends, 1000); // 1초마다 친구 목록 갱신
+        //return () => clearInterval(intervalId); 
     }, [user, navigate]);
+
+    useEffect(() => {
+        const newWs = new WebSocket('ws://localhost:8000/ws/chat/dm/');
+        newWs.onopen = () => {
+            const friendUsernameList = friends.map(friend => friend.username);
+            console.log('friendUsernameList: ', friendUsernameList);
+            newWs.send(JSON.stringify({ type: 'friend_list', username_list: friendUsernameList}));
+        };
+
+        newWs.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            // 새로운 DM이 있을 때만 친구 목록을 갱신
+            if (data.type === 'dm_message') {
+                console.log('새로운 DM이 도착했습니다.');
+                fetchFriends();
+            }
+        };
+        return () => {
+            newWs.close();
+        };
+    }, [user, friends]);
 
     return (
         <div className="friendListForm-container">
@@ -140,7 +155,11 @@ function FriendListForm() {
                                 </span>
                                 <span className="friendSchool">{friend.school}</span>
                                 <span className="friendBio">{friend.bio}</span>
-                                {friend.recent_message && <div className='last-message'>{friend.recent_message}...</div>}
+                                {friend.recent_message && (
+                                    <div className='last-message'>
+                                    {friend.recent_message.length > 15 ? `${friend.recent_message.substring(0, 15)}...` : friend.recent_message}
+                                    </div>
+                                )}
                             </div>
                             <div className='friendManage'>
                                 <img src={chatIcon} className='icon chatIcon' onClick={()=>{initiateDM(friend.username, friend.id); deleteNotification(friend.username);}} alt="DM"></img>

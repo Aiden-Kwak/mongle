@@ -43,6 +43,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(room_name, self.channel_name)
         await self.redis.set(f"dm_room_name_{self.user.username}", room_name)
 
+    async def setup_friend_list(self, friend_list):
+        print(f"setup_friend_list: {friend_list}")
+        for friend_username in friend_list:
+            sorted_usernames = sorted([self.user.username, friend_username])
+            room_name = f"dm_{sorted_usernames[0]}_{sorted_usernames[1]}"
+            self.room_name = room_name
+            await self.channel_layer.group_add(room_name, self.channel_name)
+            await self.redis.set(f"dm_room_name_{self.user.username}", room_name)
+            print(f"setup_friend_list: {room_name}")
+
     @database_sync_to_async
     def get_user_school(self, username):
         User = get_user_model()
@@ -118,10 +128,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 })
             #await database_sync_to_async(self.save_message)(self.user.username, room_name, message)
             
+        elif message_type == 'friend_list':
+            friend_list = text_data_json['username_list']
+            await self.setup_friend_list(friend_list)
 
         elif message_type == 'start_dm':
+            my_username = self.user.username
             friend_username = text_data_json.get('friend_username')
+            # 레디스에 dm_active 설정
+            key = f"dm_active:{my_username}:{friend_username}"
+            await self.redis.set(key, "True")
             await self.setup_direct_message(friend_username)
+        
+        elif message_type == 'end_dm': # 웹소켓은 종료안하고, 키만 삭제하면 됨.
+            my_username = self.user.username
+            friend_username = text_data_json.get('friend_username')
+            # 레디스에 dm_active 설정
+            key = f"dm_active:{my_username}:{friend_username}"
+            await self.redis.delete(key)
 
         elif message_type == 'start_chat':
             await self.attempt_matching()
@@ -173,7 +197,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # save_message_sync 함수를 비동기적으로 실행할 수 있도록 래핑
     async def save_message(self, sender_username, room_name, message):
         message_instance = await database_sync_to_async(self.save_message_sync)(sender_username, room_name, message)
-        await self.create_notification(message_instance)
+        
+        my_username = self.user.username
+        friend_username = [username for username in room_name.split("_") if username != my_username][1]
+        my_key = f"dm_active:{my_username}:{friend_username}"
+        friend_key = f"dm_active:{friend_username}:{my_username}"
+        my_dm_status = await self.redis.get(my_key)
+        friend_dm_status = await self.redis.get(friend_key)
+        # 나와 상대가 모두 dm접속 상태가 아니라면 알림을 생성
+        if (my_dm_status == "False" or my_dm_status == None) or (friend_dm_status == "False" or friend_dm_status == None):
+            await self.create_notification(message_instance)
         return message_instance
     
     async def create_notification(self, message_instance):
