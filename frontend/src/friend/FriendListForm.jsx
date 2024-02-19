@@ -6,6 +6,7 @@ import { BackButton } from '../snippets';
 import './friend.css';
 import deleteIcon from '../static/img/delete.png';
 import chatIcon from '../static/img/chat.png';
+import { URLManagement } from '../snippets';
 
 function FriendListForm() {
     const [friends, setFriends] = useState([]);
@@ -13,6 +14,8 @@ function FriendListForm() {
     const { user } = useContext(UserContext);
     const { setFriendUsername} = useContext(UserContext);
     const { setFriendID } = useContext(UserContext);
+    const API_BASE_URL = URLManagement('http');
+    const WS_BASE_URL = URLManagement('ws');
 
     const navigate = useNavigate();
 
@@ -44,19 +47,19 @@ function FriendListForm() {
             try {
                 const csrfToken = getCookie('csrftoken');
                 // 친구삭제요청
-                await axios.delete(`http://localhost:8000/friend/remove/${friendUsername}/`, {
+                await axios.delete(`${API_BASE_URL}/friend/remove/${friendUsername}/`, {
                     headers: {
                         'X-CSRFToken': csrfToken
                     },
                     withCredentials: true
                 });
                 // 메세지삭제요청
-                await axios.delete(`http://localhost:8000/chat/remove-messages/${friendUsername}/`, {
+                await axios.delete(`${API_BASE_URL}/chat/remove-messages/${friendUsername}/`, {
                     headers: {'X-CSRFToken': csrfToken},
                     withCredentials: true
                 });
                 // 양쪽 알림삭제
-                await axios.delete(`http://localhost:8000/notification/delete-both/dm/${friendUsername}/`, {
+                await axios.delete(`${API_BASE_URL}/notification/delete-both/dm/${friendUsername}/`, {
                     headers: {'X-CSRFToken': csrfToken},
                     withCredentials: true
                 });
@@ -71,7 +74,7 @@ function FriendListForm() {
     const deleteNotification = async (friendUsername) => {
         try {
             const csrfToken = getCookie('csrftoken');
-            await axios.post(`http://localhost:8000/notification/delete/dm/${friendUsername}/`, {}, { // 두 번째 인자로 빈 객체를 전달
+            await axios.post(`${API_BASE_URL}/notification/delete/dm/${friendUsername}/`, {}, { // 두 번째 인자로 빈 객체를 전달
                 headers: {
                     'X-CSRFToken': csrfToken
                 },
@@ -100,7 +103,7 @@ function FriendListForm() {
 
     const fetchFriends = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/friend/list', {
+            const response = await axios.get(`${API_BASE_URL}/friend/list`, {
                 withCredentials: true
             });
             setFriends(response.data);
@@ -121,7 +124,7 @@ function FriendListForm() {
     }, [user, navigate]);
 
     useEffect(() => {
-        const newWs = new WebSocket('ws://localhost:8000/ws/chat/dm/');
+        const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/dm/`);
         newWs.onopen = () => {
             const friendUsernameList = friends.map(friend => friend.username);
             console.log('friendUsernameList: ', friendUsernameList);
@@ -148,7 +151,7 @@ function FriendListForm() {
                 <ul className="friendList">
                     {friends.map((friend, index) => (
                         <li key={index} className="friendItem">
-                            <img src={`http://localhost:8000${friend.profile_pic}`} alt="Profile" className="friendProfilePic" />
+                            <img src={`${API_BASE_URL}${friend.profile_pic}`} alt="Profile" className="friendProfilePic" />
                             <div className="friendInfo">
                                 <span className="friendNickname">{friend.nickname}
                                     {friend.unread_count > 0 && <span className="unreadDot">{friend.unread_count}</span>}

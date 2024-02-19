@@ -2,11 +2,13 @@ import React, { useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../UserContext';
+import { URLManagement } from '../snippets';
 
 function SettingForm() {
     const { setUser } = useContext(UserContext);
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
+    const API_BASE_URL = URLManagement('http');
 
     const handleDeleteAccount = async () => {
         const isConfirmed = window.confirm("정말로 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
@@ -14,7 +16,7 @@ function SettingForm() {
         if (isConfirmed) {
             const csrfToken = getCookie('csrftoken');
             try {
-                await axios.post('http://localhost:8000/delete-account/', {}, {
+                await axios.post(`${API_BASE_URL}/delete-account/`, {}, {
                     headers: {
                         'X-CSRFToken': csrfToken
                     },

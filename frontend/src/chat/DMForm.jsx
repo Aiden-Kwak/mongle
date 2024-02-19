@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './dm.css';
 import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
+import { URLManagement } from '../snippets';
 
 function DMForm() {
     const [message, setMessage] = useState('');
@@ -23,6 +24,9 @@ function DMForm() {
     const typingTimeoutRef = useRef(null);
     const navigate = useNavigate();
 
+    const API_BASE_URL = URLManagement('http');
+    const WS_BASE_URL = URLManagement('ws');
+
     const receivedMessageIds = new Set();
 
     useEffect(() => {
@@ -34,7 +38,7 @@ function DMForm() {
 
     useEffect(() => {
         connectWebsocket();
-        axios.get(`http://localhost:8000/chat/dm/${friendUsername}`, {
+        axios.get(`${API_BASE_URL}/chat/dm/${friendUsername}`, {
             withCredentials: true
         })
         .then(response => {
@@ -111,7 +115,7 @@ function DMForm() {
             ws.close();
         }
 
-        const newWs = new WebSocket('ws://localhost:8000/ws/chat/dm/');
+        const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/dm/`);
         newWs.onopen = () => {
             setIsConnected(true);
             newWs.send(JSON.stringify({ type: 'start_dm', friend_username: friendUsername }));

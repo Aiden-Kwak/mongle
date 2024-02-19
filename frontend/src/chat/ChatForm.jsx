@@ -5,6 +5,7 @@ import accept from '../static/img/accept.png';
 import reject from '../static/img/reject.png';
 import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
+import { URLManagement } from '../snippets';
 
 function ChatForm() {
     const [message, setMessage] = useState('');
@@ -28,6 +29,8 @@ function ChatForm() {
     const typingTimeoutRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
+
+    const WS_BASE_URL = URLManagement('ws');
 
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
@@ -85,7 +88,7 @@ function ChatForm() {
             ws.close();
         }
 
-        const newWs = new WebSocket('ws://localhost:8000/ws/chat/random/');
+        const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/random/`);
         newWs.onopen = () => {
             setIsConnected(true);
             newWs.send(JSON.stringify({ type: 'start_chat' }));

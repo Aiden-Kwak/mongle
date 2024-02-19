@@ -2,10 +2,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { URLManagement } from '../snippets';
 
 function FindPWForm() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const API_BASE_URL = URLManagement('http');
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -16,7 +18,7 @@ function FindPWForm() {
         setMessage('');
 
         try {
-            const response = await axios.post('http://localhost:8000/pwreset-request/', { email });
+            const response = await axios.post(`${API_BASE_URL}/pwreset-request/`, { email });
             setMessage('비밀번호 재설정 링크가 이메일로 전송되었습니다. 이메일을 확인해주세요.');
         } catch (error) {
             setMessage('서버로부터 응답을 받지 못했습니다.');

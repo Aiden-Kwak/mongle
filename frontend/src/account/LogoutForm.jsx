@@ -2,10 +2,12 @@ import { useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { UserContext } from '../UserContext';
 import { useNavigate } from 'react-router-dom';
+import { URLManagement } from '../snippets';
 
 function LogoutForm() {
     const { setUser } = useContext(UserContext);
     const navigate = useNavigate();
+    const API_BASE_URL = URLManagement('http');
 
     function getCookie(name) {
         let cookieValue = null;
@@ -25,7 +27,7 @@ function LogoutForm() {
     const handleLogout = useCallback(async () => {
         const csrfToken=getCookie('csrftoken');
         try {
-            await axios.post('http://localhost:8000/logout/', {}, {
+            await axios.post(`${API_BASE_URL}/logout/`, {}, {
                 headers: {
                     'X-CSRFToken': csrfToken
                 },

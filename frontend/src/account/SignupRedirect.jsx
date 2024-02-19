@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { URLManagement } from '../snippets';
 
 function SignupRedirect({match}) {
     const navigate = useNavigate();
     const { uidb64, token } = useParams();
+    const API_BASE_URL = URLManagement('http');
 
     useEffect(() => {
         const activateEmail = async () => {
           try {
-            const response = await axios.get(`http://localhost:8000/activate/${uidb64}/${token}/`);
+            const response = await axios.get(`${API_BASE_URL}/activate/${uidb64}/${token}/`);
             console.log(response.data);
             localStorage.removeItem('user');
             // 이메일 인증 성공 시 로그인 페이지로 리디렉션

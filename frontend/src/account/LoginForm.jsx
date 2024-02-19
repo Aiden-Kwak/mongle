@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import { UserContext } from '../UserContext';
 import { Link } from 'react-router-dom';
+import { URLManagement } from '../snippets';
 
 import logo from '../static/img/logo.png';
 
@@ -14,6 +15,7 @@ function LoginForm() {
     const { setUser } = useContext(UserContext);
     const { user } = useContext(UserContext);
     const [tempMessage, setTempMessage] = useState('');
+    const API_BASE_URL = URLManagement('http');
 
     useEffect(() => {
         // 로컬 스토리지에서 사용자 정보를 로드
@@ -35,7 +37,7 @@ function LoginForm() {
         setError('');
         const csrfToken=getCookie('csrftoken');
         try {
-            const response = await axios.post('http://localhost:8000/login/', {
+            const response = await axios.post(`${API_BASE_URL}/login/`, {
                 username,
                 password
             }, {

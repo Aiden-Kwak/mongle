@@ -2,10 +2,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { URLManagement } from '../snippets';
 
 function FindIDForm() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const API_BASE_URL = URLManagement('http');
 
     const handleChange = (e) => {
         setEmail(e.target.value);
@@ -16,7 +18,7 @@ function FindIDForm() {
         setMessage('');
 
         try {
-            const response = await axios.post('http://localhost:8000/recover-username/', { email });
+            const response = await axios.post(`${API_BASE_URL}/recover-username/`, { email });
             setMessage(response.data.message);
         } catch (error) {
             setMessage('서버로부터 응답을 받지 못했습니다.');

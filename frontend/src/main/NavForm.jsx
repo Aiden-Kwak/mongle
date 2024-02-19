@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from '../static/img/logo.png';
 import axios from 'axios';
 import './main.css';
+import { URLManagement } from '../snippets';
 
 
 function NavForm() {
@@ -11,11 +12,12 @@ function NavForm() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [hasNotification, setHasNotification] = useState(false);
     const location = useLocation();
+    const API_BASE_URL = URLManagement('http');
     
     const checkNotifications = async () => {
         if (user) {
             try {
-                const response = await axios.get('http://localhost:8000/notification/check-notification', { withCredentials: true });
+                const response = await axios.get(`${API_BASE_URL}/notification/check-notification`, { withCredentials: true });
                 setHasNotification(response.data.message === "You have notifications");
             } catch (error) {
                 console.error("알림 상태 확인 실패", error);

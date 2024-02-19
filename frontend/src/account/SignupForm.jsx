@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './account.css';
 import logo from '../static/img/logo.png';
+import { URLManagement } from '../snippets';
 
 function SignupForm() {
     const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ function SignupForm() {
     const [tempMessage, setTempMessage] = useState('');
     const [schoolItem, setSchoolItem] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const API_BASE_URL = URLManagement('http');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,7 +24,7 @@ function SignupForm() {
     useEffect(() => {
         const fetchSchools = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/get-schools/');
+                const response = await axios.get(`${API_BASE_URL}/get-schools/`);
                 setSchoolItem(response.data);
             } catch (error) {
                 console.error("학교 목록을 불러오는 데 실패했습니다.", error);
@@ -52,7 +54,7 @@ function SignupForm() {
         const csrfToken=getCookie('csrftoken');
         try {
             setTempMessage("인증메일을 전송중입니다. 잠시만 기다려주세요");
-            const response = await axios.post('http://localhost:8000/signup/', formData, {
+            const response = await axios.post(`${API_BASE_URL}/signup/`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken,

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
 import defaultImg from '../static/img/logo.png';
+import {URLManagement} from '../snippets';
 
 import './profile.css';
 
@@ -19,6 +20,7 @@ function ProfileForm() {
 
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
+    const API_BASE_URL = URLManagement('http');
 
     useEffect(() => {
         if (!user){
@@ -30,7 +32,7 @@ function ProfileForm() {
 
     const fetchProfile = async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/profile/${user.username}/`, {
+            const response = await axios.get(`${API_BASE_URL}/profile/${user.username}/`, {
                 withCredentials: true
             });
             setProfile(response.data);
@@ -88,7 +90,7 @@ function ProfileForm() {
             if (profile.profilePic) {
                 formData.append('profile_pic', profile.profilePic);
             }
-            await axios.post(`http://localhost:8000/profile/${user.username}/update/`, formData, {
+            await axios.post(`${API_BASE_URL}/profile/${user.username}/update/`, formData, {
                 headers: {
                     'X-CSRFToken': csrfToken
                 },
