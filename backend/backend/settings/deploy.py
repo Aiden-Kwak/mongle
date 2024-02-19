@@ -26,7 +26,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('15.165.203.242', 6379)],  # Redis 서버 주소
+            "hosts": [("redis", 6379)],  # Redis 서버 주소
         },
     },
 }

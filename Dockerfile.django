@@ -9,7 +9,7 @@ RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # 재실행용
-RUN echo "testing:3"
+RUN echo "testing:5"
 
 # 작업 디렉토리 설정
 WORKDIR /app
@@ -20,10 +20,9 @@ RUN git clone git@github.com:Aiden-Kwak/mongle.git
 # 클론된 프로젝트의 backend 디렉토리로 작업 디렉토리 변경
 WORKDIR /app/mongle
 
-# 필수 패키지 설치
-RUN pip install -r requirements.txt
-
 WORKDIR /app/mongle/backend
+
+RUN pip install -r requirements.txt
 
 ENV DJANGO_SETTINGS_MODULE=backend.settings.deploy
 
@@ -32,4 +31,4 @@ RUN pip install mysqlclient
 EXPOSE 8000
 
 #python manage.py collectstatic --noinput --settings=backend.settings.deploy && 
-CMD ["bash", "-c", "python manage.py makemigrations --settings=backend.settings.deploy && python manage.py migrate --settings=backend.settings.deploy && daphne -p 8000 backend.asgi:application"]
+CMD ["bash", "-c", "python manage.py makemigrations --settings=backend.settings.deploy && python manage.py migrate --settings=backend.settings.deploy && daphne -b 0.0.0.0 -p 8000 backend.asgi:application"]
