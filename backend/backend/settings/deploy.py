@@ -30,6 +30,21 @@ DATABASES = {
     }
 }
 
+# Redis Channel Layer
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('15.165.203.242', 6379)],  # Redis 서버 주소
+        },
+    },
+}
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://15.165.203.242',
+    'https://15.165.203.242',
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
