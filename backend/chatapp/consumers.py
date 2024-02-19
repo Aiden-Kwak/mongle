@@ -21,8 +21,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         if self.user.is_authenticated:
             await self.accept()
-            # Redis에 연결
-            self.redis = await aioredis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
+            # Redis에 연결 # 주소 잠깐 서버용으로. 로컬과 범용성있게 바꿀것. 환경변수활용
+            self.redis = await aioredis.from_url("redis://redis", encoding="utf-8", decode_responses=True)
             # 매칭 로직 실행
             #asyncio.create_task(self.attempt_matching())
 
