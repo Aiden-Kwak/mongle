@@ -7,12 +7,14 @@ import asyncio
 from django.contrib.auth import get_user_model
 from utils.school_loader import load_schools_from_json
 import notificationapp
+import os
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     lock = asyncio.Lock()
 
     async def connect(self):
+        redis_url = os.environ.get('REDIS_URL', 'redis://localhost')
         self.user = self.scope['user']
         try:
             self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -22,7 +24,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if self.user.is_authenticated:
             await self.accept()
             # Redis에 연결 # 주소 잠깐 서버용으로. 로컬과 범용성있게 바꿀것. 환경변수활용
-            self.redis = await aioredis.from_url("redis://redis", encoding="utf-8", decode_responses=True)
+            self.redis = await aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
             # 매칭 로직 실행
             #asyncio.create_task(self.attempt_matching())
 
