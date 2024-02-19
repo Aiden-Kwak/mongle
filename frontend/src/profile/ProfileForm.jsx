@@ -32,7 +32,7 @@ function ProfileForm() {
 
     const fetchProfile = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/profile/${user.username}/`, {
+            const response = await axios.get(`${API_BASE_URL}/api/profile/${user.username}/`, {
                 withCredentials: true
             });
             setProfile(response.data);
@@ -90,7 +90,7 @@ function ProfileForm() {
             if (profile.profilePic) {
                 formData.append('profile_pic', profile.profilePic);
             }
-            await axios.post(`${API_BASE_URL}/profile/${user.username}/update/`, formData, {
+            await axios.post(`${API_BASE_URL}/api/profile/${user.username}/update/`, formData, {
                 headers: {
                     'X-CSRFToken': csrfToken
                 },

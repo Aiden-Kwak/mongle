@@ -11,7 +11,7 @@ function SignupRedirect({match}) {
     useEffect(() => {
         const activateEmail = async () => {
           try {
-            const response = await axios.get(`${API_BASE_URL}/activate/${uidb64}/${token}/`);
+            const response = await axios.get(`${API_BASE_URL}/api/activate/${uidb64}/${token}/`);
             console.log(response.data);
             localStorage.removeItem('user');
             // 이메일 인증 성공 시 로그인 페이지로 리디렉션

@@ -16,7 +16,7 @@ function SettingForm() {
         if (isConfirmed) {
             const csrfToken = getCookie('csrftoken');
             try {
-                await axios.post(`${API_BASE_URL}/delete-account/`, {}, {
+                await axios.post(`${API_BASE_URL}/api/delete-account/`, {}, {
                     headers: {
                         'X-CSRFToken': csrfToken
                     },

@@ -24,7 +24,7 @@ function SignupForm() {
     useEffect(() => {
         const fetchSchools = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/get-schools/`);
+                const response = await axios.get(`${API_BASE_URL}/api/get-schools/`);
                 setSchoolItem(response.data);
             } catch (error) {
                 console.error("학교 목록을 불러오는 데 실패했습니다.", error);
@@ -54,7 +54,7 @@ function SignupForm() {
         const csrfToken=getCookie('csrftoken');
         try {
             setTempMessage("인증메일을 전송중입니다. 잠시만 기다려주세요");
-            const response = await axios.post(`${API_BASE_URL}/signup/`, formData, {
+            const response = await axios.post(`${API_BASE_URL}/api/signup/`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken,

@@ -18,7 +18,7 @@ function FindIDForm() {
         setMessage('');
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/recover-username/`, { email });
+            const response = await axios.post(`${API_BASE_URL}/api/recover-username/`, { email });
             setMessage(response.data.message);
         } catch (error) {
             setMessage('서버로부터 응답을 받지 못했습니다.');

@@ -47,19 +47,19 @@ function FriendListForm() {
             try {
                 const csrfToken = getCookie('csrftoken');
                 // 친구삭제요청
-                await axios.delete(`${API_BASE_URL}/friend/remove/${friendUsername}/`, {
+                await axios.delete(`${API_BASE_URL}/api/friend/remove/${friendUsername}/`, {
                     headers: {
                         'X-CSRFToken': csrfToken
                     },
                     withCredentials: true
                 });
                 // 메세지삭제요청
-                await axios.delete(`${API_BASE_URL}/chat/remove-messages/${friendUsername}/`, {
+                await axios.delete(`${API_BASE_URL}/api/chat/remove-messages/${friendUsername}/`, {
                     headers: {'X-CSRFToken': csrfToken},
                     withCredentials: true
                 });
                 // 양쪽 알림삭제
-                await axios.delete(`${API_BASE_URL}/notification/delete-both/dm/${friendUsername}/`, {
+                await axios.delete(`${API_BASE_URL}/api/notification/delete-both/dm/${friendUsername}/`, {
                     headers: {'X-CSRFToken': csrfToken},
                     withCredentials: true
                 });
@@ -74,7 +74,7 @@ function FriendListForm() {
     const deleteNotification = async (friendUsername) => {
         try {
             const csrfToken = getCookie('csrftoken');
-            await axios.post(`${API_BASE_URL}/notification/delete/dm/${friendUsername}/`, {}, { // 두 번째 인자로 빈 객체를 전달
+            await axios.post(`${API_BASE_URL}/api/notification/delete/dm/${friendUsername}/`, {}, { // 두 번째 인자로 빈 객체를 전달
                 headers: {
                     'X-CSRFToken': csrfToken
                 },
@@ -103,7 +103,7 @@ function FriendListForm() {
 
     const fetchFriends = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/friend/list`, {
+            const response = await axios.get(`${API_BASE_URL}/api/friend/list`, {
                 withCredentials: true
             });
             setFriends(response.data);

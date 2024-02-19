@@ -38,7 +38,7 @@ function DMForm() {
 
     useEffect(() => {
         connectWebsocket();
-        axios.get(`${API_BASE_URL}/chat/dm/${friendUsername}`, {
+        axios.get(`${API_BASE_URL}/api/chat/dm/${friendUsername}`, {
             withCredentials: true
         })
         .then(response => {

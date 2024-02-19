@@ -27,7 +27,7 @@ function LogoutForm() {
     const handleLogout = useCallback(async () => {
         const csrfToken=getCookie('csrftoken');
         try {
-            await axios.post(`${API_BASE_URL}/logout/`, {}, {
+            await axios.post(`${API_BASE_URL}/api/logout/`, {}, {
                 headers: {
                     'X-CSRFToken': csrfToken
                 },

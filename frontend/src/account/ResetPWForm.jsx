@@ -23,7 +23,7 @@ function ChangePWForm() {
         const csrfToken=getCookie('csrftoken');
         try {
             // 비밀번호 변경 처리 API로 요청을 보냅니다.
-            const response = await axios.post(`${API_BASE_URL}/pw-change/`, {
+            const response = await axios.post(`${API_BASE_URL}/api/pw-change/`, {
                 old_password: currentPassword,
                 new_password: newPassword,
             }, {
