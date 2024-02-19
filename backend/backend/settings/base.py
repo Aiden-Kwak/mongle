@@ -43,7 +43,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],  # Redis 서버 주소
+            "hosts": [('15.165.203.242', 6379)],  # Redis 서버 주소
         },
     },
 }
@@ -61,9 +61,12 @@ CORS_ALLOW_CREDENTIALS = True
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
-    'http://localhost:8000',
+    #'http://localhost:3000',
+    #'http://localhost:8000',
+    'http://15.165.203.242',
+    'https://15.165.203.242',
 ]
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
