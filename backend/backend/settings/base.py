@@ -47,6 +47,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
 # Channels ASGI interface 세팅
 ASGI_APPLICATION = 'backend.asgi:application'
 

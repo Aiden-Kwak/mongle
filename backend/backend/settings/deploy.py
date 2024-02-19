@@ -22,8 +22,8 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "mongleDB",
-        "USER": "admin",
+        "NAME": "mongle",
+        "USER": "mongle",
         "PASSWORD": "2578160bhk!",
         "HOST": "mariadb",
         "PORT": "3306",
