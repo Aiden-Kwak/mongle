@@ -1,5 +1,13 @@
 import environ, os
 from pathlib import Path
+
+def read_secret(secret_name):
+    file = open('/run/secrets/' + secret_name)
+    secret = file.read()
+    secret = secret.rstrip().lstrip()
+    file.close()
+    return secret
+
 AUTH_USER_MODEL = 'accountapp.User'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,15 +46,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware', # 개발용
 ]
 
-# Redis Channel Layer
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('15.165.203.242', 6379)],  # Redis 서버 주소
-        },
-    },
-}
+
 
 # Channels ASGI interface 세팅
 ASGI_APPLICATION = 'backend.asgi:application'
@@ -60,12 +60,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 
-CSRF_TRUSTED_ORIGINS = [
-    #'http://localhost:3000',
-    #'http://localhost:8000',
-    'http://15.165.203.242',
-    'https://15.165.203.242',
-]
 
 ROOT_URLCONF = 'backend.urls'
 
