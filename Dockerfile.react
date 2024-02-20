@@ -18,6 +18,7 @@ RUN git clone git@github.com:Aiden-Kwak/mongle.git
 
 WORKDIR /app/mongle/frontend
 
+RUN npm cache clean --force
 # 의존성 설치
 RUN npm install
 
