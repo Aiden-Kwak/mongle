@@ -135,7 +135,7 @@ function ProfileForm() {
             {tempMessage && <div className='error'>{tempMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <div className='profile-header'>
-                    <img src={profile.profilePicPreview||profile.profile_pic} alt="프로필 사진" />
+                    <img src={profile.profilePicPreview||`${API_BASE_URL}${profile.profile_pic}`} alt="프로필 사진" />
                     <input
                         type="text"
                         name="nickname"
