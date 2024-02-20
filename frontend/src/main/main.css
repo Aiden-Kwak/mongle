@@ -330,4 +330,8 @@
     .nav-logo img {
         height: 45px!important;
     }
+    .nav-wrapper {
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
 }
