@@ -300,6 +300,7 @@
         font-size: 1.1rem;
         font-weight: bold;
         margin-left: 1rem;
+        margin-top: 2rem;
     }
     .start {
         display: inline-block;
@@ -312,8 +313,26 @@
     }
 }
 
-@media screen and (max-width: 300px){
+@media screen and (max-width: 400px){
     .rendered-name{
-        font-size: 5rem;
+        position: absolute;
+        top : 30%;
+    }
+    .rendered-name .para {
+        font-size: .9rem;
+        font-weight: bold;
+        margin-left: 0rem;
+        margin-top: 1rem;
+    }
+    .rendered-name{
+        font-size: 4.5rem;
+    }
+    .start {
+        font-size: 1.5rem;
+        color: white;
+        text-align: center;
+    }
+    .nav-logo img {
+        height: 45px!important;
     }
 }

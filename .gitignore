@@ -2,8 +2,7 @@
 venv/
 .idea/
 __pycache__/
-staticfiles/
-migrations/
+#staticfiles/
 
 # SET
 .env

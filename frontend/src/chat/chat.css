@@ -188,3 +188,35 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
+@media (max-width: 768px) {
+    .total-chat-container {
+        margin-top: 0;
+    }
+}
+@media (max-width: 400px) {
+    .first-message {
+        font-size: 0.85rem;
+    }
+    .chat-header >  .status {
+        font-size: .9rem;
+    }
+    .chat-header {
+        padding: 5px;
+    }
+    .chat-header >  .friend-btn > button {
+        font-size: .75rem;
+        padding: 6px 8px;
+    }
+    .message-bubble {
+        font-size: .85rem;
+        margin-bottom: .6rem;
+    }
+    .chat-input input {
+        font-size: 0.85rem;
+        padding: 9px;
+    }
+    .chat-input button {
+        padding: 8px 10px!important;
+        font-size: 0.85rem;
+    }
+}

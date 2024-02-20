@@ -14,7 +14,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     lock = asyncio.Lock()
 
     async def connect(self):
-        redis_url = os.environ.get('REDIS_URL', 'redis://localhost')
+        redis_url = os.environ.get('REDIS_URL')
+        if redis_url!="redis://redis":
+            redis_url = "redis://localhost"
         self.user = self.scope['user']
         try:
             self.room_name = self.scope['url_route']['kwargs']['room_name']

@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from '../static/img/logo.png';
 import axios from 'axios';
 import './main.css';
-import { URLManagement } from '../snippets';
+import { URLManagement, useWindowSize } from '../snippets';
 
 
 function NavForm() {
@@ -13,6 +13,11 @@ function NavForm() {
     const [hasNotification, setHasNotification] = useState(false);
     const location = useLocation();
     const API_BASE_URL = URLManagement('http');
+    const { width } = useWindowSize();
+    const isMobile = width < 768;
+    //모바일에서 네브바 숨길 경로
+    const hideNavOnPaths = ['/chat'];
+    const shouldHideNav = hideNavOnPaths.includes(location.pathname) && isMobile;
     
     const checkNotifications = async () => {
         if (user) {
@@ -59,6 +64,8 @@ function NavForm() {
     useEffect(() => {
         setIsMenuOpen(false);
     }, [location]);
+
+    if (shouldHideNav) return null; // 네브바 숨기기
 
     return (
         <nav>

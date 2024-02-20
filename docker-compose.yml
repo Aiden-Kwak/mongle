@@ -17,6 +17,8 @@ services:
       - MYSQL_PASSWORD
       - DJANGO_SECRET_KEY
       - EMAIL_HOST_PASSWORD
+    environment:
+      REDIS_URL: redis://redis
   react_container:
     image: mongle_react_image:1
     networks:
