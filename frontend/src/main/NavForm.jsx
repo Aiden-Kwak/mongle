@@ -74,7 +74,6 @@ function NavForm() {
                 <Link to="/" className="nav-logo">
                     <img src={logo} alt="Logo" />
                     <div className='logo-name-wrapper'>
-                        <span className="logo-name-s">대학생 랜덤채팅</span>
                         <span className="logo-name-l">
                             몽글몽글
                         </span>
@@ -105,7 +104,6 @@ function NavForm() {
                 <Link to="/" className="nav-logo">
                     <img src={logo} alt="Logo" />
                     <div className='logo-name-wrapper'>
-                        <span className="logo-name-s">대학생 랜덤채팅</span>
                         <span className="logo-name-l">
                             몽글몽글
                         </span>

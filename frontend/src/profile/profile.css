@@ -109,4 +109,10 @@ textarea {
     .profile-page-container {
         margin: 0 auto;
     }
+    .profile-submit {
+        font-size: .9rem;
+    }
+    .file-upload-content {
+        font-size: .9rem;
+    }
 }

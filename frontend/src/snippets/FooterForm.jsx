@@ -1,7 +1,17 @@
 import React from 'react';
 import './snippets.css';
+import { Link, useLocation } from 'react-router-dom';
+import { URLManagement, useWindowSize } from '../snippets';
 
 function FooterForm() {
+  const location = useLocation();
+  const hideNavOnPaths = ['/chat', '/friend', '/profile'];
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+
+  const shouldHideFooter = hideNavOnPaths.includes(location.pathname) && isMobile;
+
+  if (shouldHideFooter) return null;
   return (
     <footer className="footer-container">
       <p className='main-footer'>Copyright 2024. 몽글몽글. All rights reserved.</p>

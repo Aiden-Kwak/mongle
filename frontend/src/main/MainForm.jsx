@@ -122,7 +122,7 @@ function MainForm() {
             <canvas ref={canvasRef} />
             <div className='rendered-name'>
                 <p className='mongle'>Mongle</p>
-                <p className='para'>다른 학교에서 새로운 친구를 만나보세요</p>
+                <p className='para'>다른 학교의 친구들을 만나보세요</p>
                 <Link to="/chat" className="start">
                     <p className='start-p'>시작하기</p>
                 </Link>
