@@ -33,7 +33,9 @@ function NavForm() {
     };
 
     useEffect(() => {
-        checkNotifications();
+        if (user) {
+            checkNotifications();
+        }
     }, [user, location]);
 
     const toggleMenu = (event) => {
