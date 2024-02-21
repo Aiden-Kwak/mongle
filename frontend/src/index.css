@@ -21,6 +21,9 @@ color: #2c3e50;
 animation-fill-mode: forwards;
 }
 
+body { overflow: hidden; }
+body * { touch-action: none; }
+
 body::-webkit-scrollbar {
   display: none;
 }
