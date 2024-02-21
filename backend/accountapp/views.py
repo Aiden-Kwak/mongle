@@ -67,10 +67,12 @@ class ActivateAccountAPI(APIView):
         if user is not None and account_activation_token.check_token(user, token):
             user.is_active = True
             user.save()
+            print('이메일 인증이 성공하였습니다.') # 검토후 삭제
             return Response({'message': '이메일 인증이 완료되었습니다.'})
         else:
             if user is not None:
                 user.delete()
+            print('이메일 인증이 실패하였습니다.') # 검토후 삭제
             return Response({'message': '이메일 인증이 실패하였습니다.'})
         
         #HttpResponseRedirect(f'http://localhost:3000/activate/{uidb64}/{token}')
