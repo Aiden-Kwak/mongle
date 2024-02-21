@@ -24,7 +24,6 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedire
 from utils.school_loader import load_schools_from_json
 
 class AccountCreateAPI(APIView):
-    #@csrf_exempt # 배포시 해결할것
     def post(self, request):
         serializer = AccountCreateSerializer(data=request.data)
         if serializer.is_valid():
@@ -70,6 +69,8 @@ class ActivateAccountAPI(APIView):
             user.save()
             return Response({'message': '이메일 인증이 완료되었습니다.'})
         else:
+            if user is not None:
+                user.delete()
             return Response({'message': '이메일 인증이 실패하였습니다.'})
         
         #HttpResponseRedirect(f'http://localhost:3000/activate/{uidb64}/{token}')
@@ -138,7 +139,7 @@ class UsernameRecoveryAPI(APIView):
         send_mail(
             subject=mail_subject, 
             message=message, 
-            from_email='noreply@yourdomain.com', 
+            from_email='dev.mongle@gmail.com', 
             recipient_list=[email], 
             fail_silently=False,
             html_message=html_message

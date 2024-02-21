@@ -4,6 +4,8 @@ import {useNavigate} from 'react-router-dom';
 import { UserContext } from '../UserContext';
 import { Link } from 'react-router-dom';
 import { URLManagement } from '../snippets';
+import { getCookie } from '../snippets';
+import { removeCookie } from '../snippets';
 
 import logo from '../static/img/logo.png';
 
@@ -26,11 +28,17 @@ function LoginForm() {
     }, [setUser]);
 
     useEffect(() => {
-        // 로그인되지 않은 경우 로그인 페이지로 리디렉트
+        // 이미 로그인 된 경우 메인 페이지로 리디렉션
         if (user) {
             navigate('/');
         }
     }, [user, navigate]);
+
+    useEffect(() => {
+        // 로그인 페이지 진입시 쿠키의 sessionid 삭제
+        removeCookie('sessionid');
+    }   , []);
+
     
 
     const handleSubmit = async (e) => {
@@ -59,21 +67,6 @@ function LoginForm() {
             }
         }
     };
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     const showTempMessage = (error) => {
         setTempMessage(error); // 메시지 설정

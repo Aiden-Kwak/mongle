@@ -18,6 +18,7 @@ function SignupRedirect({match}) {
             navigate('/login');
           } catch (error) {
             console.error('이메일 인증 실패:', error.response);
+            navigate('/login');
           }
         };
         activateEmail();
