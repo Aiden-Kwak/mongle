@@ -32,7 +32,7 @@ function MainForm() {
         controls.enableDamping = true;
         controls.dampingFactor = 0.25;
         controls.enableZoom = true;
-        controls.autoRotate = true;
+        controls.autoRotate = false;
         controls.autoRotateSpeed = 0.05;
 
         scene.background = new THREE.Color('#191919');

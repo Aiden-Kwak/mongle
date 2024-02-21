@@ -99,7 +99,7 @@
   width: 400px;
 }
 
-.login-container > .error, .signup-container > .error {
+.login-container > .error, .signup-container > .error, .findaccount-container > .error {
   position: fixed; /* 팝업을 화면에 고정 */
   top: 20%; /* 상단에서부터의 위치 */
   left: 50%; /* 왼쪽에서부터의 위치 */
@@ -114,6 +114,7 @@
   text-align: center; /* 텍스트 중앙 정렬 */
   max-width: 80%; /* 최대 너비 설정 */
   word-wrap: break-word; /* 긴 텍스트 처리 */
+  font-family: "Dovemayo_gothic";
 }
 
 .login-container > form {

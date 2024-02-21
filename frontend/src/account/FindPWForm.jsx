@@ -1,5 +1,5 @@
 // FindPWForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { URLManagement } from '../snippets';
@@ -8,6 +8,7 @@ function FindPWForm() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const API_BASE_URL = URLManagement('http');
+    const [tempMessage, setTempMessage] = useState('');
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -16,6 +17,7 @@ function FindPWForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage('');
+        setTempMessage('메일을 전송중입니다. 잠시만 기다려주세요.');
 
         try {
             const response = await axios.post(`${API_BASE_URL}/api/pwreset-request/`, { email });
@@ -24,6 +26,17 @@ function FindPWForm() {
             setMessage('서버로부터 응답을 받지 못했습니다.');
         }
     };
+    const showTempMessage = (msg) => {
+        setTempMessage(msg); // 메시지 설정
+        setTimeout(() => {
+            setTempMessage(''); // 2초 후 메시지 제거
+        }, 1500);
+    };
+    useEffect(() => {
+        if (message) {
+            showTempMessage(message);
+        }
+    }, [message]);
 
     return (
         <div className='findaccount-container'>
@@ -35,6 +48,7 @@ function FindPWForm() {
                     <p>비밀번호 찾기</p>
                 </Link>
             </div>
+            {tempMessage && <div className='error'>{tempMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="email"
@@ -45,7 +59,6 @@ function FindPWForm() {
                 />
                 <button type="submit">비밀번호 찾기</button>
             </form>
-            {message && <div>{message}</div>}
             <div className='notice'>
                 <p>※ 비밀번호를 잊으셨나요? 이메일을 입력하시면 비밀번호 재설정 링크를 보내드립니다.</p>
                 <p>※ 만약 이메일이 오지 않는다면, 스펨메일함을 확인해주세요.</p>
