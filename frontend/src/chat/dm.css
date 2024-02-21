@@ -160,7 +160,10 @@
 
 @media (max-width: 768px) {
     .dm-container {
-        height: 100vh;
+        height: calc(100vh - 50px);
+        @supports (-webkit-touch-callout: none) {
+            height: -webkit-fill-available;
+        }
     }
     .dm-messages {
         justify-content: flex-end;
