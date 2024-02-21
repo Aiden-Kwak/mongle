@@ -69,7 +69,7 @@
 }
 
 .chat-input button {
-    padding: 10px 15px;
+    padding: 10px 10px;
     background-color: #F07489;
     border: none;
     border-radius: 3px;
@@ -193,7 +193,7 @@
     .total-chat-container {
         margin-top: 0;
         margin-bottom: 0;
-        height: calc(100vh - 50px);
+        height: calc(var(--vh, 1vh) * 100 - 45px);
         @supports (-webkit-touch-callout: none) {
             height: -webkit-fill-available;
         }
@@ -201,6 +201,9 @@
     .chat-container {
         height: 100%;
         margin-bottom: 0;
+    }
+    .chat-input button:hover {
+        background-color: #F07489;
     }
 }
 @media (max-width: 400px) {
