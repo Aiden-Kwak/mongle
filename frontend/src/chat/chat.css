@@ -193,9 +193,10 @@
     .total-chat-container {
         margin-top: 0;
         margin-bottom: 0;
+        height: 100vh;
     }
     .chat-container {
-        height: 100vh;
+        height: 100%;
         margin-bottom: 0;
     }
 }
@@ -224,5 +225,8 @@
     .chat-input button {
         padding: 8px 10px!important;
         font-size: 0.85rem;
+    }
+    .chat-messages {
+        justify-content: flex-end;
     }
 }

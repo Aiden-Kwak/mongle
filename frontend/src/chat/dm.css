@@ -160,6 +160,9 @@
 
 @media (max-width: 768px) {
     .dm-container {
-        height: 100vh;
+        height: 100%;
+    }
+    .dm-messages {
+        justify-content: flex-end;
     }
 }

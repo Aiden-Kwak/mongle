@@ -136,7 +136,8 @@ class UsernameRecoveryAPI(APIView):
         message = "귀하의 아이디 찾기 요청에 대한 정보입니다. 이 메일은 HTML 형식으로 보내진 메일입니다. 메일 클라이언트가 HTML을 지원하지 않는 경우, 이 텍스트 메시지를 보게 됩니다."
         html_message = render_to_string('accountapp/recover_username_email.html', {
             'username': user.username,
-            'domain': current_site.domain,
+            #'domain': current_site.domain,
+            'domain': "mongles.com",
         })
         send_mail(
             subject=mail_subject, 

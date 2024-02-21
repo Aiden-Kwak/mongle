@@ -16,8 +16,10 @@ function NavForm() {
     const { width } = useWindowSize();
     const isMobile = width < 768;
     //모바일에서 네브바 숨길 경로
+    const dmPath = [/^\/dm\/[^\/]+$/];
     const hideNavOnPaths = ['/chat'];
-    const shouldHideNav = hideNavOnPaths.includes(location.pathname) && isMobile;
+    const isDMPath = dmPath.some((regex) => location.pathname.match(regex));
+    const shouldHideNav = (hideNavOnPaths.includes(location.pathname)||isDMPath) && isMobile;
     
     const checkNotifications = async () => {
         if (user) {
