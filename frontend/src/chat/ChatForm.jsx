@@ -47,12 +47,12 @@ function ChatForm() {
         };
     }, []);
 
-    //useEffect(() => {
-    //    // 로그인되지 않은 경우 로그인 페이지로 리디렉트
-    //    if (!user) {
-    //        navigate('/login');
-    //    }
-    //}, [user, navigate]);
+    useEffect(() => {
+        // 로그인되지 않은 경우 로그인 페이지로 리디렉트
+        if (!user) {
+            navigate('/login');
+        }
+    }, [user, navigate]);
 
     useEffect(() => {
         if (messagesEndRef.current) {
