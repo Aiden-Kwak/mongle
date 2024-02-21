@@ -27,6 +27,7 @@ function ChatForm() {
     const { user } = useContext(UserContext);
     const messagesEndRef = useRef(null);
     const typingTimeoutRef = useRef(null);
+    const inputRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -170,6 +171,7 @@ function ChatForm() {
     };
 
     const sendMessage = () => {
+        inputRef.current.focus(); // 입력창에 포커스
         if (ws && message) {
             const messageData = { type: 'chat_message', message: message };
             ws.send(JSON.stringify(messageData));
@@ -255,7 +257,10 @@ function ChatForm() {
                 </div>
                 <div className="chat-messages" ref={messagesEndRef}>
                     {isMatched &&
-                        <p className='first-message'>{`"${peerInfo.school}"의 누군가와 연결되었습니다!`}</p>
+                        <>
+                            <p className='first-message'>{`"${peerInfo.school}"의 누군가와 연결되었습니다!`}</p>
+                            <p className='first-message'>친구추가를 하면 다음에도 계속 대화할 수 있어요!</p>
+                        </>    
                     }
                     {!isMatched &&
                         <>
@@ -287,6 +292,7 @@ function ChatForm() {
                                     <button onClick={confirmEndChat}>대화 끝</button> // 초기 상태
                             ))}
                             <input 
+                                ref={inputRef}
                                 type="text" 
                                 value={message} 
                                 onChange={(e) => setMessage(e.target.value)}

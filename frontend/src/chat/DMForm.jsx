@@ -22,6 +22,7 @@ function DMForm() {
 
     const messagesEndRef = useRef(null);
     const typingTimeoutRef = useRef(null);
+    const inputRef = useRef(null);
     const navigate = useNavigate();
 
     const API_BASE_URL = URLManagement('http');
@@ -147,6 +148,7 @@ function DMForm() {
     };
 
     const sendMessage = () => {
+        inputRef.current.focus(); // 입력창에 포커스
         if (ws && message) {
             const messageData = { type: 'dm_message', message: message };
             ws.send(JSON.stringify(messageData));
@@ -208,6 +210,7 @@ function DMForm() {
             </div>
             <div className="chat-input">
                 <input 
+                    ref={inputRef}
                     type="text" 
                     value={message} 
                     onChange={(e) => setMessage(e.target.value)}
