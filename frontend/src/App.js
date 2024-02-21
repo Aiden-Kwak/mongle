@@ -30,7 +30,7 @@ function App() {
                     <Route path="/password-change" element={<ResetPWForm />} />
                     <Route path="/setting" element={<SettingForm />} />
                     <Route path="/activate/:uidb64/:token" element={<SignupRedirect />} />
-                    <Route path="*" element={<NotFoundForm />} />
+                    {/*<Route path="*" element={<NotFoundForm />} />*/}
                 </Routes>
                 <FooterForm />
             </div>

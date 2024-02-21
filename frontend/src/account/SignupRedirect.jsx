@@ -19,6 +19,7 @@ function SignupRedirect({match}) {
           } catch (error) {
             console.error('이메일 인증 실패:', error.response);
             navigate('/login');
+            
           }
         };
         activateEmail();

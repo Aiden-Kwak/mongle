@@ -17,13 +17,13 @@ function FindPWForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage('');
-        setTempMessage('메일을 전송중입니다. 잠시만 기다려주세요.');
+        setTempMessage('등록된 정보를 검토중입니다. 잠시만 기다려주세요.');
 
         try {
             const response = await axios.post(`${API_BASE_URL}/api/pwreset-request/`, { email });
-            setMessage('비밀번호 재설정 링크가 이메일로 전송되었습니다. 이메일을 확인해주세요.');
+            setMessage('임시 비밀번호가 이메일로 전송되었습니다. 이메일을 확인해주세요.');
         } catch (error) {
-            setMessage('서버로부터 응답을 받지 못했습니다.');
+            setMessage(error.response.data.error);
         }
     };
     const showTempMessage = (msg) => {
