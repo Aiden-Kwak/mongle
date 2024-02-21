@@ -36,9 +36,9 @@ function LoginForm() {
 
     useEffect(() => {
         // 로그인 페이지 진입시 쿠키의 sessionid 삭제
+        console.log('로그인 페이지 진입시 쿠키 삭제');
         removeCookie('sessionid');
     }   , []);
-
     
 
     const handleSubmit = async (e) => {
