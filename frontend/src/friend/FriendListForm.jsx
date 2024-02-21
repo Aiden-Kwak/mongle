@@ -103,6 +103,7 @@ function FriendListForm() {
 
     const fetchFriends = async () => {
         try {
+            console.log("API_BASE_URL: ", API_BASE_URL);
             const response = await axios.get(`${API_BASE_URL}/api/friend/list`, {
                 withCredentials: true
             });

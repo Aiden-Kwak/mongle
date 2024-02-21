@@ -5,11 +5,13 @@ import { URLManagement, useWindowSize } from '../snippets';
 
 function FooterForm() {
   const location = useLocation();
-  const hideNavOnPaths = ['/chat', '/friend', '/profile', '/login'];
+  const hideNavOnPaths = [,'/chat', '/friend', '/profile', '/login'];
+  const dmPath = [/^\/dm\/[^\/]+$/];
   const { width } = useWindowSize();
   const isMobile = width < 768;
 
-  const shouldHideFooter = hideNavOnPaths.includes(location.pathname) && isMobile;
+  const isDMPath = dmPath.some((regex) => location.pathname.match(regex));
+  const shouldHideFooter = (hideNavOnPaths.includes(location.pathname) || isDMPath) && isMobile;
 
   if (shouldHideFooter) return null;
   return (

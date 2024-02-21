@@ -31,6 +31,7 @@ function LoginForm() {
             navigate('/');
         }
     }, [user, navigate]);
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();

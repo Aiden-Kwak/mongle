@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../UserContext';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -11,6 +12,8 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 // 상대 경로에 따라 조정
 
 function MainForm() {
+    const { user } = useContext(UserContext);
+
     const canvasRef = useRef();
     let rotationDirection = 0.000005; // 초기 회전 방향
     let lastDirectionChangeTime = Date.now();
