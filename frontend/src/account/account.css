@@ -233,6 +233,9 @@ button:active {
   .signup-container {
     margin: 20% auto 0; /* 상단에 여백을 주고 가운데 정렬 */
   }
+  .login-container > .error, .signup-container > .error, .findaccount-container > .error {
+    font-size: 0.85rem;
+  }
 }
 
 /* FindForm */

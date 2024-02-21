@@ -157,3 +157,9 @@
 .their-message .message-timestamp {
     align-self: flex-start; /* 왼쪽 메시지의 타임스탬프를 위해 */
 }
+
+@media (max-width: 768px) {
+    .dm-container {
+        height: 100vh;
+    }
+}

@@ -192,6 +192,11 @@
 @media (max-width: 768px) {
     .total-chat-container {
         margin-top: 0;
+        margin-bottom: 0;
+    }
+    .chat-container {
+        height: 100vh;
+        margin-bottom: 0;
     }
 }
 @media (max-width: 400px) {
