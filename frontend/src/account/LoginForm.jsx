@@ -56,7 +56,7 @@ function LoginForm() {
             });
             localStorage.setItem('user', JSON.stringify({ username: username }));
             setUser({ username: username });
-            navigate('/chat');
+            navigate('/');
         } catch (error) {
             if (error.response && error.response.data) {
                 // 서버로부터의 응답에 따라 오류 메시지 설정

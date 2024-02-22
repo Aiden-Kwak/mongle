@@ -38,21 +38,31 @@ function ChatForm() {
             let vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty('--vh', `${vh}px`);
         }
+        function handleVisualViewportResize() {
+            let vh = window.visualViewport.height * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
         setScreenSize(); // 페이지가 로드될 때 한 번 호출
         // 브라우저 창의 크기가 변경될 때마다 호출
         window.addEventListener('resize', setScreenSize);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', handleVisualViewportResize);
+        }
         // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
         return () => {
             window.removeEventListener('resize', setScreenSize);
+            if (window.visualViewport) {
+                window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
+            }
         };
     }, []);
 
-    useEffect(() => {
-        // 로그인되지 않은 경우 로그인 페이지로 리디렉트
-        if (!user) {
-            navigate('/login');
-        }
-    }, [user, navigate]);
+    //useEffect(() => {
+    //    // 로그인되지 않은 경우 로그인 페이지로 리디렉트
+    //    if (!user) {
+    //        navigate('/login');
+    //    }
+    //}, [user, navigate]);
 
     useEffect(() => {
         if (messagesEndRef.current) {
