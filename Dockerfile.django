@@ -31,4 +31,4 @@ RUN pip install mysqlclient
 EXPOSE 8000
 
 #python manage.py collectstatic --noinput --settings=backend.settings.deploy && 
-CMD ["bash", "-c", "python manage.py makemigrations --settings=backend.settings.deploy && python manage.py migrate --settings=backend.settings.deploy && daphne -b 0.0.0.0 -p 8000 backend.asgi:application"]
+CMD ["bash", "-c", "python manage.py makemigrations --settings=backend.settings.deploy && python manage.py migrate --settings=backend.settings.deploy && python manage.py collectstatic --noinput --settings=backend.settings.deploy && daphne -b 0.0.0.0 -p 8000 backend.asgi:application"]

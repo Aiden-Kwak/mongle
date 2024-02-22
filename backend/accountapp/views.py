@@ -158,45 +158,6 @@ class UsernameRecoveryAPI(APIView):
         
         return Response({'message': '귀하의 아이디 정보를 이메일로 전송하였습니다.'}, status=status.HTTP_200_OK)
 
-
-
-#class PasswordResetRequestAPI(APIView):
-#    def post(self, request):
-#        email = request.data.get('email')
-#        user_model = get_user_model()
-#        try:
-#            user = user_model.objects.get(email=email)
-#        except user_model.DoesNotExist:
-#            return Response({'error': '해당 이메일로 등록된 사용자가 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
-#        
-#        current_site = get_current_site(request)
-#        mail_subject = '[몽글몽글] 비밀번호 재설정 요청'
-#        if settings.DEBUG:
-#            set_domain = "localhost:3000"
-#        else:
-#            set_domain = "mongles.com"
-#        context = {
-#            'user': user,
-#            'domain': set_domain,
-#            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-#            'token': default_token_generator.make_token(user),
-#        }
-#        # HTML 메시지
-#        html_message = render_to_string('accountapp/password_reset_email.html', context)
-#        # 일반 텍스트 메시지
-#        message = "비밀번호를 재설정하려면 이메일에 포함된 링크를 클릭해주세요."
-#
-#        send_mail(
-#            subject=mail_subject,
-#            message=message,
-#            from_email='noreply@yourdomain.com',
-#            recipient_list=[email],
-#            fail_silently=False,
-#            html_message=html_message  # HTML 메시지 추가
-#        )
-#        
-#        return Response({'message': '비밀번호 재설정 링크를 이메일로 전송하였습니다.'}, status=status.HTTP_200_OK)
-
 class PasswordResetRequestAPI(APIView): # 등록된 이메일인지확인, 새로운 비밀번호 전송
     def post(self, request):
         email = request.data.get('email')
@@ -227,33 +188,33 @@ class PasswordResetRequestAPI(APIView): # 등록된 이메일인지확인, 새�
         return Response({'message': '새로운 비밀번호를 이메일로 전송하였습니다.'}, status=status.HTTP_200_OK)
 
 
-class PasswordResetConfirmAPI(APIView):
-    def post(self, request, uidb64, token):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-        
-        if user is not None and default_token_generator.check_token(user, token):
-            new_password = request.data.get('new_password')
-            user.set_password(new_password)
-            user.save()
-            return Response({'message': '비밀번호가 재설정되었습니다.'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': '비밀번호 재설정 링크가 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
-    
-    def get(self, request, uidb64, token):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = get_user_model().objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
-            user = None
-
-        if user is not None and default_token_generator.check_token(user, token):
-            return HttpResponseRedirect(f'http://localhost:3000/password-reset/{uidb64}/{token}')
-        else:
-            return HttpResponseBadRequest('비밀번호 재설정 요청이 유효하지 않습니다.')
+#class PasswordResetConfirmAPI(APIView):
+#    def post(self, request, uidb64, token):
+#        try:
+#            uid = force_str(urlsafe_base64_decode(uidb64))
+#            user = User.objects.get(pk=uid)
+#        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+#            user = None
+#        
+#        if user is not None and default_token_generator.check_token(user, token):
+#            new_password = request.data.get('new_password')
+#            user.set_password(new_password)
+#            user.save()
+#            return Response({'message': '비밀번호가 재설정되었습니다.'}, status=status.HTTP_200_OK)
+#        else:
+#            return Response({'error': '비밀번호 재설정 링크가 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+#    
+#    def get(self, request, uidb64, token):
+#        try:
+#            uid = force_str(urlsafe_base64_decode(uidb64))
+#            user = get_user_model().objects.get(pk=uid)
+#        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
+#            user = None
+#
+#        if user is not None and default_token_generator.check_token(user, token):
+#            return HttpResponseRedirect(f'http://localhost:3000/password-reset/{uidb64}/{token}')
+#        else:
+#            return HttpResponseBadRequest('비밀번호 재설정 요청이 유효하지 않습니다.')
 
 class AccountDeleteAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
