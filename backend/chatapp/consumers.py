@@ -18,6 +18,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if redis_url!="redis://redis":
             redis_url = "redis://localhost"
         self.user = self.scope['user']
+
+        query_string = self.scope["query_string"].decode("utf-8")
+        query_params = dict(qc.split("=") for qc in query_string.split("&"))
+        connection_type = query_params.get("type")
+        friend_username = query_params.get("friend_username")
+
         try:
             self.room_name = self.scope['url_route']['kwargs']['room_name']
         except:
@@ -30,15 +36,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # 매칭 로직 실행
             #asyncio.create_task(self.attempt_matching())
 
-            if self.room_name == None:
-                print("room_name is None")
+            #if self.room_name == None and connection_type=="random": # 디엠기능에서도 이게 논으로 뜰 수 있음
+            #    print("room_name is None")
+            #    await self.attempt_matching()
+            #else:
+            #    print(f"room_name: {self.room_name}")
+            #    if "random" in self.room_name:
+            #        await self.attempt_matching()
+            #    elif "dm" in self.room_name:
+            #        await self.setup_direct_message()
+            
+            if connection_type=="random":
                 await self.attempt_matching()
-            else:
-                print(f"room_name: {self.room_name}")
-                if "random" in self.room_name:
-                    await self.attempt_matching()
-                elif "dm" in self.room_name:
-                    await self.setup_direct_message()
+            elif connection_type=="dm" and friend_username:
+                await self.setup_direct_message(friend_username)
     
     async def setup_direct_message(self, friend_username):
         sorted_usernames = sorted([self.user.username, friend_username])
@@ -55,7 +66,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_name = room_name
             await self.channel_layer.group_add(room_name, self.channel_name)
             await self.redis.set(f"dm_room_name_{self.user.username}", room_name)
-            print(f"setup_friend_list: {room_name}")
 
     @database_sync_to_async
     def get_user_school(self, username):
@@ -73,7 +83,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.redis.set(f"channel_name_{self.user.username}", self.channel_name)
         await self.redis.sadd("waiting_users", self.user.username)
         waiting_users = await self.redis.smembers("waiting_users")
-
         if len(waiting_users) > 1:
             peer_user = random.choice(list(waiting_users - {self.user.username}))
             await self.redis.srem("waiting_users", self.user.username, peer_user)
@@ -134,6 +143,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             
         elif message_type == 'friend_list':
             friend_list = text_data_json['username_list']
+            print(f"friend_list: {friend_list}")
             await self.setup_friend_list(friend_list)
 
         elif message_type == 'start_dm':

@@ -103,7 +103,7 @@ function ChatForm() {
             ws.close();
         }
 
-        const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/random/`);
+        const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/random/?type=random&friend_username=none`);
         newWs.onopen = () => {
             setIsConnected(true);
             newWs.send(JSON.stringify({ type: 'start_chat' }));

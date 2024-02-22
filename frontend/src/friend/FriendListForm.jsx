@@ -125,7 +125,7 @@ function FriendListForm() {
     }, [user, navigate]);
 
     useEffect(() => {
-        const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/dm/`);
+        const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/dm/?type=friend_list&friend_username=none`);
         newWs.onopen = () => {
             const friendUsernameList = friends.map(friend => friend.username);
             console.log('friendUsernameList: ', friendUsernameList);

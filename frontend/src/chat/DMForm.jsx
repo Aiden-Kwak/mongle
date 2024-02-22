@@ -116,7 +116,7 @@ function DMForm() {
             ws.close();
         }
 
-        const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/dm/`);
+        const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/dm/?type=dm&friend_username=${friendUsername}`);
         newWs.onopen = () => {
             setIsConnected(true);
             newWs.send(JSON.stringify({ type: 'start_dm', friend_username: friendUsername }));
