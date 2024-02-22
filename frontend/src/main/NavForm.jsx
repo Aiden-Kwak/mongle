@@ -17,7 +17,7 @@ function NavForm() {
     const isMobile = width < 768;
     //모바일에서 네브바 숨길 경로
     const dmPath = [/^\/dm\/[^\/]+$/];
-    const hideNavOnPaths = ['/chat'];
+    const hideNavOnPaths = ['/chat', '/test'];
     const isDMPath = dmPath.some((regex) => location.pathname.match(regex));
     const shouldHideNav = (hideNavOnPaths.includes(location.pathname)||isDMPath) && isMobile;
     

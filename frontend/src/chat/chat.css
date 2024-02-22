@@ -12,8 +12,7 @@
     margin: 0px auto;
     border: 1px solid #ddd;
     border-radius: 5px;
-    -webkit-overflow-scrolling: touch;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 .chat-container .message-bubble {
@@ -196,11 +195,16 @@
     .total-chat-container {
         margin-top: 0;
         margin-bottom: 0;
-        height: calc(var(--vh, 1vh) * 100 - 45px);
+        height: calc(var(--vh, 1vh) * 100 - 50px);
     }
     .chat-container {
-        height: 100%+1px;
+        height: 100%;/*테스트: 1px 더하면 스크롤되지않을까*/
         margin-bottom: 0;
+    }
+    .chat-messages {
+        /* chat-messages 영역이 flex-grow를 사용하여 남은 공간을 채우도록 합니다. */
+        flex-grow: 1;
+        overflow-y: scroll; /* 이 영역에서만 스크롤이 가능하도록 합니다. */
     }
     .chat-input button:hover {
         background-color: #F07489;
@@ -234,5 +238,8 @@
     }
     .chat-messages {
         justify-content: flex-end;
+        flex-grow: 1;
+        overflow-y: scroll;
     }
+
 }

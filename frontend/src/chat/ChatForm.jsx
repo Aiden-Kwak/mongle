@@ -33,27 +33,25 @@ function ChatForm() {
 
     const WS_BASE_URL = URLManagement('ws');
 
+
+    function setScreenSize2() {
+        let vh = window.outerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
+    function setScreenSize() {
+        console.log(window.innerHeight);
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
     useEffect(() => {
-        function setScreenSize() {
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
-        function handleVisualViewportResize() {
-            let vh = window.visualViewport.height * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
         setScreenSize(); // 페이지가 로드될 때 한 번 호출
         // 브라우저 창의 크기가 변경될 때마다 호출
         window.addEventListener('resize', setScreenSize);
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', handleVisualViewportResize);
-        }
         // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
         return () => {
             window.removeEventListener('resize', setScreenSize);
-            if (window.visualViewport) {
-                window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
-            }
         };
     }, []);
 
@@ -323,6 +321,7 @@ function ChatForm() {
                                 onKeyUp={handleTyping}
                                 onKeyDown={handleKeyDown}
                                 placeholder="메시지를 입력하세요"
+                                onClick={setScreenSize2}
                             />
                             <button onClick={sendMessage}>보내기</button>
                         </>

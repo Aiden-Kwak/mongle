@@ -5,7 +5,7 @@ import { URLManagement, useWindowSize } from '../snippets';
 
 function FooterForm() {
   const location = useLocation();
-  const hideNavOnPaths = [,'/chat', '/friend', '/profile', '/login'];
+  const hideNavOnPaths = [,'/chat', '/friend', '/profile', '/login', '/test'];
   const dmPath = [/^\/dm\/[^\/]+$/];
   const { width } = useWindowSize();
   const isMobile = width < 768;

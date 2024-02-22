@@ -159,9 +159,6 @@
 @media (max-width: 768px) {
     .dm-container {
         height: calc(100vh - 50px);
-        @supports (-webkit-appearance: none) {
-            height: 100vh
-        }
     }
     .dm-messages {
         justify-content: flex-end;
