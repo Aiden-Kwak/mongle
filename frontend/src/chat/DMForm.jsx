@@ -50,6 +50,17 @@ function DMForm() {
             window.removeEventListener('resize', setScreenSize);
         };
     }, [isKeyboardActive]);
+    useEffect(() => {
+        // setInterval을 사용하여 someFunction을 1초마다 호출
+        const interval = setInterval(() => {
+            if(setIsKeyboardActive === false){
+                setScreenSize();
+            }
+        }, 500);
+    
+        // 컴포넌트가 언마운트될 때 setInterval을 정리
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
