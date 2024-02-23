@@ -158,10 +158,10 @@
 
 @media (max-width: 768px) {
     .dm-container {
-        height: calc(100vh - 50px);
+        height: calc(var(--vh, 1vh) * 100 - 50px);
     }
     .dm-messages {
-        justify-content: flex-end;
+        flex-direction: column-reverse;
     }
     .chat-input button:hover {
         background-color: #F07489;

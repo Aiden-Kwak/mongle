@@ -49,23 +49,11 @@ function TestForm() {
     //useEffect(() => {
     //    window.visualViewport.onresize = handleVisualViewportResize
     //}  , [])
-        
-    useEffect(() => {
-        // 로그인 페이지에서만 touch-action 스타일 적용
-        const originalTouchAction = document.body.style.touchAction;
-        document.body.style.touchAction = 'none';
-
-        return () => {
-            // 컴포넌트가 언마운트될 때 원래의 touch-action 스타일로 복원
-            document.body.style.touchAction = originalTouchAction;
-        };
-    }, []);  
-
 
     const sendMessage = () => {
         // 메시지 배열에 새 메시지 추가
         const newMessage = { message: message, sender: "me" }; // 임시로 "me"로 설정
-        setChat([...chat, newMessage]);
+        setChat([newMessage, ...chat]);
         setMessage(''); // 입력 필드 초기화
         inputRef.current.focus();
     };

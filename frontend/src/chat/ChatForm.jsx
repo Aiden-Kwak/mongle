@@ -55,12 +55,12 @@ function ChatForm() {
         };
     }, []);
 
-    //useEffect(() => {
-    //    // 로그인되지 않은 경우 로그인 페이지로 리디렉트
-    //    if (!user) {
-    //        navigate('/login');
-    //    }
-    //}, [user, navigate]);
+    useEffect(() => {
+        // 로그인되지 않은 경우 로그인 페이지로 리디렉트
+        if (!user) {
+            navigate('/login');
+        }
+    }, [user, navigate]);
 
     useEffect(() => {
         if (messagesEndRef.current) {
@@ -121,13 +121,17 @@ function ChatForm() {
             const data = JSON.parse(event.data);
             switch (data.type) {
                 case 'chat':
-                    setChat((prevChat) => [...prevChat, { message: data.message, sender: data.sender }]);
+                    setChat((prevChat) => [{ message: data.message, sender: data.sender },...prevChat]);
                     break;
                 case 'match_success':
                     setIsMatched(true);
                     setIsLoading(false);
                     const peerData = data.message.find(info => info.username !== user.username);
                     setPeerInfo(peerData);
+                    const start_msg1= `"${peerInfo.school}"의 누군가와 연결되었습니다!`;
+                    const start_msg2= "친구추가를 하면 다음에도 계속 대화할 수 있어요!";
+                    setChat((prevChat) => [{ message: start_msg1, sender: user.username },...prevChat]);
+                    setChat((prevChat) => [{ message: start_msg2, sender: user.username },...prevChat]);
                     break;
                 case 'chat_end':
                     endChat();
@@ -141,6 +145,9 @@ function ChatForm() {
                 case 'friend_request':
                     setFriendRequestReceived(true);
                     setFriendRequestFrom(data.from_username);
+                    //메세지함에 도착알림주자
+                    const request_msg= "SYSTEM: 친구요청이 도착했습니다. 상단에서 친구요청을 수락/거절해주세요.";
+                    setChat((prevChat) => [{ message: request_msg, sender: user.username },...prevChat]);
                     break;
                 case 'accept_friend_request':
                     showTempMessage('친구 요청이 수락되었습니다.');
@@ -278,12 +285,12 @@ function ChatForm() {
                     {isMatched && <p className='friend-btn'><button onClick={sendFriendRequest}>친구 요청</button></p>}
                 </div>
                 <div className="chat-messages" ref={messagesEndRef}>
-                    {isMatched &&
+                    {/*{isMatched &&
                         <>
                             <p className='first-message'>{`"${peerInfo.school}"의 누군가와 연결되었습니다!`}</p>
                             <p className='first-message'>친구추가를 하면 다음에도 계속 대화할 수 있어요!</p>
                         </>    
-                    }
+                    }*/}
                     {!isMatched &&
                         <>
                             <p className='first-message'>상대방에겐 자신의 학교명만이 노출됩니다.</p>
@@ -300,10 +307,10 @@ function ChatForm() {
                             {msg.message}
                         </div>
                     ))}
-                    {isTyping && (
-                        <div className="message-bubble their-message">...</div> // "..." 말풍선 표시
-                    )}
                 </div>
+                {isTyping && (
+                <div className="loading">상대방이 입력중입니다...</div> // "..." 말풍선 표시
+                )}
                 <div className="chat-input">
                     {isMatched && isConnected && (
                         <>
