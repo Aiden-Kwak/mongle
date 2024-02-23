@@ -233,6 +233,8 @@ function ChatForm() {
             const friendRequestData = { type: 'send_friend_request', to_username: user.username }; // 여기서 상대방 사용자명 설정 필요
             ws.send(JSON.stringify(friendRequestData));
             setFriendRequestSent(true);
+            const send_request_msg= "SYSTEM: 친구요청을 완료했습니다.";
+            setChat((prevChat) => [{ message: send_request_msg, sender: user.username },...prevChat]);
         }
     };
 
