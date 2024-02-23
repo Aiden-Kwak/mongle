@@ -36,7 +36,7 @@ function ChatForm() {
 
 
     function setScreenSize2() {
-        let vh = window.outerHeight * 0.01;
+        let vh = (window.outerHeight-15) * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
 
@@ -88,6 +88,16 @@ function ChatForm() {
             }
         }
     }, [isTyping, chat, isKeyboardActive]); // chat 상태가 변경될 때마다 실행
+
+    useEffect(() => { // 화면 재조정시키기 위한거임.
+       const timer = setTimeout(() => {
+           if(isKeyboardActive === false){
+               setScreenSize();
+               window.scrollTo(0, 0);
+           }
+       }, 200);
+       return () => clearTimeout(timer);
+   }, [isKeyboardActive]);
     
     
     useEffect(() => {

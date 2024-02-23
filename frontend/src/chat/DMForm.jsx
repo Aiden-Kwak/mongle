@@ -62,6 +62,16 @@ function DMForm() {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => { // 화면 재조정시키기 위한거임.
+        const timer = setTimeout(() => {
+            if(isKeyboardActive === false){
+                setScreenSize();
+                window.scrollTo(0, 0);
+            }
+        }, 200);
+        return () => clearTimeout(timer);
+    }, [isKeyboardActive]);
+
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
         if (!user) {

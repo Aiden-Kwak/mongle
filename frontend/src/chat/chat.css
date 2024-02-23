@@ -1,6 +1,7 @@
 .total-chat-container {
     margin: 1rem 0;
     height: 100%;
+    overflow-y: unset;
 }
 .chat-container {
     display: flex;
@@ -195,7 +196,7 @@
     .total-chat-container {
         margin-top: 0;
         margin-bottom: 0;
-        height: calc(var(--vh, 1vh) * 100 - 50px);
+        height: calc(var(--vh, 1vh) * 100 - 55px);
     }
     .chat-container {
         height: 100%;/*테스트: 1px 더하면 스크롤되지않을까*/
