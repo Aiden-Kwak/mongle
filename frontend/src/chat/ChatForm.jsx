@@ -22,6 +22,7 @@ function ChatForm() {
     const [peerUsername, setPeerUsername] = useState('');
     const [tempMessage, setTempMessage] = useState('');
     const [peerInfo, setPeerInfo] = useState('');
+    const [isKeyboardActive, setIsKeyboardActive] = useState(false);// 키보드활성상태
 
 
     const { user } = useContext(UserContext);
@@ -53,7 +54,7 @@ function ChatForm() {
         return () => {
             window.removeEventListener('resize', setScreenSize);
         };
-    }, []);
+    }, [setIsKeyboardActive]);
 
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
@@ -69,12 +70,12 @@ function ChatForm() {
             // 스크롤이 바닥에 거의 도달했는지 확인 (여유분을 두어 완전히 바닥이 아니어도 됨)
             const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
     
-            if (isNearBottom) {
+            if (isNearBottom || isKeyboardActive) {
                 // 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
                 messagesEndRef.current.scrollTop = scrollHeight;
             }
         }
-    }, [isTyping, chat]); // chat 상태가 변경될 때마다 실행
+    }, [isTyping, chat, isKeyboardActive]); // chat 상태가 변경될 때마다 실행
     
     
     useEffect(() => {
@@ -331,6 +332,8 @@ function ChatForm() {
                                 onKeyDown={handleKeyDown}
                                 placeholder="메시지를 입력하세요"
                                 onClick={setScreenSize2}
+                                onFocus={() => setIsKeyboardActive(true)} // 입력 필드에 포커스가 있을 때
+                                onBlur={() => setIsKeyboardActive(false)} // 입력 필드에서 포커스가 사라질 때
                             />
                             <button onClick={sendMessage}>보내기</button>
                         </>

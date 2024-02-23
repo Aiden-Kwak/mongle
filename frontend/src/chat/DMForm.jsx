@@ -14,7 +14,7 @@ function DMForm() {
     const [isLoading, setIsLoading] = useState(false);
     const [isConfirmingEndChat, setIsConfirmingEndChat] = useState(false);
     const [isTyping, setIsTyping] = useState(false); // 상대방의 타이핑 상태를 추적하는 상태 변수
-
+    const [isKeyboardActive, setIsKeyboardActive] = useState(false);// 키보드활성상태
     const { user } = useContext(UserContext);
     const { friendUsername} = useContext(UserContext);
     const { friendID } = useContext(UserContext);
@@ -49,7 +49,7 @@ function DMForm() {
         return () => {
             window.removeEventListener('resize', setScreenSize);
         };
-    }, []);
+    }, [isKeyboardActive]);
 
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
@@ -71,25 +71,36 @@ function DMForm() {
         })
     },[user]);
 
+    //useEffect(() => {
+    //    const scrollToBottom = () => {
+    //        if (messagesEndRef.current) {
+    //            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    //        }
+    //    };
+    //    scrollToBottom();  
+    //    const handleScroll = () => {
+    //        if (messagesEndRef.current) {
+    //            const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
+    //            const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
+    //            if (isNearBottom) {
+    //                scrollToBottom();
+    //            }
+    //        }
+    //    };
+    //    handleScroll();
+    //}, [chat, isTyping]); // chat 또는 isTyping 상태가 변경될 때마다 이 useEffect가 실행됩니다.
+
     useEffect(() => {
-        const scrollToBottom = () => {
-            if (messagesEndRef.current) {
-                messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+        if (messagesEndRef.current) {
+            const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
+            const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
+
+            // 키보드가 활성화되었거나 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
+            if (isKeyboardActive || isNearBottom) {
+                messagesEndRef.current.scrollTop = scrollHeight;
             }
-        };
-        scrollToBottom();
-    
-        const handleScroll = () => {
-            if (messagesEndRef.current) {
-                const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
-                const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
-                if (isNearBottom) {
-                    scrollToBottom();
-                }
-            }
-        };
-        handleScroll();
-    }, [chat, isTyping]); // chat 또는 isTyping 상태가 변경될 때마다 이 useEffect가 실행됩니다.
+        }
+    }, [isKeyboardActive, chat]);
 
     useEffect(() => {
         return () => {
@@ -237,6 +248,7 @@ function DMForm() {
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="메시지를 입력하세요"
+                    onClick={setScreenSize2}
                 />
                 <button onClick={sendMessage}>보내기</button>
             </div>
