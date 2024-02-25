@@ -103,7 +103,6 @@ function FriendListForm() {
 
     const fetchFriends = async () => {
         try {
-            console.log("API_BASE_URL: ", API_BASE_URL);
             const response = await axios.get(`${API_BASE_URL}/api/friend/list`, {
                 withCredentials: true
             });
@@ -128,7 +127,6 @@ function FriendListForm() {
         const newWs = new WebSocket(`${WS_BASE_URL}/ws/chat/dm/?type=friend_list&friend_username=none`);
         newWs.onopen = () => {
             const friendUsernameList = friends.map(friend => friend.username);
-            console.log('friendUsernameList: ', friendUsernameList);
             newWs.send(JSON.stringify({ type: 'friend_list', username_list: friendUsernameList}));
         };
 
@@ -136,7 +134,6 @@ function FriendListForm() {
             const data = JSON.parse(event.data);
             // 새로운 DM이 있을 때만 친구 목록을 갱신
             if (data.type === 'dm_message') {
-                console.log('새로운 DM이 도착했습니다.');
                 fetchFriends();
             }
         };

@@ -48,14 +48,12 @@ function TestForm() {
             // 스크롤이 바닥에 거의 도달했는지 확인 (여유분을 두어 완전히 바닥이 아니어도 됨)
             //const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
             const isNearBottom = scrollTop >= -300;
-            console.log("hello:", isNearBottom, scrollHeight, scrollTop, clientHeight);
             if (isNearBottom) {
                 // 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
                 //messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
                 messagesEndRef.current.scrollTop=0;
             }
             if (isKeyboardActive){ //모바일 키보드 올라왔을때
-                console.log("keyboard is active");
                 messagesEndRef.current.scrollTop=-10;
             }
         }

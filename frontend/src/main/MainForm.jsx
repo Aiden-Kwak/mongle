@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -8,6 +8,9 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'; // 명암과 선명도 향상에 도움을 줄 수 있습니다.
 
+import { UserContext } from '../UserContext';
+
+import chatbot from '../static/img/chatbot.svg';
 // 상대 경로에 따라 조정
 
 function MainForm() {
@@ -15,7 +18,11 @@ function MainForm() {
     const canvasRef = useRef();
     let rotationDirection = 0.000005; // 초기 회전 방향
     let lastDirectionChangeTime = Date.now();
-    
+
+    const { user } = useContext(UserContext);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [user]);
 
     useEffect(() => {
         const scene = new THREE.Scene();
@@ -97,7 +104,6 @@ function MainForm() {
         animate();
 
         return () => {
-            window.scrollTo(0, 0);
             cancelAnimationFrame(animationFrameId);
             scene.clear();
             scene.traverse(function (object) {
@@ -128,6 +134,14 @@ function MainForm() {
                 <Link to="/chat" className="start">
                     <p className='start-p'>시작하기</p>
                 </Link>
+            </div>
+            <div className='chatbot'>
+                <a href="http://pf.kakao.com/_fYEaG/chat"
+                    target='_blank'
+                    rel='noreferrer noopener'
+                >
+                    <img src={chatbot} alt="chatbot" />
+                </a>
             </div>
         </div>
     );

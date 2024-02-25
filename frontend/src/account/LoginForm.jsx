@@ -20,17 +20,6 @@ function LoginForm() {
     const API_BASE_URL = URLManagement('http');
 
     useEffect(() => {
-        // 로그인 페이지에서만 touch-action 스타일 적용
-        const originalTouchAction = document.body.style.touchAction;
-        document.body.style.touchAction = 'none';
-
-        return () => {
-            // 컴포넌트가 언마운트될 때 원래의 touch-action 스타일로 복원
-            document.body.style.touchAction = originalTouchAction;
-        };
-    }, []);
-
-    useEffect(() => {
         // 로컬 스토리지에서 사용자 정보를 로드
         const storedUser = localStorage.getItem('user');
         if (storedUser) {

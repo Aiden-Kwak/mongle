@@ -102,7 +102,6 @@ function ProfileForm() {
             setTimeout(() => setTempMessage(''), 5000);
 
         } catch (error) {
-            console.log(error.response.status);
             let errorMessage = '';
             if (error.response.status === 400) {
                 errorMessage = '닉네임: 13자, 소개: 250자 이하로 작성해주세요.';

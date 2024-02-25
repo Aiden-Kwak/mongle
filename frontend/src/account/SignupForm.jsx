@@ -61,16 +61,13 @@ function SignupForm() {
                 }
             });
             setTempMessage("인증메일이 전송되었습니다. 도착하지 않은 경우 스팸메일함을 확인해주세요"); // 메시지 설정
-            console.log(tempMessage);
             setTimeout(() => {
                 setTempMessage(''); // 2초 후 메시지 제거
             }, 10000);
             // 회원가입 성공 처리 로직
-            console.log('회원가입 성공');
         } catch (error) {
             if (error.response && error.response.data) {
                 // 서버로부터의 응답에 따라 오류 메시지 설정
-                console.log(error.response.data);
                 let error_msg = error.response.data;
                 if (error_msg.username) {
                     setError(error_msg.username);
@@ -181,7 +178,9 @@ function SignupForm() {
                 ) : null}
 
                 <button className="signup-button" type="submit">회원가입</button>
+                <p className='signup-notice'>메일전송에는 최대 3분이 소요될 수 있습니다.</p>
             </form>
+            
         </div>
     );
   

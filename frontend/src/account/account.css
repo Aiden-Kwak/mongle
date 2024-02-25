@@ -192,6 +192,14 @@ button:active {
   margin: .5rem 0;
 }
 
+.signup-notice {
+  font-size: .8rem;
+  color: gray;
+  text-align: center;
+  padding: 0;
+
+}
+
 /* Responsive adjustments */
 @media (max-width: 400px) {
   .login-container > form {
@@ -220,6 +228,11 @@ button:active {
   }
   .search-results > li {
     font-size: .85rem;
+  }
+  .login-container > .error, .signup-container > .error, .findaccount-container > .error {
+    padding: 10px 20px; /* 내부 여백 */
+    font-size: .85rem; /* 폰트 크기 */
+    width: 65%; /* 최대 너비 설정 */
   }
 }
 @media (max-width: 600px) {
