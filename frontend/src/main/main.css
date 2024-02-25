@@ -283,8 +283,18 @@
     text-align: center;
 }
 
-.start {
+/*.start {
     display: none;
+}*/
+
+.start {
+    display: inline-block;
+    background-color: #F07489;
+    border-radius: 15px;
+    padding: .5rem;
+    font-size: 2rem;
+    color: white;
+    text-align: center;
 }
 
 @media screen and (max-width: 768px){

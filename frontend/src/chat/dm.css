@@ -103,7 +103,7 @@
 
 .temp-message {
     position: fixed; /* 팝업을 화면에 고정 */
-    top: 20%; /* 상단에서부터의 위치 */
+    top: 50%; /* 상단에서부터의 위치 */
     left: 50%; /* 왼쪽에서부터의 위치 */
     transform: translate(-50%, -50%); /* 정확한 중앙 위치 조정 */
     z-index: 1000; /* 다른 요소들 위에 표시 */
@@ -112,7 +112,7 @@
     padding: 20px 40px; /* 내부 여백 */
     border-radius: 5px; /* 모서리 둥글게 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
-    font-size: 1rem; /* 폰트 크기 */
+    font-size: .85rem; /* 폰트 크기 */
     text-align: center; /* 텍스트 중앙 정렬 */
     max-width: 80%; /* 최대 너비 설정 */
     word-wrap: break-word; /* 긴 텍스트 처리 */

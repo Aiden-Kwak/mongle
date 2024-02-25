@@ -286,6 +286,8 @@ function DMForm() {
                     onKeyDown={handleKeyDown}
                     placeholder="메시지를 입력하세요"
                     onClick={setScreenSize2}
+                    onFocus={() => setIsKeyboardActive(true)} // 입력 필드에 포커스가 있을 때
+                    onBlur={() => setIsKeyboardActive(false)} // 입력 필드에서 포커스가 사라질 때
                 />
                 <button onClick={sendMessage}>보내기</button>
             </div>
