@@ -97,6 +97,7 @@ function MainForm() {
         animate();
 
         return () => {
+            window.scrollTo(0, 0);
             cancelAnimationFrame(animationFrameId);
             scene.clear();
             scene.traverse(function (object) {
