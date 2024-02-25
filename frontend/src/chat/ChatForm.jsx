@@ -56,17 +56,17 @@ function ChatForm() {
         };
     }, [setIsKeyboardActive]);
 
-    useEffect(() => {
-        // setInterval을 사용하여 someFunction을 1초마다 호출
-        const interval = setInterval(() => {
-            if(setIsKeyboardActive === false){
-                setScreenSize();
-            }
-        }, 500);
-    
-        // 컴포넌트가 언마운트될 때 setInterval을 정리
-        return () => clearInterval(interval);
-    }, []);
+    //useEffect(() => {
+    //    // setInterval을 사용하여 someFunction을 1초마다 호출
+    //    const interval = setInterval(() => {
+    //        if(setIsKeyboardActive === false){
+    //            setScreenSize();
+    //        }
+    //    }, 500);
+    //
+    //    // 컴포넌트가 언마운트될 때 setInterval을 정리
+    //    return () => clearInterval(interval);
+    //}, []);
 
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
@@ -94,13 +94,12 @@ function ChatForm() {
             // 스크롤이 바닥에 거의 도달했는지 확인 (여유분을 두어 완전히 바닥이 아니어도 됨)
             //const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
             const isNearBottom = scrollTop >= -300;
-            console.log("hello:", isNearBottom, scrollHeight, scrollTop, clientHeight);
             if (isNearBottom) {
                 // 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
                 //messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
                 messagesEndRef.current.scrollTop=0;
             }
-            if (isKeyboardActive){ //모바일 키보드 올라왔을때
+            if (isKeyboardActive && window.innerWidth<=767){ //모바일 키보드 올라왔을때
                 console.log("keyboard is active");
                 messagesEndRef.current.scrollTop=-10;
             }

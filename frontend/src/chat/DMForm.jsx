@@ -49,17 +49,17 @@ function DMForm() {
         return () => {
             window.removeEventListener('resize', setScreenSize);
         };
-    }, [isKeyboardActive]);
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if(setIsKeyboardActive === false){
-                setScreenSize();
-            }
-        }, 500);
-    
-        // 컴포넌트가 언마운트될 때 setInterval을 정리
-        return () => clearInterval(interval);
-    }, []);
+    }, [setIsKeyboardActive]);
+    //useEffect(() => {
+    //    const interval = setInterval(() => {
+    //        if(setIsKeyboardActive === false){
+    //            setScreenSize();
+    //        }
+    //    }, 500);
+    //
+    //    // 컴포넌트가 언마운트될 때 setInterval을 정리
+    //    return () => clearInterval(interval);
+    //}, []);
 
     useEffect(() => { // 화면 재조정시키기 위한거임.
         const timer = setTimeout(() => {
@@ -132,7 +132,7 @@ function DMForm() {
                 //messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
                 messagesEndRef.current.scrollTop=0;
             }
-            if (isKeyboardActive){ //모바일 키보드 올라왔을때
+            if (isKeyboardActive && window.innerWidth<=767){ //모바일 키보드 올라왔을때
                 console.log("keyboard is active");
                 messagesEndRef.current.scrollTop=-10;
             }
@@ -178,6 +178,16 @@ function DMForm() {
             exitDMPage();
         };
     }, [ws, friendUsername, location]);
+
+    useEffect(() => { // 화면 재조정시키기 위한거임.
+        const timer = setTimeout(() => {
+            if(isKeyboardActive === false){
+                setScreenSize();
+                window.scrollTo(0, 0);
+            }
+        }, 200);
+        return () => clearTimeout(timer);
+    }, [isKeyboardActive]);
 
 
     const connectWebsocket = () => {
