@@ -255,8 +255,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # 비동기로 친구 요청을 조회
         friend_request = await self.get_friend_request(friend_username)
         if friend_request:
-            # FriendRequest 인스턴스의 pk를 사용하여 from_user를 비동기적으로 가져옵니다.
-            # 여기서는 비동기 함수 호출의 결과를 기다린 후에 from_user에 접근합니다.
             from_user_instance = await database_sync_to_async(FriendRequest.objects.get)(pk=friend_request.pk)
             from_user = await database_sync_to_async(lambda: from_user_instance.from_user)()
             
@@ -292,7 +290,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             from_user__username=friend_username,
             to_user=self.user
         )
-        # 첫 번째 결과를 비동기적으로 반환합니다.
         friend_request = await database_sync_to_async(friend_request_query.first)()
         return friend_request
 
@@ -300,28 +297,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
         
    
     async def handle_send_friend_request(self, to_username):
-        # 매칭된 상대방의 username을 찾습니다.
         room_name = await self.redis.get(f"room_name_{self.user.username}")
         if room_name:
-            # room_name에서 상대방의 username을 추출합니다.
             usernames = room_name.split("_")[1:]  # room_name이 "chat_user1_user2" 형식이라고 가정
             peer_username = [username for username in usernames if username != self.user.username][0]
-            
-            # 상대방 사용자 객체를 가져옵니다.
+
             User = get_user_model()
             peer_user = await database_sync_to_async(User.objects.get)(username=peer_username)
 
-            # FriendRequest 인스턴스를 생성합니다.
             from friendapp.models import FriendRequest
             friend_request = await database_sync_to_async(FriendRequest.objects.create)(
                 from_user=self.scope['user'],
                 to_user=peer_user
             )
             
-            # 상대방의 channel_name을 찾습니다.
             peer_channel_name = await self.redis.get(f"channel_name_{peer_username}")
             if peer_channel_name:
-                # 상대방에게 친구 요청 메시지를 전송합니다.
                 await self.channel_layer.send(peer_channel_name, {
                     "type": "friend_request",
                     "from_username": self.user.username,
@@ -385,11 +376,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
     
     async def dm_message(self, event):
-        # 이벤트로부터 메시지 정보를 가져옵니다.
         message = event['message']
         sender = event['sender']
 
-        # WebSocket 클라이언트에 메시지를 전송합니다.
         await self.send(text_data=json.dumps({
             'type': 'dm_message',
             'message': message,

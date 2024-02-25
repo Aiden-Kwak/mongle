@@ -22,11 +22,6 @@ animation-fill-mode: forwards;
 }
 
 /*body { overflow: hidden; }*/
-body * { touch-action: none; }
-.back-button { touch-action: auto;}
-.chat-messages {
-  touch-action: auto;
-}
 body * { overflow-x: clip; }
 
 body::-webkit-scrollbar {

@@ -31,7 +31,7 @@ function DMForm() {
     const receivedMessageIds = new Set();
 
     function setScreenSize2() {
-        let vh = window.outerHeight * 0.01;
+        let vh = (window.outerHeight-15) * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
 
@@ -51,7 +51,6 @@ function DMForm() {
         };
     }, [isKeyboardActive]);
     useEffect(() => {
-        // setInterval을 사용하여 someFunction을 1초마다 호출
         const interval = setInterval(() => {
             if(setIsKeyboardActive === false){
                 setScreenSize();
@@ -111,17 +110,34 @@ function DMForm() {
     //    handleScroll();
     //}, [chat, isTyping]); // chat 또는 isTyping 상태가 변경될 때마다 이 useEffect가 실행됩니다.
 
-    useEffect(() => {
+    //useEffect(() => {
+    //    if (messagesEndRef.current) {
+    //        const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
+    //        const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
+    //        // 키보드가 활성화되었거나 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
+    //        if (isKeyboardActive || isNearBottom) {
+    //            messagesEndRef.current.scrollTop = scrollHeight;
+    //        }
+    //    }
+    //}, [isKeyboardActive, chat]);
+    useEffect(() => { // 수정 2월25일: gist에서
         if (messagesEndRef.current) {
             const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
-            const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
-
-            // 키보드가 활성화되었거나 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
-            if (isKeyboardActive || isNearBottom) {
-                messagesEndRef.current.scrollTop = scrollHeight;
+            // 스크롤이 바닥에 거의 도달했는지 확인 (여유분을 두어 완전히 바닥이 아니어도 됨)
+            //const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
+            const isNearBottom = scrollTop >= -300;
+            console.log("hello:", isNearBottom, scrollHeight, scrollTop, clientHeight);
+            if (isNearBottom) {
+                // 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
+                //messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+                messagesEndRef.current.scrollTop=0;
+            }
+            if (isKeyboardActive){ //모바일 키보드 올라왔을때
+                console.log("keyboard is active");
+                messagesEndRef.current.scrollTop=-10;
             }
         }
-    }, [isKeyboardActive, chat]);
+    }, [chat, isKeyboardActive]);
 
     useEffect(() => {
         return () => {

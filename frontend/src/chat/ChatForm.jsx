@@ -75,19 +75,37 @@ function ChatForm() {
         }
     }, [user, navigate]);
 
+    //useEffect(() => {
+    //    if (messagesEndRef.current) {
+    //        const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
+    //        
+    //        // 스크롤이 바닥에 거의 도달했는지 확인 (여유분을 두어 완전히 바닥이 아니어도 됨)
+    //        const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
+    //
+    //        if (isNearBottom || isKeyboardActive) {
+    //            // 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
+    //            messagesEndRef.current.scrollTop = scrollHeight;
+    //        }
+    //    }
+    //}, [isTyping, chat, isKeyboardActive]); // chat 상태가 변경될 때마다 실행
     useEffect(() => {
         if (messagesEndRef.current) {
             const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
-            
             // 스크롤이 바닥에 거의 도달했는지 확인 (여유분을 두어 완전히 바닥이 아니어도 됨)
-            const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
-    
-            if (isNearBottom || isKeyboardActive) {
+            //const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
+            const isNearBottom = scrollTop >= -300;
+            console.log("hello:", isNearBottom, scrollHeight, scrollTop, clientHeight);
+            if (isNearBottom) {
                 // 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
-                messagesEndRef.current.scrollTop = scrollHeight;
+                //messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+                messagesEndRef.current.scrollTop=0;
+            }
+            if (isKeyboardActive){ //모바일 키보드 올라왔을때
+                console.log("keyboard is active");
+                messagesEndRef.current.scrollTop=-10;
             }
         }
-    }, [isTyping, chat, isKeyboardActive]); // chat 상태가 변경될 때마다 실행
+    }, [chat, isKeyboardActive]); // chat 상태가 변경될 때마다 실행
 
     useEffect(() => { // 화면 재조정시키기 위한거임.
        const timer = setTimeout(() => {

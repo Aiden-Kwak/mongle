@@ -16,22 +16,10 @@ function TestForm() {
     }
 
     function setScreenSize() {
-        console.log(window.innerHeight);
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
 
-
-    //useEffect(() => {
-    //    const interval = setInterval(() => {
-    //        if(setIsKeyboardActive === false){
-    //            setScreenSize();
-    //        }
-    //    }, 500);
-    //
-    //    // 컴포넌트가 언마운트될 때 setInterval을 정리
-    //    return () => clearInterval(interval);
-    //}, []);
     useEffect(() => {
          // 페이지가 로드될 때 한 번 호출
         //alert("hi");
@@ -54,19 +42,24 @@ function TestForm() {
         };
     }, []);
 
-    //useEffect(() => {
-    //    if (messagesEndRef.current) {
-    //        const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
-    //        
-    //        // 스크롤이 바닥에 거의 도달했는지 확인 (여유분을 두어 완전히 바닥이 아니어도 됨)
-    //        const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
-    //
-    //        if (isNearBottom || isKeyboardActive === true) {
-    //            // 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
-    //            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-    //        }
-    //    }
-    //}, [chat, isKeyboardActive]); // chat 상태가 변경될 때마다 실행
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            const { scrollHeight, clientHeight, scrollTop } = messagesEndRef.current;
+            // 스크롤이 바닥에 거의 도달했는지 확인 (여유분을 두어 완전히 바닥이 아니어도 됨)
+            //const isNearBottom = scrollHeight - scrollTop <= clientHeight + 150;
+            const isNearBottom = scrollTop >= -300;
+            console.log("hello:", isNearBottom, scrollHeight, scrollTop, clientHeight);
+            if (isNearBottom) {
+                // 스크롤이 거의 바닥에 있을 때만 맨 아래로 스크롤
+                //messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+                messagesEndRef.current.scrollTop=0;
+            }
+            if (isKeyboardActive){ //모바일 키보드 올라왔을때
+                console.log("keyboard is active");
+                messagesEndRef.current.scrollTop=-10;
+            }
+        }
+    }, [chat, isKeyboardActive]); // chat 상태가 변경될 때마다 실행
 
     const sendMessage = () => {
         // 메시지 배열에 새 메시지 추가
@@ -77,6 +70,7 @@ function TestForm() {
     };
 
     const handleKeyDown = (e) => {
+        if (e.nativeEvent.isComposing) return;
         if (e.key === 'Enter' && message.trim() !== '') {
             e.preventDefault();
             sendMessage();

@@ -1,7 +1,6 @@
 .total-chat-container {
     margin: 1rem 0;
     height: 100%;
-    overflow-y: unset;
 }
 .chat-container {
     display: flex;
