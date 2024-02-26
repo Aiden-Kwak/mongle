@@ -57,30 +57,37 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['nickname', 'profile_pic', 'bio', 'username']
 
-    # def update(self, instance, validated_data):
-    #    instance.nickname = validated_data.get('nickname', instance.nickname)
-    #    instance.profile_pic = validated_data.get('profile_pic', instance.profile_pic)
-    #    instance.bio = validated_data.get('bio', instance.bio)
-    #    instance.save()
-    #    return instance
     def update(self, instance, validated_data):
         instance.nickname = validated_data.get('nickname', instance.nickname)
         instance.bio = validated_data.get('bio', instance.bio)
         
-        # 이미지 파일 처리
         if 'profile_pic' in validated_data:
             profile_pic = validated_data.pop('profile_pic')
             image = Image.open(profile_pic)
             file_path = os.path.join(settings.MEDIA_ROOT, f"profile_pics/{instance.user.username}.png")
             if os.path.exists(file_path):
                 os.remove(file_path)
-            if image.format != 'PNG': # 똑같은거 맞는데 나중에 분기시킬 수 있을거같아서 남겨둠
-                output = io.BytesIO()
+
+            if image.format == 'PNG':
+                output=io.BytesIO()
                 image.save(output, format='PNG', quality=80)
                 image_data = output.getvalue()
                 instance.profile_pic.save(f"{instance.user.username}.png", ContentFile(image_data), save=False)
+            elif profile_pic.name.endswith(('.heif', '.HEIF', '.heic', '.HEIC')):
+                print("HEIF format")
+                import pyheif
+                heif_file = pyheif.read(profile_pic)
+                image = Image.frombytes(
+                    heif_file.mode, 
+                    heif_file.size, 
+                    heif_file.data,
+                    "raw",
+                    heif_file.mode,
+                    heif_file.stride,
+                )
             else:
-                output = io.BytesIO()
+                image = image.convert('RGB')
+                output=io.BytesIO()
                 image.save(output, format='PNG', quality=80)
                 image_data = output.getvalue()
                 instance.profile_pic.save(f"{instance.user.username}.png", ContentFile(image_data), save=False)

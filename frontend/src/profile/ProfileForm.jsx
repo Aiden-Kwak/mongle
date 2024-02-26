@@ -102,15 +102,15 @@ function ProfileForm() {
             setTimeout(() => setTempMessage(''), 5000);
 
         } catch (error) {
-            let errorMessage = '';
-            if (error.response.status === 400) {
-                errorMessage = '닉네임: 13자, 소개: 250자 이하로 작성해주세요.';
-            } else {
-                errorMessage = '세션만료. 다시 로그인해주세요.';
+            let firstErrorMessage = "";
+            const firstKey = Object.keys(error.response.data)[0];
+            if (firstKey && error.response.data[firstKey].length > 0) {
+                firstErrorMessage = error.response.data[firstKey][0];
             }
-            setError(errorMessage); // 오류 메시지 상태 설정
+
+            setError(firstErrorMessage); // 오류 메시지 상태 설정
             // showTempMessage 함수 호출 대신 직접 tempMessage 상태를 설정하여 오류 메시지 표시
-            setTempMessage(errorMessage);
+            setTempMessage(firstErrorMessage);
             setTimeout(() => setTempMessage(''), 5000);
         }
     };
