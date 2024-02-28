@@ -50,6 +50,25 @@ class AccountCreateSerializer(serializers.ModelSerializer):
         return user
     
 
+def save_image_as_png(image, user):
+    """
+    이미지를 PNG 형식으로 변환하고 저장하는 함수.
+    """
+    output = io.BytesIO()
+    # RGB 모드로 변경하여 PNG 저장을 보장
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+    image.save(output, format='PNG', quality=80)
+    image_data = output.getvalue()
+    file_name = f"{user.username}.png"
+    file_path = os.path.join('profile_pics', file_name)
+    # 기존 파일 삭제 로직을 함수 내부에 포함
+    full_file_path = os.path.join(settings.MEDIA_ROOT, file_path)
+    if os.path.exists(full_file_path):
+        os.remove(full_file_path)
+    # ContentFile을 사용하여 메모리상의 이미지 데이터를 저장
+    user.profile_pic.save(file_name, ContentFile(image_data), save=False)
+
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username')
 
@@ -63,19 +82,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         
         if 'profile_pic' in validated_data:
             profile_pic = validated_data.pop('profile_pic')
-            image = Image.open(profile_pic)
-            file_path = os.path.join(settings.MEDIA_ROOT, f"profile_pics/{instance.user.username}.png")
-            if os.path.exists(file_path):
-                os.remove(file_path)
-
-            if image.format == 'PNG':
-                output=io.BytesIO()
-                image.save(output, format='PNG', quality=80)
-                image_data = output.getvalue()
-                instance.profile_pic.save(f"{instance.user.username}.png", ContentFile(image_data), save=False)
-            elif profile_pic.name.endswith(('.heif', '.HEIF', '.heic', '.HEIC')):
-                print("HEIF format")
-                import pyheif
+            if profile_pic.name.endswith(('.heif', '.HEIF', '.heic', '.HEIC')):
                 heif_file = pyheif.read(profile_pic)
                 image = Image.frombytes(
                     heif_file.mode, 
@@ -86,11 +93,10 @@ class ProfileSerializer(serializers.ModelSerializer):
                     heif_file.stride,
                 )
             else:
-                image = image.convert('RGB')
-                output=io.BytesIO()
-                image.save(output, format='PNG', quality=80)
-                image_data = output.getvalue()
-                instance.profile_pic.save(f"{instance.user.username}.png", ContentFile(image_data), save=False)
+                image = Image.open(profile_pic)
+
+            # 이제 모든 이미지를 PNG로 저장하는 save_image_as_png 함수를 사용
+            save_image_as_png(image, instance.user)
 
         instance.save()
         return instance
