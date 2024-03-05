@@ -83,7 +83,7 @@ function DMForm() {
             withCredentials: true
         })
         .then(response => {
-            setChat(response.data);
+            setChat(response.data.reverse());
         })
         .catch(error => {
             console.error('채팅 내용을 불러오는데 실패했습니다.', error);
@@ -197,6 +197,7 @@ function DMForm() {
             const messageData = { type: 'dm_message', message: message };
             ws.send(JSON.stringify(messageData));
             setMessage('');
+            if (inputRef.current) inputRef.current.value = ''; //인풋클릭시 마지막 글자 나오는 오류 해결시도
         }
     };
     

@@ -141,7 +141,7 @@ function ChatForm() {
                     setIsLoading(false);
                     const peerData = data.message.find(info => info.username !== user.username);
                     setPeerInfo(peerData);
-                    const start_msg1= `"${peerInfo.school}"의 누군가와 연결되었습니다!`;
+                    const start_msg1= `"${peerData.school}"의 누군가와 연결되었습니다!`;
                     const start_msg2= "친구추가를 하면 다음에도 계속 대화할 수 있어요!";
                     setChat((prevChat) => [{ message: start_msg1, sender: user.username },...prevChat]);
                     setChat((prevChat) => [{ message: start_msg2, sender: user.username },...prevChat]);
@@ -218,6 +218,7 @@ function ChatForm() {
             const messageData = { type: 'chat_message', message: message };
             ws.send(JSON.stringify(messageData));
             setMessage('');
+            if (inputRef.current) inputRef.current.value = ''; //인풋클릭시 마지막 글자 나오는 오류 해결시도
         }
     };
 
