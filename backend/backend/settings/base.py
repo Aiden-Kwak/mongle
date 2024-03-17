@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'chatapp',
     'friendapp',
     'notificationapp',
+    'communityapp',
 
     'django.contrib.admin',
     'django.contrib.auth',

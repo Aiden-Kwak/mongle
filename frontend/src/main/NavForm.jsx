@@ -93,6 +93,7 @@ function NavForm() {
                 <div className='nav-menu'>
                     <Link to="/profile"><span>프로필</span></Link>
                     <Link to="/setting"><span>계정관리</span></Link>
+                    <li><Link to="/community"><span>커뮤니티</span></Link></li>
                     <Link to="/friend">
                         <span>친구관리</span>
                         {hasNotification && <span className="notification-dot"></span>}
@@ -117,6 +118,7 @@ function NavForm() {
                     <li><Link to="/chat"><span>채팅시작</span></Link></li>
                     <li><Link to="/profile"><span>프로필</span></Link></li>
                     <li><Link to="/setting"><span>계정관리</span></Link></li>
+                    <li><Link to="/community"><span>커뮤니티</span></Link></li>
                     <li>
                         <Link to="/friend">
                             <span>친구관리</span>

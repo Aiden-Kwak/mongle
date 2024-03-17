@@ -6,6 +6,7 @@ import { ProfileForm } from './profile';
 import { ChatForm, DMForm, TestForm } from './chat';
 import { FriendListForm } from './friend';
 import { NotFoundForm, FooterForm } from './snippets';
+import { CMainForm } from './community';
 
 import { UserProvider } from './UserContext';
 
@@ -30,6 +31,7 @@ function App() {
                     <Route path="/password-change" element={<ResetPWForm />} />
                     <Route path="/setting" element={<SettingForm />} />
                     <Route path="/activate/:uidb64/:token" element={<SignupRedirect />} />
+                    <Route path="/community" element={<CMainForm />} />
                     {/*<Route path="/test" element={<TestForm />} />*/}
                     <Route path="/admin" element={<MainForm />} />
                     <Route path="*" element={<NotFoundForm />} />
