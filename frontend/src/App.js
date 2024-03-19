@@ -5,8 +5,8 @@ import { SignupForm, LoginForm, LogoutForm, FindIDForm, FindPWForm, ResetPWForm,
 import { ProfileForm } from './profile';
 import { ChatForm, DMForm, TestForm } from './chat';
 import { FriendListForm } from './friend';
-import { NotFoundForm, FooterForm } from './snippets';
-import { CMainForm } from './community';
+import { NotFoundForm, FooterForm, PrepareForm } from './snippets';
+import { CMainForm, CCreateForm } from './community';
 
 import { UserProvider } from './UserContext';
 
@@ -31,7 +31,9 @@ function App() {
                     <Route path="/password-change" element={<ResetPWForm />} />
                     <Route path="/setting" element={<SettingForm />} />
                     <Route path="/activate/:uidb64/:token" element={<SignupRedirect />} />
-                    <Route path="/community" element={<CMainForm />} />
+                    {/*<Route path="/community" element={<CMainForm />} />*/}
+                    <Route path="/community" element={<PrepareForm />} />
+                    <Route path="/community/create" element={<CCreateForm />} />
                     {/*<Route path="/test" element={<TestForm />} />*/}
                     <Route path="/admin" element={<MainForm />} />
                     <Route path="*" element={<NotFoundForm />} />
