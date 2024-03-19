@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../UserContext';
-import { URLManagement } from '../snippets';
+import { URLManagement, getCookie } from '../snippets';
 
 function SettingForm() {
     const { setUser } = useContext(UserContext);
@@ -39,21 +39,6 @@ function SettingForm() {
             navigate('/login');
         }
     }, [user, navigate]);
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     return (
         <div className="setting-container">

@@ -6,7 +6,7 @@ import { BackButton } from '../snippets';
 import './friend.css';
 import deleteIcon from '../static/img/delete.png';
 import chatIcon from '../static/img/chat.png';
-import { URLManagement } from '../snippets';
+import { URLManagement, getCookie } from '../snippets';
 
 function FriendListForm() {
     const [friends, setFriends] = useState([]);
@@ -18,21 +18,6 @@ function FriendListForm() {
     const WS_BASE_URL = URLManagement('ws');
 
     const navigate = useNavigate();
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     const initiateDM = (friendUsername, friendID) => {
         setFriendUsername(friendUsername);
@@ -84,22 +69,6 @@ function FriendListForm() {
             console.error("알림 삭제에 실패했습니다.", error);
         }
     };
-    
-    
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     const fetchFriends = async () => {
         try {

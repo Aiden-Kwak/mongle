@@ -4,7 +4,7 @@ import axios from 'axios';
 import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
 import defaultImg from '../static/img/logo.png';
-import {URLManagement} from '../snippets';
+import {URLManagement, getCookie} from '../snippets';
 
 import './profile.css';
 
@@ -53,22 +53,6 @@ function ProfileForm() {
             reader.readAsDataURL(e.target.files[0]);
         }
     };
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
