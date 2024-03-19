@@ -107,7 +107,7 @@
     {"id": 105, "name": "단국대학교 천안캠퍼스", "domains": ["dankook.ac.kr"]},
     {"id": 106, "name": "대경대학교", "domains": ["tk.ac.kr"]},
     {"id": 107, "name": "대구가톨릭대학교", "domains": ["cu.ac.kr"]},
-    {"id": 108, "name": "가야대학교", "domains": ["kaya.ac.kr"]},
+    {"id": 108, "name": "가야대학교", "domains": ["kaya.ac.kr", "office.kaya.ac.kr"]},
     {"id": 109, "name": "대구공업대학교", "domains": ["ttc.ac.kr"]},
     {"id": 110, "name": "대구과학대학교", "domains": ["tsu.ac.kr"]},
     {"id": 111, "name": "대구교육대학교", "domains": ["dnue.ac.kr"]},
@@ -396,5 +396,6 @@
     {"id": 394, "name": "홍익대학교 세종캠퍼스", "domains": ["hongik.ac.kr"]},
     {"id": 395, "name": "화성의과학대학교 (신경대학교)", "domains": ["hsmu.ac.kr"]},
     {"id": 396, "name": "화신사이버대학교", "domains": ["hscu.ac.kr"]},
-	{"id": 397, "name": "신경주대학교", "domains": ["sgu.ac.kr"]}
+	{"id": 397, "name": "신경주대학교", "domains": ["sgu.ac.kr"]},
+    {"id": 398, "name": "렌셀레어 폴리테크닉 대학교", "domains": ["rpi.edu"]}
 ]
