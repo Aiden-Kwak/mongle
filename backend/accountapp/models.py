@@ -60,6 +60,12 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_admin
     
+    def get_school_display(self):
+        for code, name in SCHOOL_CHOICES:
+            if self.school == code:
+                return name
+        return "학교정보없음"
+    
     def save(self, *args, **kwargs):
         is_new = self._state.adding
         super().save(*args, **kwargs)
