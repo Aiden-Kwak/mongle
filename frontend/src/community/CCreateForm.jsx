@@ -3,6 +3,7 @@ import axios from 'axios';
 import { URLManagement, getCookie } from '../snippets';
 import { UserContext } from '../UserContext';
 import { useNavigate } from 'react-router-dom';
+import { BackButton } from '../snippets';
 
 function CCreateForm() {
     const [title, setTitle] = useState('');
@@ -45,13 +46,12 @@ function CCreateForm() {
             withCredentials: true
         };
 
-        // 서버로 POST 요청 전송
         axios.post(`${API_BASE_URL}/api/community/posts/create/`, { title, content, type }, config)
             .then(response => {
-                console.log('게시글 생성 성공:', response.data);
                 setTitle('');
                 setContent('');
                 setType('0');
+                navigate('/community');
             })
             .catch(error => {
                 console.log('게시글 생성 오류:', error);
@@ -59,40 +59,47 @@ function CCreateForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>게시글 작성</h2>
-            <div>
-                <label htmlFor="title">제목</label>
-                <input
-                    id="title"
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
+        <form onSubmit={handleSubmit} className="commu-create-container__form">
+            <BackButton />
+            <h2 className="commu-create-container__title">게시글 작성</h2>
+            <div className='commu-create-container__form__total'>
+                <div className="commu-create-container__form-group title">
+                    <input
+                        id="title"
+                        type="text"
+                        value={title}
+                        placeholder='제목을 입력하세요'
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="commu-create-container__form-input"
+                    />
+                </div>
+                <div className="commu-create-container__form-group type">
+                    <select
+                        id="type"
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
+                        placeholder='게시글 타입을 선택하세요'
+                        className="commu-create-container__form-select"
+                    >
+                        {typeOptions.map(option => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="commu-create-container__form-group content">
+                    <textarea
+                        id="content"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        className="commu-create-container__form-textarea"
+                    />
+                </div>
+
             </div>
-            <div>
-                <label htmlFor="content">내용</label>
-                <textarea
-                    id="content"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                />
-            </div>
-            <div>
-                <label htmlFor="type">유형</label>
-                <select
-                    id="type"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                >
-                    {typeOptions.map(option => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <button type="submit">게시글 작성</button>
+            
+            <button type="submit" className="commu-create-container__form-submit">게시글 작성</button>
         </form>
     );
 }

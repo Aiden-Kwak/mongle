@@ -9,6 +9,11 @@ import comment from '../static/img/comment.png';
 function CMainForm() {
     const [posts, setPosts] = useState([]);
     const [selectedType, setSelectedType] = useState('');
+    //인피니트 스크롤
+    const [offset, setOffset] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const limit = 10; 
 
     const formatDate = (dateStr) => {
         const postDate = new Date(dateStr);
@@ -36,14 +41,53 @@ function CMainForm() {
     };
 
     useEffect(() => {
-        // 선택된 type에 따라 URL을 조정하여 API 요청
-        const url = `/api/community/posts/${selectedType ? `?type=${selectedType}` : ''}`;
-        axios.get(url)
-            .then(response => {
-                setPosts(response.data);
-            })
-            .catch(error => console.log(error));
-    }, [selectedType]); // selectedType이 변경될 때마다 useEffect 실행
+        // 선택된 type 변경 시 초기 게시물 로드
+        setPosts([]); // 게시물 목록 초기화
+        setOffset(0); // 오프셋 초기화
+        setHasMore(true); // 더 로드할 게시물이 있다고 가정
+        fetchInitialPosts(); // 초기 게시물 로드
+    }, [selectedType]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight && !isLoading && hasMore) {
+                fetchMorePosts();
+            }
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isLoading, hasMore, selectedType, offset]);
+
+    const fetchInitialPosts = async () => {
+        setIsLoading(true);
+        const url = `/api/community/posts/${selectedType ? `?type=${selectedType}&limit=${limit}&offset=0` : `?limit=${limit}&offset=0`}`;
+        try {
+            const response = await axios.get(url);
+            console.log(response.data);
+            setPosts(response.data.results); // 데이터 구조에 따라 response.data 혹은 response.data.posts 등으로 조정 필요
+            setOffset(response.data.results.length);
+            setHasMore(!!response.data.next); // 데이터 구조에 따라 조정 필요
+            setIsLoading(false);
+        } catch (error) {
+            console.error(error);
+            setIsLoading(false);
+        }
+    };
+
+    const fetchMorePosts = async () => {
+        setIsLoading(true);
+        const url = `/api/community/posts/${selectedType ? `?type=${selectedType}&limit=${limit}&offset=${offset}` : `?limit=${limit}&offset=${offset}`}`;
+        try {
+            const response = await axios.get(url);
+            setPosts(prev => [...prev, ...response.data.results]); // 데이터 구조에 따라 조정 필요
+            setOffset(prevOffset => prevOffset + response.data.results.length); // 데이터 구조에 따라 조정 필요
+            setIsLoading(false);
+            setHasMore(!!response.data.next); // 데이터 구조에 따라 조정 필요
+        } catch (error) {
+            console.error(error);
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className='commu-container'>
@@ -85,7 +129,10 @@ function CMainForm() {
                                         <p>{post.comments_count}</p>
                                     </div>
                                 </div>
-                                <p className='commu-container__post-list-item-date'>{formatDate(post.created_at)}</p>
+                                <div className='date-school'>
+                                    <p className='commu-container__post-list-item-date'>{formatDate(post.created_at)}</p>
+                                    <p className='commu-container__post-list-item-date-school'>- {post.user.school_name}</p>
+                                </div>  
                             </li>
                         ))}
                     </ul>

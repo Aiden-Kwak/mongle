@@ -91,8 +91,16 @@ class CommentCreateAPI(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CommentListAPI(APIView):
-    def get(self, request, post_id):
-        comments = Comment.objects.filter(post_id=post_id)
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data)
+#class CommentListAPI(APIView):
+#    def get(self, request, post_id):
+#        comments = Comment.objects.filter(post_id=post_id)
+#        serializer = CommentSerializer(comments, many=True)
+#        return Response(serializer.data)
+    
+
+class CommentListAPI(ListAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return Comment.objects.filter(post_id=post_id)

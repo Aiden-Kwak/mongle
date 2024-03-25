@@ -1,5 +1,11 @@
 /* CMainForm */
-/* 커뮤니티 컨테이너 */
+/* CMainForm */
+/* CMainForm */
+/* CMainForm */
+/* CMainForm */
+/* CMainForm */
+
+
 .commu-container {
     max-width: 800px; /* 최대 너비 설정 */
     width: 100%; /* 너비를 100%로 설정하여 부모 컨테이너에 맞춤 */
@@ -81,27 +87,30 @@
     margin-right: 2rem;
 }
 .commu-container__post-list-item-i-view > img{
-    height: 20px;
+    height: 16px;
     margin-right: .5rem;
 }
 .commu-container__post-list-item-i-comment {
     display: flex;
 }
 .commu-container__post-list-item-i-comment > img{
-    height: 17px;
+    height: 16px;
     margin-right: .5rem;
 }
 .commu-container__post-list-item-date {
     font-size: 1rem;
-    margin-top: 1rem;
     color: #94969B;
+    margin-right: 5px;
 }
-/* 개별 게시물 */
+
 .commu-container__post-list-item {
-    /* 밑줄*/
     border-bottom: 1px solid #e2e2e2;
     width: 100%;
     padding: 15px 0;
+}
+.commu-container__post-list-item:hover {
+    background-color: #f9f9f9;
+    transition: background-color 0.5s;
 }
 
 .commu-container__post-link {
@@ -128,11 +137,21 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url('../static/img/down-arrow.png'); /* 아래방향 화살표 이미지 경로 */
+    background-image: url('../static/img/down-arrow.png');
     background-repeat: no-repeat;
-    background-position: right 10px center; /* 화살표 위치 조정 */
-    background-size: 20px; /* 화살표 크기 조정 */
-    padding-right: 30px; /* 텍스트와 화살표 사이의 공간 확보 */
+    background-position: right 10px center;
+    background-size: 20px;
+    padding-right: 30px;
+}
+.date-school {
+    display: flex;
+    margin-top: 1rem;
+    color: #94969B;
+}
+.commu-container__post-list-item-date-school {
+    color: #F07489;
+    font-size: 0.8rem;
+    margin: 2px;
 }
 
 @media (max-width: 768px) {
@@ -149,90 +168,272 @@
         background-color: white;
         padding: 0;
         color: #94969B;
+        font-size: 0.9rem;
     }
     .commu-container__post-list-item-title {
         margin-right: auto;
+        font-size: .9rem;
+    }
+    .commu-container__post-list-item-content {
+        font-size: 0.875rem;
+    }
+    .commu-container__post-list-item-date {
+        font-size: 0.85rem;
     }
     .commu-container__post-link {
         flex-direction: column;
     }
+    .commu-container__create-link {
+        font-size: 1rem;
+    }
     .type-select {
         width: 90%;
+        font-size: 1rem;
     }
 
 }
 
 /* CDetailForm.jsx */
+/* CDetailForm.jsx */
+/* CDetailForm.jsx */
+/* CDetailForm.jsx */
+/* CDetailForm.jsx */
+/* CDetailForm.jsx */
+/* CDetailForm.jsx */
+
+
 .post-detail-container {
     max-width: 800px;
     width: 100%;
     margin: auto;
     padding: 20px;
-
-  }
-  
-  /* 게시글 제목 */
-  .post-detail-container h1 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  /* 게시글 본문 */
-  .post-detail-container p {
-    line-height: 1.6;
-  }
-  
-  /* 조회수, 작성일 */
-  .post-detail-container > div {
-    margin-top: 10px;
+}
+.post-detail-container__copylink {
     color: #666;
-    font-size: 0.9rem;
-  }
-  
-  /* 사용자 정보 - 학교 이름, 사용자 이름 */
-  .commu-container__post-list-item-school,
-  .commu-container__post-list-item-writer {
-    margin-top: 5px;
+    font-size: 0.75rem;
+    /*오른쪽 정렬*/
+    text-align: right;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.post-detail-container__copylink:hover {
+    color: #F07489;
+}
+.post-detail-container__title {
+    font-size: 1.5rem;
     font-weight: bold;
-  }
+}
+.post-detail-container__content {
+    margin-top: 1.5rem;
+}
+.post-detail-container__content > p {
+    width: 100%;
+}
+.post-detail-container__i {
+    display: flex;
+    border-bottom: 1px solid #e2e2e2;
+    padding-bottom: 1.5rem;
+    font-size: 0.9rem;
+    margin-top: .5rem;
+}
+.post-detail-container__i-view {
+    display: flex;
+    margin-right: 2rem;
+}
+.post-detail-container__i-comment {
+    display: flex;
+}
+.post-detail-container__i img{
+    height: 20px;
+    vertical-align: middle;
+    margin-right: .5rem;
+}
+.post-detail-container__writer {
+    display: flex;
+    margin-top: .5rem;
+}
+.post-detail-container__writer-school{
+    color: #37ACC9;
+    margin-right: 5px;
+    font-size: 0.9rem;
+}
+.post-detail-container__writer-username {
+    font-size: 0.9rem;
+    color: #666;
+}
+.post-detail-container__writer-username-checkiswriter {
+    font-size: 0.8rem;
+    color: #F07489;
+    margin-left: 1rem;
+}
+.post-detail-container__comment-time {
+    font-size: 0.75rem;
+    color: #94969B;
+}
+
+/* 게시글 본문 */
+.post-detail-container p {
+  line-height: 1.6;
+}
+
+/* 사용자 정보 - 학교 이름, 사용자 이름 */
+.commu-container__post-list-item-school,
+.commu-container__post-list-item-writer {
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+/* 댓글 섹션 */
+.comments-section {
+  margin-top: 30px;
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+}
+
+.comment-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* 댓글 입력 폼 */
+.comment-form {
+  margin-top: 20px;
+}
+
+.comment-textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 100px;
+  resize: none;
+}
+
+.comment-submit-btn {
+  background-color: #F07489;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.comment-submit-btn:disabled {
+  background-color: #ccc;
+}
+.alert-comment {
+    color: #666;
+    font-size: 0.85rem;
+}
+.alert-comment > a {
+    color: #F07489;
+}
+
+@media (max-width: 768px) {
+    .post-detail-container__i {
+        width: 90%;
+    }
+    .comment-textarea {
+        width: 90%;
+    }
+    .comments-section {
+        width: 90%;
+    }
+    .post-detail-container__title {
+        font-size: 1.25rem;
+    }
+    .post-detail-container__content > p {
+        width: 90%;
+    }
+    .post-detail-container__writer-school {
+        font-size: 0.75rem;
+    }
+    .post-detail-container__writer-username {
+        font-size: 0.75rem;
+    }
+    .post-detail-container__content {
+        font-size: 0.95rem;
+    }
+    .comment-item > p {
+        font-size: 0.875rem;
+    }
+    .post-detail-container__copylink {
+        padding-right: 3rem;
+    }
+    .post-detail-container__comment-time {
+        font-size: 0.65rem!important;
+    }
+}
   
-  /* 댓글 섹션 */
-  .comments-section {
-    margin-top: 30px;
-    border-top: 1px solid #ddd;
-    padding-top: 15px;
-  }
-  
-  .comment-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-  }
-  
-  /* 댓글 입력 폼 */
-  .comment-form {
-    margin-top: 20px;
-  }
-  
-  .comment-textarea {
+
+
+/* create form */
+/* create form */
+/* create form */
+/* create form */
+/* create form */
+/* create form */
+/* create form */
+/* create form */
+
+
+.commu-create-container__form {
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.commu-create-container__form__total {
+    border: 1px solid #ccc;
+}
+.commu-create-container__title {
+    text-align: center;
+}
+.commu-create-container__form-group {
+    border-bottom: 1px solid #ccc;
+}
+
+.commu-create-container__form-input,
+.commu-create-container__form-textarea,
+.commu-create-container__form-select {
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    border: none;
+}
+
+.commu-create-container__form-textarea {
+    height: 300px;
+}
+
+.commu-create-container__form-submit {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    height: 100px;
-    resize: none;
-  }
-  
-  .comment-submit-btn {
-    background-color: #F07489;
+    background-color: #f07489;
     color: white;
-    padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
     cursor: pointer;
-  }
-  
-  .comment-submit-btn:disabled {
-    background-color: #ccc;
-  }
-  
+}
+
+.commu-create-container__form-submit:hover {
+    background-color: pink;
+}
+
+
+@media (max-width: 768px) {
+    .commu-create-container__form__total{
+        width: 90%;
+    }
+    .commu-create-container__form-submit {
+        width: 90%;
+    }
+    .commu-create-container__title {
+        display: none;
+    }
+
+}

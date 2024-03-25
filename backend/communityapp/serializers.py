@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     type_display = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
-    user = UserSerializer(read_only=True)  # 작성자 정보를 UserSerializer를 통해 반환
+    user = UserSerializer(read_only=True)
 
     def get_type_display(self, obj):
         return obj.get_type_display()
@@ -28,7 +28,7 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ['user']
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)  # 댓글 작성자 정보를 UserSerializer를 통해 반환
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Comment

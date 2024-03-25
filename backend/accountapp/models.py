@@ -7,6 +7,14 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator, EmailValidator
 from django.utils import timezone
 from utils.school_loader import load_school_choices
+
+# 이미지 사이트 컨버트용
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
+from django.core.files.storage import default_storage
+import os
     
 SCHOOL_CHOICES = load_school_choices()
 
@@ -82,3 +90,29 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_profile = Profile.objects.get(pk=self.pk)
+            old_profile_pic = old_profile.profile_pic
+            new_profile_pic = self.profile_pic
+            if old_profile_pic.name != new_profile_pic.name:
+                if old_profile_pic.name != 'profile_pics/default.png':
+                    old_profile_pic.delete(save=False)
+                if new_profile_pic:
+                    self.process_new_profile_pic()
+        else:
+            if self.profile_pic:
+                self.process_new_profile_pic()
+                
+        super(Profile, self).save(*args, **kwargs)
+
+    def process_new_profile_pic(self):
+        image = Image.open(self.profile_pic)
+        output = BytesIO()
+        image = image.resize((300, 300))
+        if image.mode != "RGB":
+            image = image.convert("RGB")
+        image.save(output, format='JPEG', quality=90)
+        output.seek(0)
+        self.profile_pic.save(self.profile_pic.name, content=InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % os.path.splitext(self.profile_pic.name)[0], 'image/jpeg', sys.getsizeof(output), None), save=False)
