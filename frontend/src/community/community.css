@@ -228,6 +228,7 @@
 }
 .post-detail-container__content > p {
     width: 100%;
+    white-space: pre-wrap;
 }
 .post-detail-container__i {
     display: flex;
@@ -293,6 +294,9 @@
 .comment-item {
   padding: 10px 0;
   border-bottom: 1px solid #eee;
+}
+.comment-item > p {
+    white-space: pre-wrap;
 }
 
 /* 댓글 입력 폼 */
@@ -422,6 +426,10 @@
 
 .commu-create-container__form-submit:hover {
     background-color: pink;
+}
+
+.commu-create-container__form-group.content {
+    white-space: pre-wrap;
 }
 
 

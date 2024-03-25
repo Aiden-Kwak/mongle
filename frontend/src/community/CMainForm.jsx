@@ -63,7 +63,6 @@ function CMainForm() {
         const url = `/api/community/posts/${selectedType ? `?type=${selectedType}&limit=${limit}&offset=0` : `?limit=${limit}&offset=0`}`;
         try {
             const response = await axios.get(url);
-            console.log(response.data);
             setPosts(response.data.results); // 데이터 구조에 따라 response.data 혹은 response.data.posts 등으로 조정 필요
             setOffset(response.data.results.length);
             setHasMore(!!response.data.next); // 데이터 구조에 따라 조정 필요
