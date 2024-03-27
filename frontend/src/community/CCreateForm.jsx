@@ -1,9 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { URLManagement, getCookie } from '../snippets';
 import { UserContext } from '../UserContext';
 import { useNavigate } from 'react-router-dom';
 import { BackButton } from '../snippets';
+import redDelete from '../static/img/red-delete.png';
+import camera from '../static/img/camera.png';
+import pencil from '../static/img/pen.png';
 
 function CCreateForm() {
     const [title, setTitle] = useState('');
@@ -26,6 +29,38 @@ function CCreateForm() {
         { value: '10', label: '팀원모집/프로젝트' },
     ];
 
+    const [images, setImages] = useState([]);
+    const [previewImages, setPreviewImages] = useState([]);
+
+    const fileInputRef = useRef();
+
+    // 버튼 클릭 시 input[file] 열기
+    const handleButtonClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleImageChange = (e) => {
+        if (e.target.files) {
+            const filesArray = Array.from(e.target.files).map(file => URL.createObjectURL(file));
+    
+            // 미리보기 이미지를 설정합니다.
+            setPreviewImages((prevImages) => [...prevImages, ...filesArray]);
+    
+            // 여기에서 FileList를 배열로 변환하고, 이 배열을 이전 이미지 상태에 추가합니다.
+            setImages((prevImages) => [...prevImages, ...Array.from(e.target.files)]);
+        }
+    };
+
+    // 이미지 미리보기 제거 핸들러
+    const handleRemoveImage = (indexToRemove) => {
+        // 미리보기 이미지 상태 업데이트
+        setPreviewImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
+        
+        // 실제 업로드할 이미지 상태 업데이트
+        setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
+    };
+    
+
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
         const storedUser = localStorage.getItem('user');
@@ -38,15 +73,22 @@ function CCreateForm() {
     const handleSubmit = (e) => {
         e.preventDefault(); // 폼 제출시 페이지 리로드 방지
         const csrfToken=getCookie('csrftoken');
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+        formData.append('type', type);
+        images.forEach((image, index) => {
+            formData.append('images', image, image.name);
+        });
         const config = {
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'multipart/form-data',
                 'X-CSRFToken': csrfToken,
             },
             withCredentials: true
         };
 
-        axios.post(`${API_BASE_URL}/api/community/posts/create/`, { title, content, type }, config)
+        axios.post(`${API_BASE_URL}/api/community/posts/create/`, formData, config)
             .then(response => {
                 setTitle('');
                 setContent('');
@@ -96,10 +138,36 @@ function CCreateForm() {
                         className="commu-create-container__form-textarea"
                     />
                 </div>
-
+                <div className='submit-and-image'>
+                    <div className="image-input" onClick={handleButtonClick}>
+                        <img src={camera} alt="camera" />
+                    </div>
+                    <button type="submit" className="commu-create-container__form-submit" disabled={!title || !content}>
+                        <img src={pencil} alt="submit-img" />
+                    </button>
+                </div>
             </div>
             
-            <button type="submit" className="commu-create-container__form-submit">게시글 작성</button>
+            
+            <div className="commu-create-container__form-group images">
+                {previewImages.map((image, index) => (
+                    <div key={index} onClick={() => handleRemoveImage(index)} className="image-preview-container">
+                        <img src={image} alt={`preview ${index}`} />
+                        <div
+                        className="remove-image-icon"
+                        onClick={() => handleRemoveImage(index)}>
+                            <img src={redDelete} alt="remove" />
+                        </div>
+                    </div>
+                ))}
+                <input 
+                    className="hidden-btn" 
+                    type="file" 
+                    multiple 
+                    onChange={handleImageChange}
+                    ref={fileInputRef}
+                />
+            </div>
         </form>
     );
 }

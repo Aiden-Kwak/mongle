@@ -167,6 +167,11 @@ function CDetailForm() {
       <div className='post-detail-container__content'>
         <p>{post.content}</p>
       </div>
+      <div className='post-detail-container__image'>
+          {post.images && post.images.map((image, index) => (
+              <img key={index} src={image.image} alt={`Post Image ${index}`} />
+          ))}
+      </div>
       
       {user ? (
         <form onSubmit={addComment} className="comment-form">

@@ -128,7 +128,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'sender': self.user.username
                 })
         elif message_type == 'dm_message':
-            print("dm_message 받음!!!!!")
             message = text_data_json['message']
             room_name = await self.redis.get(f"dm_room_name_{self.user.username}")
             if room_name:

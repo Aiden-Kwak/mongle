@@ -8,14 +8,13 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 
 class PostCreateAPI(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
-        serializer = PostSerializer(data=request.data)
+        serializer = PostSerializer(data=request.data, context={'request': request, 'images': request.FILES.getlist('images')})
         if serializer.is_valid():
-            # Manually add the current user to the validated data.
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class PostDeleteAPI(DestroyAPIView):

@@ -31,7 +31,6 @@ class AccountCreateSerializer(serializers.ModelSerializer):
 
         # 학교 ID를 기반으로 도메인 정보 찾기
         school_domain_info = next((item for item in school_domains if item['id'] == school_id), None)
-        print("get school domain info:", school_domain_info)
         # 학교 정보가 없거나 도메인 영역이 빈 배열일 경우 예외 처리
         if school_domain_info is None or not school_domain_info['domains']:
             raise ValidationError("해당 학교는 아직 준비중입니다.")

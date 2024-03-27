@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from PIL import Image
+
 
 User = get_user_model()
 
@@ -35,6 +37,20 @@ class Post(models.Model):
     def increment_view_count(self):
         self.view_count += 1
         self.save()
+
+class PostImage(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='post_images/')
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.image.path)
+        
+        if img.height > 1080 or img.width > 1080:
+            output_size = (1080, 1080)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
+
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
