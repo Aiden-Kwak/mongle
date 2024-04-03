@@ -523,6 +523,9 @@ textarea {
     .commu-create-container__form-group.images {
         width: 90%;
     }
-
-
+}
+@media (max-width: 400px) {
+    .commu-create-container__form {
+        margin-left: -5px;
+    }
 }

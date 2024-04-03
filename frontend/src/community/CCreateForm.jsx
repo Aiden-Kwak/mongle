@@ -143,7 +143,8 @@ function CCreateForm() {
                         <img src={camera} alt="camera" />
                     </div>
                     <button type="submit" className="commu-create-container__form-submit" disabled={!title || !content}>
-                        <img src={pencil} alt="submit-img" />
+                        {/*<img src={pencil} alt="submit-img" />*/}
+                        <span>&#62;</span>
                     </button>
                 </div>
             </div>

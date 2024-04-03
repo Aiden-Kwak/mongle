@@ -13,7 +13,18 @@ function CMainForm() {
     const [offset, setOffset] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const limit = 10; 
+    const limit = 10;
+    //화면너비
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    // 화면 너비 감지 및 업데이트
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+        window.addEventListener('resize', handleResize);
+        // 컴포넌트가 언마운트 될 때 이벤트 리스너 제거
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const formatDate = (dateStr) => {
         const postDate = new Date(dateStr);
@@ -88,6 +99,24 @@ function CMainForm() {
         }
     };
 
+    const truncate = (str, n) => {
+        return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+    };
+    // 조건적 truncate
+    const conditionalTruncate = (str) => {
+        if (windowWidth <= 400) {
+            return truncate(str, 25);
+        } else if (windowWidth <= 530) {
+            return truncate(str, 35);
+        } else if (windowWidth <= 650) {
+            return truncate(str, 45);
+        } else if (windowWidth <= 768) {
+            return truncate(str, 55);
+        } else {
+            return truncate(str, 65);
+        }
+    };
+
     return (
         <div className='commu-container'>
             <Link to="/community/create" className="commu-container__create-link">
@@ -115,8 +144,8 @@ function CMainForm() {
                             <li key={post.id} className="commu-container__post-list-item">
                                 <Link to={`/community/posts/${post.id}`} className="commu-container__post-link">
                                     <p className='commu-container__post-list-item-type'>{post.type_display}</p>
-                                    <p className='commu-container__post-list-item-title'>{post.title}</p>
-                                    <p className='commu-container__post-list-item-content'>{post.content}</p>
+                                    <p className='commu-container__post-list-item-title'>{conditionalTruncate(post.title)}</p>
+                                    <p className='commu-container__post-list-item-content'>{conditionalTruncate(post.content)}</p>
                                 </Link>
                                 <div className='commu-container__post-list-item-i'>
                                     <div className='commu-container__post-list-item-i-view'>
