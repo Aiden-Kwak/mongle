@@ -52,6 +52,13 @@
 .email {
   font-family: Arial;
 }
+.email span {
+  font-family: 'Dovemayo_gothic', sans-serif;
+  color: #F07489;
+}
+.email span:hover {
+  text-decoration: underline;
+}
 
 .copyright {
   color: #666;
@@ -71,5 +78,52 @@
 .back-button:hover {
   background-color: pink; /* hover 상태일 때 배경색 */
 }
-  
-  
+
+/* Policy */
+.policy-container {
+  background-color: #f7f7f7;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  font-family: 'Dovemayo_gothic', sans-serif;
+  color: #333;
+  font-size: 1rem;
+}
+.policy-container h1 {
+  font-size: 1.5rem;
+}
+.policy-container h2 {
+  font-size: 1.2rem;
+}
+
+.policy-container h1, .policy-container h2 {
+  color: #2c3e50;
+}
+
+.policy-container p, .policy-container li {
+  line-height: 1.6;
+}
+
+.policy-container ul {
+  margin-left: 20px;
+}
+
+/* 모바일환경: 768px*/
+@media screen and (max-width: 768px) {
+  .policy-container {
+    padding: 10px;
+    margin: 10px;
+  }
+  .policy-container h1 {
+    font-size: 1.2rem;
+  }
+  .policy-container h2 {
+    font-size: 1rem;
+  }
+  .policy-container p, .policy-container li {
+    font-size: 0.9rem;
+  }
+  .policy-container ul {
+    margin-left: -15px;
+  }
+}

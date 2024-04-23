@@ -136,6 +136,10 @@ function CMainForm() {
                 <option value="8">유머</option>
                 <option value="9">군대</option>
                 <option value="10">팀원모집/프로젝트</option>
+                <option value="11">만화/애니/영화</option>
+                <option value="12">일상</option>
+                <option value="13">연예인</option>
+                <option value="14">인생 꿀팁</option>
             </select>
             <div className='total'>
                 {posts.length > 0 ? (

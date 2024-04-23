@@ -347,6 +347,9 @@ textarea {
 }
 
 @media (max-width: 768px) {
+    .post-detail-container__title {
+        width: 90%;
+    }
     .post-detail-container__i {
         width: 90%;
     }
