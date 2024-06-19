@@ -7,7 +7,7 @@ services:
     ports:
       - "6379:6379" 
   django_container:
-    image: mongle_django_image:1
+    image: mongle_django_image:2
     networks:
       - network
     volumes:
@@ -20,7 +20,7 @@ services:
     environment:
       REDIS_URL: redis://redis
   react_container:
-    image: mongle_react_image:1
+    image: mongle_react_image:2
     networks:
       - network
     volumes:

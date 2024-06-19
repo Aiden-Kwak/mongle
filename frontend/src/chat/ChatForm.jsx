@@ -6,6 +6,7 @@ import reject from '../static/img/reject.png';
 import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
 import { URLManagement } from '../snippets';
+import { OnlineUser } from '../snippets';
 
 function ChatForm() {
     const [message, setMessage] = useState('');
@@ -100,19 +101,14 @@ function ChatForm() {
     }, [ws, location]);
 
     useEffect(() => {
-        // beforeunload 이벤트 리스너를 추가하는 함수
         const handleBeforeUnload = (event) => {
-            // 웹소켓이 열려있고, 채팅이 시작된 상태라면 endChat 함수 호출
             if (ws && ws.readyState === WebSocket.OPEN) {
-                endChat(); // 채팅 종료 처리
-                // 이 경우, 기본적인 브라우저 경고는 필요하지 않으므로 preventDefault는 호출하지 않습니다.
+                endChat();
             }
         };
     
-        // 이벤트 리스너 등록
         window.addEventListener('beforeunload', handleBeforeUnload);
-    
-        // 컴포넌트 언마운트 시 이벤트 리스너 제거
+
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
@@ -278,8 +274,12 @@ function ChatForm() {
 
     return (
         <div className="total-chat-container">
-            <BackButton />
+            
             <div className="chat-container">
+                <div className='back-and-onlineuser'>
+                    <BackButton />
+                    <OnlineUser />
+                </div>
                 {tempMessage && <div className="temp-message">{tempMessage}</div>}
                 <div className="chat-header">
                     {isLoading && <p className='status'>매칭중...</p>}

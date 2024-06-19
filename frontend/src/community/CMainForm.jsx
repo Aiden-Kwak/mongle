@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './community.css';
 import pencil from '../static/img/pen.png';
 import view from '../static/img/view.png';
 import comment from '../static/img/comment.png';
+import { OnlineUser } from '../snippets';
+import { UserContext } from '../UserContext';
 
 function CMainForm() {
     const [posts, setPosts] = useState([]);
     const [selectedType, setSelectedType] = useState('');
+    const { user } = useContext(UserContext);
     //인피니트 스크롤
     const [offset, setOffset] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -141,6 +144,8 @@ function CMainForm() {
                 <option value="13">연예인</option>
                 <option value="14">인생 꿀팁</option>
             </select>
+            {/*<p className='online-user'>접속자: {onlineUser}명</p>*/}
+            {user&&<OnlineUser/>}
             <div className='total'>
                 {posts.length > 0 ? (
                     <ul className="commu-container__post-list">

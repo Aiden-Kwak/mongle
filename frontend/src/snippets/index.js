@@ -7,3 +7,4 @@ export {default as URLManagement} from './URLManagement';
 export {default as useWindowSize} from './useWindowSize';
 export {default as Policy} from './Policy';
 export { setCookie, getCookie, removeCookie } from './useCookie';
+export {default as OnlineUser} from './OnlineUser';

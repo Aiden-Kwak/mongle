@@ -17,6 +17,7 @@ textarea {
     margin: 0 auto; /* 중앙 정렬 */
     padding: 20px; /* 내부 여백 */
 }
+
 .commu-container__board-title {
     /*하단 밑줄*/
     border-bottom: 1px solid #333;
@@ -194,6 +195,10 @@ textarea {
     .type-select {
         width: 90%;
         font-size: 1rem;
+    }
+    .commu-container .online-user {
+        font-size: 0.8rem;
+        margin-right: 4.5rem;
     }
 
 }
@@ -530,5 +535,8 @@ textarea {
 @media (max-width: 400px) {
     .commu-create-container__form {
         margin-left: -5px;
+    }
+    .commu-container .online-user {
+        margin-right: 3.5rem;
     }
 }

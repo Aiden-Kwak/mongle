@@ -14,6 +14,10 @@
     border-radius: 5px;
     overflow: hidden;
 }
+.chat-container .back-and-onlineuser {
+    background-color: #f9f9f9;
+    padding-right: 1rem;
+}
 
 .chat-container .message-bubble {
     font-family: Dovemayo_gothic;
@@ -208,6 +212,9 @@
     }
     .chat-input button:hover {
         background-color: #F07489;
+    }
+    .chat-container .back-and-onlineuser .online-user{
+        margin-right: 0;
     }
 }
 @media (max-width: 400px) {

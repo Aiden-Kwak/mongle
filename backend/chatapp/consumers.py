@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from utils.school_loader import load_schools_from_json
 import notificationapp
 import os
+import uuid
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -393,3 +394,153 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type': response_type,  # 클라이언트가 이해할 수 있는 메시지 타입
         }))
 
+
+"""
+class CountConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        redis_url = os.environ.get('REDIS_URL')
+        if redis_url != "redis://redis":
+            redis_url = "redis://localhost"
+        self.redis = await aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
+        self.user = self.scope["user"]
+        if self.user.is_authenticated:
+            await self.accept()
+            await self.add_online_user()
+        else:
+            await self.close()
+
+    async def disconnect(self, close_code):
+        if self.user.is_authenticated:
+            await self.remove_online_user()
+        await self.redis.close()
+
+    async def add_online_user(self):
+        try:
+            username = self.user.username
+            online_users = await self.redis.lrange("online_users_list", 0, -1)
+            if username not in online_users:
+                await self.redis.rpush("online_users_list", username)
+        except Exception as e:
+            print(f"Add User Error: {e}")
+
+        await self.update_online_users_count()
+
+    async def remove_online_user(self):
+        try:
+            username = self.user.username
+            await self.redis.lrem("online_users_list", 1, username)
+        except Exception as e:
+            print(f"Remove User Error: {e}")
+
+        await self.update_online_users_count()
+
+    @staticmethod
+    async def get_online_users_count():
+        redis_url = os.environ.get('REDIS_URL')
+        if redis_url != "redis://redis":
+            redis_url = "redis://localhost"
+        print(f"redis_url: {redis_url}")
+        redis = await aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
+        online_users = await redis.lrange("online_users_list", 0, -1)
+        print(online_users)
+        return len(online_users)
+
+    async def update_online_users_count(self):
+        count = await self.get_online_users_count()
+        await self.channel_layer.group_send("online_users_group", {
+            "type": "update_online_users_count_message",
+            "count": count
+        })
+
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message_type = text_data_json['type']
+
+        if message_type == 'get_online_users_count':
+            count = await self.get_online_users_count()
+            await self.send(text_data=json.dumps({
+                'type': 'online_users_count',
+                'count': count
+            }))
+
+    async def update_online_users_count_message(self, event):
+        count = event['count']
+        await self.send(text_data=json.dumps({
+            'type': 'online_users_count',
+            'count': count
+        }))
+"""
+
+class CountConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        redis_url = os.environ.get('REDIS_URL')
+        if redis_url != "redis://redis":
+            redis_url = "redis://localhost"
+        self.redis = await aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
+        self.user = self.scope["user"]
+        if self.user.is_authenticated:
+            await self.channel_layer.group_add("online_users_group", self.channel_name)
+            await self.accept()
+            await self.add_online_user()
+        else:
+            await self.close()
+
+    async def disconnect(self, close_code):
+        if self.user.is_authenticated:
+            await self.remove_online_user()
+            await self.channel_layer.group_discard("online_users_group", self.channel_name)
+        await self.redis.close()
+
+    async def add_online_user(self):
+        try:
+            username = self.user.username
+            online_users = await self.redis.lrange("online_users_list", 0, -1)
+            if username not in online_users:
+                await self.redis.rpush("online_users_list", username)
+        except Exception as e:
+            print(f"Add User Error: {e}")
+
+        await self.update_online_users_count()
+
+    async def remove_online_user(self):
+        try:
+            username = self.user.username
+            await self.redis.lrem("online_users_list", 1, username)
+        except Exception as e:
+            print(f"Remove User Error: {e}")
+
+        await self.update_online_users_count()
+
+    @staticmethod
+    async def get_online_users_count():
+        redis_url = os.environ.get('REDIS_URL')
+        if redis_url != "redis://redis":
+            redis_url = "redis://localhost"
+        redis = await aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
+        online_users = await redis.lrange("online_users_list", 0, -1)
+        return len(online_users)
+
+    async def update_online_users_count(self):
+        count = await self.get_online_users_count()
+        await self.channel_layer.group_send("online_users_group", {
+            "type": "update_online_users_count_message",
+            "count": count
+        })
+
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        message_type = text_data_json['type']
+
+        if message_type == 'get_online_users_count':
+            count = await self.get_online_users_count()
+            await self.send(text_data=json.dumps({
+                'type': 'online_users_count',
+                'count': count
+            }))
+
+    async def update_online_users_count_message(self, event):
+        count = event['count']
+        await self.send(text_data=json.dumps({
+            'type': 'online_users_count',
+            'count': count
+        }))

@@ -22,10 +22,12 @@ function LogoutForm() {
             localStorage.removeItem('user');
             setUser(null);
             navigate('/');
+            window.location.reload();
         } catch (error) {
             localStorage.removeItem('user');
             setUser(null);
             navigate('/');
+            window.location.reload();
         }
     }, [setUser, navigate]);
 
