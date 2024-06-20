@@ -35,7 +35,18 @@ function SignupForm() {
     }, []);
 
     const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value); // 검색어 상태 업데이트
+        const value = e.target.value;
+        setSearchTerm(value);
+
+        // 숫자가 포함된 경우 경고 메시지 설정
+        if (/\d/.test(value)) {
+            setTempMessage("학교입력란입니다.");
+            setTimeout(() => {
+                setTempMessage('');
+            }, 2000);
+        } else {
+            setTempMessage('');
+        }
     };
 
     const filteredSchools = searchTerm.length > 0
