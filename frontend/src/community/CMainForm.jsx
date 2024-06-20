@@ -176,7 +176,7 @@ function CMainForm() {
                                 </div>
                                 <div className='date-school'>
                                     <p className='commu-container__post-list-item-date'>{formatDate(post.created_at)}</p>
-                                    <p className='commu-container__post-list-item-date-school'>- {post.user.school_name}</p>
+                                    <p className='commu-container__post-list-item-date-school'>- {post.user.username === 'jeff721' ? '관리자 ★' : post.user.school_name}</p>
                                 </div>  
                             </li>
                         ))}

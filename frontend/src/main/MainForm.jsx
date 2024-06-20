@@ -128,8 +128,8 @@ function MainForm() {
     return (
         <div className='main-container'>
             <SEOMetaTag 
-                title='몽글몽글: 다른 학교의 친구들을 만나보세요'
-                description='대학생 커뮤니티 몽글몽글에서 다른 학교의 친구들을 만나보세요'
+                title='몽글몽글: 랜덤채팅'
+                description='대학생 커뮤니티 몽글몽글에서 다른 학교의 친구들을 만나보세요. 본인과 상대방의 대학교가 공개됩니다. 대학생들의 공간에서 더 안전하게 대화하세요!'
                 keywords='몽글몽글, mongle, 랜덤채팅, 커뮤니티'
                 image='https://mongles.com/og_image.png'
                 url='https://mongles.com/'

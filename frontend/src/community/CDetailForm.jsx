@@ -152,6 +152,9 @@ function CDetailForm() {
   const SEOImage = post && post.images && post.images.length > 0 ? post.images[0].image : 'https://mongles.com/og_image.png';
   const SEOUrl = `https://mongles.com/community/post/${pk}`;
   const SEOKeywords = extractSEOKeywords(post ? post.title : '');
+  const truncate = (str, n=150) => {
+      return str?.length > n ? str.substr(0, n - 1) : str;
+  };
 
   if (!post) return <div>Loading...</div>;
 
@@ -159,7 +162,7 @@ function CDetailForm() {
     <div className='post-detail-container'>
       <SEOMetaTag 
           title={post.title}
-          description={post.content}
+          description={truncate(post.content)}
           keywords={SEOKeywords}
           image={SEOImage}
           url={SEOUrl}
@@ -172,7 +175,9 @@ function CDetailForm() {
       }
       <p className='post-detail-container__title'>{post.title}</p>
       <div className='post-detail-container__writer'>
-        <p className='post-detail-container__writer-school'>{post.user.school_name}</p>
+      <p className='post-detail-container__writer-school'>
+        {post.user.username === 'jeff721' ? '관리자' : post.user.school_name}
+      </p>
         <p className='post-detail-container__writer-username'>· {maskUsername(post.user.username)}</p>
       </div>
       <div className='post-detail-container__i'>
