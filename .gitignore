@@ -2,6 +2,7 @@
 venv/
 .idea/
 __pycache__/
+backend/media/
 #staticfiles/
 
 # SET

@@ -3,6 +3,7 @@ import axios from 'axios';
 import './account.css';
 import logo from '../static/img/logo.png';
 import { URLManagement, getCookie } from '../snippets';
+import { SEOMetaTag } from '../snippets';
 
 function SignupForm() {
     const [formData, setFormData] = useState({
@@ -101,6 +102,13 @@ function SignupForm() {
 
     return (
         <div className="signup-container">
+            <SEOMetaTag 
+                title='몽글몽글: 회원가입'
+                description='[회원가입하기] 대학생 커뮤니티 몽글몽글에서 다른 학교의 친구들을 만나보세요'
+                keywords='몽글몽글, mongle, 랜덤채팅, 커뮤니티, 회원가입'
+                image='https://mongles.com/og_image.png'
+                url='https://mongles.com/signup/'
+            />
             <div className='logo-img'>
                 <img src={logo} alt="Logo" />
                 <div className='logo-span'>

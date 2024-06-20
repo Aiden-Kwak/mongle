@@ -11,7 +11,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { UserContext } from '../UserContext';
 
 import chatbot from '../static/img/chatbot.svg';
-// 상대 경로에 따라 조정
+import { SEOMetaTag } from '../snippets';
 
 function MainForm() {
 
@@ -127,6 +127,13 @@ function MainForm() {
 
     return (
         <div className='main-container'>
+            <SEOMetaTag 
+                title='몽글몽글: 다른 학교의 친구들을 만나보세요'
+                description='대학생 커뮤니티 몽글몽글에서 다른 학교의 친구들을 만나보세요'
+                keywords='몽글몽글, mongle, 랜덤채팅, 커뮤니티'
+                image='https://mongles.com/og_image.png'
+                url='https://mongles.com/'
+            />
             <canvas ref={canvasRef} />
             <div className='rendered-name'>
                 <p className='mongle'>Mongle</p>

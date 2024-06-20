@@ -7,6 +7,7 @@ import view from '../static/img/view.png';
 import comment from '../static/img/comment.png';
 import { OnlineUser } from '../snippets';
 import { UserContext } from '../UserContext';
+import { SEOMetaTag } from '../snippets';
 
 function CMainForm() {
     const [posts, setPosts] = useState([]);
@@ -122,6 +123,13 @@ function CMainForm() {
 
     return (
         <div className='commu-container'>
+            <SEOMetaTag 
+                title='몽글몽글: 커뮤니티'
+                description='대학생 커뮤니티 몽글몽글에서 다른 학교의 친구들을 만나보세요'
+                keywords='몽글몽글, mongle, 랜덤채팅, 커뮤니티, mongles.com'
+                image='https://mongles.com/og_image.png'
+                url='https://mongles.com/community/'
+            />
             <Link to="/community/create" className="commu-container__create-link">
                 <img src={pencil} alt="Pencil"></img>
                 <span> 글쓰기</span>

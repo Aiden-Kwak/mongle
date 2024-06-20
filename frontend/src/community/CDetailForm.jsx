@@ -6,6 +6,7 @@ import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
 import view from '../static/img/view.png';
 import comment from '../static/img/comment.png';
+import { SEOMetaTag } from '../snippets';
 
 function CDetailForm() {
   const { pk } = useParams();
@@ -17,6 +18,15 @@ function CDetailForm() {
   const maskUsername = (username) => {
     return username.length > 2 ? `${username.substring(0, 2)}${'*'.repeat(username.length - 2)}` : username;
   };
+  const extractSEOKeywords = (titleText) => {
+    if (!titleText) return '커뮤니티, 몽글몽글, 대학교, 랜덤채팅';
+    const words = titleText.split(' ');
+    const filteredText = words.filter(word => word.length >= 2 && !/\d/.test(word));
+    if (filteredText.length === 0) return '커뮤니티, 몽글몽글, 대학교, 랜덤채팅';
+    const extractedSEOKeywords = filteredText.join(', ');
+    return `${extractedSEOKeywords}, 커뮤니티, 몽글몽글, 대학교, 랜덤채팅 `;
+  };
+
   const formatDate = (dateStr) => {
       const postDate = new Date(dateStr);
       const now = new Date();
@@ -138,11 +148,22 @@ function CDetailForm() {
       console.error("Error adding a comment: ", error);
     }
   };
+  console.log(post);
+  const SEOImage = post && post.images && post.images.length > 0 ? post.images[0].image : 'https://mongles.com/og_image.png';
+  const SEOUrl = `https://mongles.com/community/post/${pk}`;
+  const SEOKeywords = extractSEOKeywords(post ? post.title : '');
 
   if (!post) return <div>Loading...</div>;
 
   return (
     <div className='post-detail-container'>
+      <SEOMetaTag 
+          title={post.title}
+          description={post.content}
+          keywords={SEOKeywords}
+          image={SEOImage}
+          url={SEOUrl}
+      />
       <BackButton/>
       {user?.username === post.user?.username ? 
           <p className='post-detail-container__copylink' onClick={deletePost}>삭제</p>

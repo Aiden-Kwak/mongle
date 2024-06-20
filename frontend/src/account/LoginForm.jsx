@@ -7,6 +7,8 @@ import { URLManagement } from '../snippets';
 import { getCookie } from '../snippets';
 import { removeCookie } from '../snippets';
 
+import { SEOMetaTag } from '../snippets';
+
 import logo from '../static/img/logo.png';
 
 function LoginForm() {
@@ -82,6 +84,13 @@ function LoginForm() {
 
     return (
         <div className='login-container'>
+            <SEOMetaTag 
+                title='몽글몽글: 로그인'
+                description='대학생 커뮤니티 몽글몽글에서 다른 학교의 친구들을 만나보세요'
+                keywords='몽글몽글, mongle, 랜덤채팅, 커뮤니티, 로그인'
+                image='https://mongles.com/og_image.png'
+                url='https://mongles.com/login/'
+            />
             <div className='logo-img'>
                 <img src={logo} alt="Logo" />
                 <div className='logo-span'>

@@ -274,7 +274,6 @@ function ChatForm() {
 
     return (
         <div className="total-chat-container">
-            
             <div className="chat-container">
                 <div className='back-and-onlineuser'>
                     <BackButton />
