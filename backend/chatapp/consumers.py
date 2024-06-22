@@ -80,31 +80,70 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return school_id_to_name[user.school]
         return "알 수 없는 학교"
 
+    """
     async def attempt_matching(self):
-        await self.redis.set(f"channel_name_{self.user.username}", self.channel_name)
-        await self.redis.sadd("waiting_users", self.user.username)
-        waiting_users = await self.redis.smembers("waiting_users")
-        if len(waiting_users) > 1:
-            peer_user = random.choice(list(waiting_users - {self.user.username}))
-            await self.redis.srem("waiting_users", self.user.username, peer_user)
+        async with self.lock:
+            await self.redis.set(f"channel_name_{self.user.username}", self.channel_name)
+            await self.redis.sadd("waiting_users", self.user.username)
+            waiting_users = await self.redis.smembers("waiting_users")
+            if len(waiting_users) > 1:
+                peer_user = random.choice(list(waiting_users - {self.user.username}))
+                await self.redis.srem("waiting_users", self.user.username, peer_user)
 
-            sorted_usernames = sorted([self.user.username, peer_user])
-            room_name = f"chat_{sorted_usernames[0]}_{sorted_usernames[1]}"
-            await self.channel_layer.group_add(room_name, self.channel_name)
-            await self.redis.set(f"room_name_{self.user.username}", room_name)
+                sorted_usernames = sorted([self.user.username, peer_user])
+                room_name = f"chat_{sorted_usernames[0]}_{sorted_usernames[1]}"
+                await self.channel_layer.group_add(room_name, self.channel_name)
+                await self.redis.set(f"room_name_{self.user.username}", room_name)
 
-            peer_channel_name = await self.redis.get(f"channel_name_{peer_user}")
-            if peer_channel_name:
-                await self.channel_layer.group_add(room_name, peer_channel_name)
-                await self.redis.set(f"room_name_{peer_user}", room_name)
+                peer_channel_name = await self.redis.get(f"channel_name_{peer_user}")
+                if peer_channel_name:
+                    await self.channel_layer.group_add(room_name, peer_channel_name)
+                    await self.redis.set(f"room_name_{peer_user}", room_name)
 
-            peer_school = await self.get_user_school(peer_user)
-            your_school = await self.get_user_school(self.user.username)
-            await self.channel_layer.group_send(room_name, {
-                'type': 'match_success_message',
-                'message': [{"username":peer_user, "school":peer_school}, 
-                            {"username":self.user.username, "school":your_school}]
-            })
+                peer_school = await self.get_user_school(peer_user)
+                your_school = await self.get_user_school(self.user.username)
+                await self.channel_layer.group_send(room_name, {
+                    'type': 'match_success_message',
+                    'message': [{"username":peer_user, "school":peer_school}, 
+                                {"username":self.user.username, "school":your_school}]
+                })
+    """
+
+    async def attempt_matching(self):
+        async with self.lock:
+            await self.redis.set(f"channel_name_{self.user.username}", self.channel_name)
+            await self.redis.sadd("waiting_users", self.user.username)
+            waiting_users = await self.redis.smembers("waiting_users")
+            
+            # 채팅 중인 사용자를 제외해서 대기중인 사용자 집합 생성함.
+            available_users = set()
+            for user in waiting_users:
+                room_name = await self.redis.get(f"room_name_{user}")
+                if not room_name:
+                    available_users.add(user)
+            
+            if len(available_users) > 1:
+                peer_user = random.choice(list(available_users - {self.user.username}))
+                await self.redis.srem("waiting_users", self.user.username, peer_user)
+
+                sorted_usernames = sorted([self.user.username, peer_user])
+                room_name = f"chat_{sorted_usernames[0]}_{sorted_usernames[1]}"
+                await self.channel_layer.group_add(room_name, self.channel_name)
+                await self.redis.set(f"room_name_{self.user.username}", room_name)
+
+                peer_channel_name = await self.redis.get(f"channel_name_{peer_user}")
+                if peer_channel_name:
+                    await self.channel_layer.group_add(room_name, peer_channel_name)
+                    await self.redis.set(f"room_name_{peer_user}", room_name)
+
+                peer_school = await self.get_user_school(peer_user)
+                your_school = await self.get_user_school(self.user.username)
+                await self.channel_layer.group_send(room_name, {
+                    'type': 'match_success_message',
+                    'message': [{"username": peer_user, "school": peer_school}, 
+                                {"username": self.user.username, "school": your_school}]
+                })
+
 
     async def disconnect(self, close_code):
         if hasattr(self, 'redis'):
@@ -395,81 +434,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
 
-"""
-class CountConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        redis_url = os.environ.get('REDIS_URL')
-        if redis_url != "redis://redis":
-            redis_url = "redis://localhost"
-        self.redis = await aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
-        self.user = self.scope["user"]
-        if self.user.is_authenticated:
-            await self.accept()
-            await self.add_online_user()
-        else:
-            await self.close()
-
-    async def disconnect(self, close_code):
-        if self.user.is_authenticated:
-            await self.remove_online_user()
-        await self.redis.close()
-
-    async def add_online_user(self):
-        try:
-            username = self.user.username
-            online_users = await self.redis.lrange("online_users_list", 0, -1)
-            if username not in online_users:
-                await self.redis.rpush("online_users_list", username)
-        except Exception as e:
-            print(f"Add User Error: {e}")
-
-        await self.update_online_users_count()
-
-    async def remove_online_user(self):
-        try:
-            username = self.user.username
-            await self.redis.lrem("online_users_list", 1, username)
-        except Exception as e:
-            print(f"Remove User Error: {e}")
-
-        await self.update_online_users_count()
-
-    @staticmethod
-    async def get_online_users_count():
-        redis_url = os.environ.get('REDIS_URL')
-        if redis_url != "redis://redis":
-            redis_url = "redis://localhost"
-        print(f"redis_url: {redis_url}")
-        redis = await aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
-        online_users = await redis.lrange("online_users_list", 0, -1)
-        print(online_users)
-        return len(online_users)
-
-    async def update_online_users_count(self):
-        count = await self.get_online_users_count()
-        await self.channel_layer.group_send("online_users_group", {
-            "type": "update_online_users_count_message",
-            "count": count
-        })
-
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        message_type = text_data_json['type']
-
-        if message_type == 'get_online_users_count':
-            count = await self.get_online_users_count()
-            await self.send(text_data=json.dumps({
-                'type': 'online_users_count',
-                'count': count
-            }))
-
-    async def update_online_users_count_message(self, event):
-        count = event['count']
-        await self.send(text_data=json.dumps({
-            'type': 'online_users_count',
-            'count': count
-        }))
-"""
 
 class CountConsumer(AsyncWebsocketConsumer):
     async def connect(self):
