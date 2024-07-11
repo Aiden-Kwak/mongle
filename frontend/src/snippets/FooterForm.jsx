@@ -5,13 +5,13 @@ import { URLManagement, useWindowSize } from '../snippets';
 
 function FooterForm() {
   const location = useLocation();
-  const hideNavOnPaths = [,'/chat', '/friend', '/profile', '/login', '/test', '/signup'];
+  const hideNavOnPaths = ['/chat', '/friend', '/profile', '/login', '/test', '/signup']; // /e1i5를 제거했습니다.
   const dmPath = [/^\/dm\/[^\/]+$/];
   const { width } = useWindowSize();
   const isMobile = width < 768;
 
   const isDMPath = dmPath.some((regex) => location.pathname.match(regex));
-  const shouldHideFooter = (hideNavOnPaths.includes(location.pathname) || isDMPath) && isMobile;
+  const shouldHideFooter = hideNavOnPaths.includes(location.pathname) || isDMPath || location.pathname === '/e1i5';
 
   if (shouldHideFooter) return null;
   return (
