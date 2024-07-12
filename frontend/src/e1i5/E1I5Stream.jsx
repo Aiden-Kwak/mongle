@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, useContext, useCallback } from 'rea
 import axios from 'axios';
 import { UserContext } from '../UserContext';
 import robotEye from '../static/img/robot-emotion.gif';
-import sound from '../static/e1i5sound.mp3';
 import './E1I5Stream.css';
 
 function E1I5Stream() {
@@ -14,47 +13,6 @@ function E1I5Stream() {
   const [videoUrls, setVideoUrls] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [joystickPosition, setJoystickPosition] = useState({ x: 0, y: 0 });
-  const audioRef = useRef(null);
-  const wsRef = useRef(null);
-
-  const initializeWebSocket = () => {
-    if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
-      wsRef.current = new WebSocket('ws://localhost:8000/ws/e1i5/stream/');
-
-      wsRef.current.onopen = () => {
-        console.log('WebSocket connection established');
-      };
-
-      wsRef.current.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-        if (message.action === 'play_sound' && user && user.username === 'jeff721') {
-          if (audioRef.current) {
-            audioRef.current.play();
-          }
-        }
-      };
-
-      wsRef.current.onclose = () => {
-        console.error('WebSocket connection closed');
-        setTimeout(initializeWebSocket, 1000); // 1초 후 재연결 시도
-      };
-
-      wsRef.current.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        wsRef.current.close();
-      };
-    }
-  };
-
-  useEffect(() => {
-    initializeWebSocket();
-
-    return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
-    };
-  }, [user]);
 
   const uploadVideo = async (blob) => {
     const formData = new FormData();
@@ -73,10 +31,10 @@ function E1I5Stream() {
   };
 
   const startRecording = (mediaRecorder) => {
-    mediaRecorder.start(4000); // 4초 간격으로 데이터 수집
+    mediaRecorder.start(5000); // 4초 간격으로 데이터 수집
     setTimeout(() => {
       mediaRecorder.stop();
-    }, 4000);
+    }, 5000);
   };
 
   const startStream = useCallback(async () => {
@@ -202,15 +160,8 @@ function E1I5Stream() {
     setJoystickPosition({ x: 0, y: 0 });
   };
 
-  const handlePlaySound = () => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({ action: 'play_sound', username: 'jeff721' }));
-    }
-  };
-
   return (
     <div>
-      <audio ref={audioRef} src={sound} />
       {user?.username === 'jeff721' ? (
         <div className="video-container fullscreen-video">
           <video ref={localVideoRef} autoPlay playsInline muted style={{ display: 'none' }} />
@@ -237,7 +188,7 @@ function E1I5Stream() {
           </div>
           <div className="button-container">
             <button className="control-button">밥 주기</button>
-            <button className="control-button" onClick={handlePlaySound}>놀아주기</button>
+            <button className="control-button">놀이하기</button>
           </div>
         </div>
       ) : (
