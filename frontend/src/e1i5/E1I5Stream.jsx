@@ -121,7 +121,7 @@ function E1I5Stream() {
           videoElement.src = videoUrls[currentVideoIndex];
           videoElement.load();
         }
-      }, 10);
+      }, 100);
     };
 
     if (videoElement && videoUrls.length > 0) {
