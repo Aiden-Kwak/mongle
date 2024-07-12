@@ -31,10 +31,10 @@ function E1I5Stream() {
   };
 
   const startRecording = (mediaRecorder) => {
-    mediaRecorder.start(5000); // 4초 간격으로 데이터 수집
+    mediaRecorder.start(4000); // 4초 간격으로 데이터 수집
     setTimeout(() => {
       mediaRecorder.stop();
-    }, 5000);
+    }, 4000);
   };
 
   const startStream = useCallback(async () => {
@@ -121,7 +121,7 @@ function E1I5Stream() {
           videoElement.src = videoUrls[currentVideoIndex];
           videoElement.load();
         }
-      }, 100);
+      }, 20);
     };
 
     if (videoElement && videoUrls.length > 0) {
