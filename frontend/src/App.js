@@ -39,7 +39,7 @@ function App() {
                     <Route path="/policy" element={<Policy />} />
                     {/*<Route path="/test" element={<TestForm />} />*/}
                     <Route path="/admin" element={<MainForm />} />
-                    <Route path="/e1i5" element={<E1I5Stream />} />
+                    {/*<Route path="/e1i5" element={<E1I5Stream />} />*/}
                     <Route path="*" element={<NotFoundForm />} />
                 </Routes>
                 <FooterForm />
