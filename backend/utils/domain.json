@@ -130,7 +130,7 @@
     {"id": 128, "name": "덕성여자대학교", "domains": ["duksung.ac.kr"]},
     {"id": 129, "name": "동강대학교", "domains": ["dkc.ac.kr"]},
     {"id": 130, "name": "동국대학교 서울캠퍼스", "domains": ["dgu.ac.kr", "dongguk.edu"]},
-    {"id": 131, "name": "동국대학교 WISE캠퍼스", "domains": ["dgu.ac.kr", "dongguk.edu"]},
+    {"id": 131, "name": "동국대학교 WISE캠퍼스", "domains": ["dongguk.ac.kr", "dongguk.edu"]},
     {"id": 132, "name": "동남보건대학교", "domains": ["dongnam.ac.kr"]},
     {"id": 133, "name": "동덕여자대학교", "domains": ["dongduk.ac.kr"]},
     {"id": 134, "name": "동명대학교", "domains": ["tu.ac.kr", "g.tu.ac.kr"]},
