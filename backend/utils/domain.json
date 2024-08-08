@@ -138,7 +138,7 @@
     {"id": 136, "name": "동서울대학교", "domains": ["du.ac.kr"]},
     {"id": 137, "name": "동신대학교", "domains": ["dsu.ac.kr"]},
     {"id": 138, "name": "동아대학교", "domains": ["dau.ac.kr"]},
-    {"id": 139, "name": "동아방송예술대학교 (DIMA)", "domains": ["dima.ac.kr"]},
+    {"id": 139, "name": "동아방송예술대학교 (DIMA)", "domains": ["dima.ac.kr", "st.dima.ac.kr"]},
     {"id": 140, "name": "동아보건대학교", "domains": ["duh.ac.kr"]},
     {"id": 141, "name": "동양대학교", "domains": ["dyu.ac.kr"]},
     {"id": 142, "name": "동양미래대학교", "domains": ["dongyang.ac.kr"]},
