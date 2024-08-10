@@ -398,5 +398,6 @@
     {"id": 396, "name": "화신사이버대학교", "domains": ["hscu.ac.kr"]},
 	{"id": 397, "name": "신경주대학교", "domains": ["sgu.ac.kr"]},
     {"id": 398, "name": "렌셀레어 폴리테크닉 대학교", "domains": ["rpi.edu"]},
-    {"id": 399, "name": "가톨릭대학교 성의교정", "domains": ["songeui.ac.kr"]}
+    {"id": 399, "name": "가톨릭대학교 성의교정", "domains": ["songeui.ac.kr"]},
+    {"id": 400, "name": "토론토대학교", "domains": ["mail.utoronto.ca"]}
 ]
