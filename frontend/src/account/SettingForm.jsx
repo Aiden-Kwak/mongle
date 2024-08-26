@@ -25,7 +25,7 @@ function SettingForm() {
                 alert("계정이 성공적으로 삭제되었습니다.");
                 // 사용자 상태 업데이트 및 로그인 페이지로 리디렉션
                 setUser(null);
-                localStorage.removeItem('user'); // 로컬 스토리지에서 사용자 정보 제거
+                localStorage.removeItem('userData'); // 로컬 스토리지에서 사용자 정보 제거
                 navigate('/login');
             } catch (error) {
                 console.error("계정 삭제 중 오류가 발생했습니다.", error);

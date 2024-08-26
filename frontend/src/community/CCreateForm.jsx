@@ -63,7 +63,7 @@ function CCreateForm() {
 
     useEffect(() => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉트
-        const storedUser = localStorage.getItem('user');
+        const storedUser = localStorage.getItem('userData');
         if (!storedUser) {
             navigate('/login');
             return;

@@ -72,11 +72,15 @@ function FriendListForm() {
 
     const fetchFriends = async () => {
         try {
+            console.log("fuck4");
             const response = await axios.get(`${API_BASE_URL}/api/friend/list`, {
                 withCredentials: true
             });
+            console.log(response);
             setFriends(response.data);
+            console.log("!!!!!!!!!!!", friends);
         } catch (error) {
+            console.log("fuck3");
             console.error("친구 목록을 불러오는 데 실패했습니다.", error);
         }
     };
@@ -87,7 +91,9 @@ function FriendListForm() {
             navigate('/login');
             return;
         }
+        console.log("fuck1");
         fetchFriends(); // 최초 로드 시 친구 목록 가져오기
+        console.log("fuck2");
         //const intervalId = setInterval(fetchFriends, 1000); // 1초마다 친구 목록 갱신
         //return () => clearInterval(intervalId); 
     }, [user, navigate]);

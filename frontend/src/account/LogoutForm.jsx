@@ -6,7 +6,8 @@ import { URLManagement } from '../snippets';
 import { getCookie } from '../snippets';
 
 function LogoutForm() {
-    const { setUser } = useContext(UserContext);
+    //const { setUser } = useContext(UserContext);
+    const { clearUser } = useContext(UserContext);
     const navigate = useNavigate();
     const API_BASE_URL = URLManagement('http');
 
@@ -19,17 +20,14 @@ function LogoutForm() {
                 },
                 withCredentials: true
             });
-            localStorage.removeItem('user');
-            setUser(null);
-            navigate('/');
-            window.location.reload();
         } catch (error) {
-            localStorage.removeItem('user');
-            setUser(null);
-            navigate('/');
-            window.location.reload();
+            alert("로그아웃 실패");
+        } finally {
+            
+            clearUser();
+            navigate('/', { replace: true });
         }
-    }, [setUser, navigate]);
+    }, [clearUser, navigate]);
 
     useEffect(() => {
         handleLogout();

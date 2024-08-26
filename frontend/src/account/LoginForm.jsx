@@ -16,28 +16,19 @@ function LoginForm() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const { setUser } = useContext(UserContext);
-    const { user } = useContext(UserContext);
+    //const { setUser } = useContext(UserContext);
+    const { user, updateUser } = useContext(UserContext);
+    //const { user } = useContext(UserContext);
     const [tempMessage, setTempMessage] = useState('');
     const API_BASE_URL = URLManagement('http');
 
     useEffect(() => {
-        // 로컬 스토리지에서 사용자 정보를 로드
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, [setUser]);
-
-    useEffect(() => {
-        // 이미 로그인 된 경우 메인 페이지로 리디렉션
         if (user) {
             navigate('/');
         }
     }, [user, navigate]);
 
     useEffect(() => {
-        // 로그인 페이지 진입시 쿠키의 sessionid 삭제
         removeCookie('sessionid');
     }   , []);
     
@@ -56,8 +47,9 @@ function LoginForm() {
                 },
                 withCredentials: true
             });
-            localStorage.setItem('user', JSON.stringify({ username: username }));
-            setUser({ username: username });
+            //localStorage.setItem('user', JSON.stringify({ username: username }));
+            //setUser({ username: username });
+            updateUser({ username: username, ...response.data.user });
             navigate('/');
         } catch (error) {
             if (error.response && error.response.data) {
@@ -125,8 +117,6 @@ function LoginForm() {
                 <p style={{color:"#737373"}}>아이디/비밀번호 찾기</p>
             </Link>
         </div>
-        
-        
         
     );
 }
