@@ -80,7 +80,7 @@
     {"id": 78, "name": "국립금오공과대학교", "domains": ["kumoh.ac.kr"]},
     {"id": 79, "name": "국립목포대학교", "domains": ["mokpo.ac.kr"]},
     {"id": 80, "name": "국립부경대학교", "domains": ["pukyong.ac.kr"]},
-    {"id": 81, "name": "국립순천대학교", "domains": ["scnu.ac.kr"]},
+    {"id": 81, "name": "국립순천대학교", "domains": ["scnu.ac.kr", "s.scnu.ac.kr"]},
     {"id": 82, "name": "국립안동대학교", "domains": ["andong.ac.kr"]},
     {"id": 83, "name": "국립창원대학교", "domains": ["changwon.ac.kr"]},
     {"id": 84, "name": "국립한국교통대학교", "domains": ["ut.ac.kr", "a.ut.ac.kr"]},
