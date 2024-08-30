@@ -28,7 +28,7 @@ function SettingForm() {
                 localStorage.removeItem('userData'); // 로컬 스토리지에서 사용자 정보 제거
                 navigate('/login');
             } catch (error) {
-                console.error("계정 삭제 중 오류가 발생했습니다.", error);
+                //console.error("계정 삭제 중 오류가 발생했습니다.", error);
                 alert("계정을 삭제하는 중 오류가 발생했습니다.");
             }
         }

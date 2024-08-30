@@ -27,7 +27,7 @@ function NavForm() {
                 const response = await axios.get(`${API_BASE_URL}/api/notification/check-notification`, { withCredentials: true });
                 setHasNotification(response.data.message === "You have notifications");
             } catch (error) {
-                console.error("알림 상태 확인 실패", error);
+                //console.error("알림 상태 확인 실패", error);
             }
         }
     };

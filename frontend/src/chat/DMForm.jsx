@@ -86,7 +86,7 @@ function DMForm() {
             setChat(response.data.reverse());
         })
         .catch(error => {
-            console.error('채팅 내용을 불러오는데 실패했습니다.', error);
+            //console.error('채팅 내용을 불러오는데 실패했습니다.', error);
         })
     },[user]);
 

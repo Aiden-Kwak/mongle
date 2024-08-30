@@ -38,7 +38,7 @@ function ProfileForm() {
             setProfile(response.data);
         } catch (error) {
             setError(error.response.data.message);
-            console.error('프로필 정보를 불러오는데 실패했습니다', error);
+            //console.error('프로필 정보를 불러오는데 실패했습니다', error);
         }
     };
     const handleFileChange = (e) => {

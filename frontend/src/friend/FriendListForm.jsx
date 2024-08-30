@@ -51,7 +51,8 @@ function FriendListForm() {
                 // 성공적으로 삭제되면 친구 목록에서 해당 친구 제거
                 setFriends(friends.filter(friend => friend.username !== friendUsername));
             } catch (error) {
-                console.error("친구 삭제에 실패했습니다.", error);
+                //console.error("친구 삭제에 실패했습니다.", error);
+                alert("친구삭제에 실패했습니다.")
             }
         }
     };
@@ -66,22 +67,22 @@ function FriendListForm() {
                 withCredentials: true
             });
         } catch (error) {
-            console.error("알림 삭제에 실패했습니다.", error);
+            //console.error("알림 삭제에 실패했습니다.", error);
         }
     };
 
     const fetchFriends = async () => {
         try {
-            console.log("fuck4");
+            //console.log("fuck4");
             const response = await axios.get(`${API_BASE_URL}/api/friend/list`, {
                 withCredentials: true
             });
-            console.log(response);
+            //console.log(response);
             setFriends(response.data);
-            console.log("!!!!!!!!!!!", friends);
+            //console.log("!!!!!!!!!!!", friends);
         } catch (error) {
-            console.log("fuck3");
-            console.error("친구 목록을 불러오는 데 실패했습니다.", error);
+            //console.log("fuck3");
+            //console.error("친구 목록을 불러오는 데 실패했습니다.", error);
         }
     };
 
@@ -91,9 +92,9 @@ function FriendListForm() {
             navigate('/login');
             return;
         }
-        console.log("fuck1");
+        //console.log("fuck1");
         fetchFriends(); // 최초 로드 시 친구 목록 가져오기
-        console.log("fuck2");
+        //console.log("fuck2");
         //const intervalId = setInterval(fetchFriends, 1000); // 1초마다 친구 목록 갱신
         //return () => clearInterval(intervalId); 
     }, [user, navigate]);

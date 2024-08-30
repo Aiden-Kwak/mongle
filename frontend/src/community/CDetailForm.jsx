@@ -72,7 +72,8 @@ function CDetailForm() {
           navigate('/community');
         })
         .catch(error => {
-          console.error("Error deleting the post: ", error);
+          //console.error("Error deleting the post: ", error);
+          alert("삭제에 실패했습니다.")
         });
     }
   };
@@ -94,7 +95,7 @@ function CDetailForm() {
         setOffset(commentsResponse.data.results.length);
         setHasMore(commentsResponse.data.results.length === limit);
       } catch (error) {
-        console.error("Error loading the post or comments: ", error);
+        //console.error("Error loading the post or comments: ", error);
       }
     };
 
@@ -126,7 +127,7 @@ function CDetailForm() {
         setHasMore(false);
       }
     } catch (error) {
-      console.error("Error fetching additional comments: ", error);
+      //console.error("Error fetching additional comments: ", error);
     } finally {
       setIsLoading(false);
     }
@@ -145,7 +146,7 @@ function CDetailForm() {
       setComments(prev => [...prev, response.data]);
       setCommentContent('');
     } catch (error) {
-      console.error("Error adding a comment: ", error);
+      //console.error("Error adding a comment: ", error);
     }
   };
   console.log(post);

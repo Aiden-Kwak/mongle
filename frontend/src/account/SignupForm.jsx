@@ -28,7 +28,7 @@ function SignupForm() {
                 const response = await axios.get(`${API_BASE_URL}/api/get-schools/`);
                 setSchoolItem(response.data);
             } catch (error) {
-                console.error("학교 목록을 불러오는 데 실패했습니다.", error);
+                //console.error("학교 목록을 불러오는 데 실패했습니다.", error);
             }
         };
         fetchSchools();

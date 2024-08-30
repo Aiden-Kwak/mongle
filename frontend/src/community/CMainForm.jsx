@@ -83,7 +83,7 @@ function CMainForm() {
             setHasMore(!!response.data.next); // 데이터 구조에 따라 조정 필요
             setIsLoading(false);
         } catch (error) {
-            console.error(error);
+            //console.error(error);
             setIsLoading(false);
         }
     };
@@ -98,7 +98,7 @@ function CMainForm() {
             setIsLoading(false);
             setHasMore(!!response.data.next); // 데이터 구조에 따라 조정 필요
         } catch (error) {
-            console.error(error);
+            //console.error(error);
             setIsLoading(false);
         }
     };

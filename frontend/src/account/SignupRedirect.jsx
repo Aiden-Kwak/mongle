@@ -16,7 +16,7 @@ function SignupRedirect({match}) {
             // 이메일 인증 성공 시 로그인 페이지로 리디렉션
             navigate('/login');
           } catch (error) {
-            console.error('이메일 인증 실패:', error.response);
+            //console.error('이메일 인증 실패:', error.response);
             navigate('/login');
             
           }

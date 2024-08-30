@@ -82,7 +82,7 @@ function MainForm() {
             },
             undefined,
             (error) => {
-              console.error('An error happened', error);
+              //console.error('An error happened', error);
             }
         );
         group.position.set(0, 6, 60);
