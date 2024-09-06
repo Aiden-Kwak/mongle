@@ -1,0 +1,14 @@
+[
+    {
+      "relation": [
+        "delegate_permission/common.handle_all_urls"
+      ],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.mongles.twa",
+        "sha256_cert_fingerprints": [
+          "1B:30:99:43:B1:AC:EF:89:52:1A:C3:17:62:87:AD:E2:3E:45:85:57:A0:27:A3:17:94:8E:E4:66:5D:61:45:C2"
+        ]
+      }
+    }
+  ]
