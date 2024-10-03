@@ -370,7 +370,7 @@
     {"id": 368, "name": "한국폴리텍대학교", "domains": ["kopo.ac.kr"]},
     {"id": 369, "name": "한국항공대학교", "domains": ["kau.ac.kr", "kau.kr"]},
     {"id": 370, "name": "한남대학교", "domains": ["hannam.ac.kr", "gm.hannam.ac.kr"]},
-    {"id": 371, "name": "한동대학교", "domains": ["handong.edu"]},
+    {"id": 371, "name": "한동대학교", "domains": ["handong.edu", "handong.ac.kr"]},
     {"id": 372, "name": "한라대학교", "domains": ["halla.ac.kr"]},
     {"id": 373, "name": "한려대학교", "domains": []},
     {"id": 374, "name": "한림대학교", "domains": ["hallym.ac.kr"]},
