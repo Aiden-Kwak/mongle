@@ -146,7 +146,7 @@
     {"id": 144, "name": "동원대학교", "domains": ["tw.ac.kr"]},
     {"id": 145, "name": "동의과학대학교 (DIT)", "domains": ["dit.ac.kr"]},
     {"id": 146, "name": "동의대학교", "domains": ["deu.ac.kr"]},
-    {"id": 147, "name": "두원공과대학교", "domains": ["doowon.ac.kr", "office.doown.ac.kr"]},
+    {"id": 147, "name": "두원공과대학교", "domains": ["doowon.ac.kr", "office.doowon.ac.kr"]},
     {"id": 148, "name": "디지털서울문화예술대학교", "domains": ["scau.ac.kr"]},
     {"id": 149, "name": "라사라패션직업전문학교", "domains": ["rasara.com"]},
     {"id": 150, "name": "루터대학교", "domains": ["ltu.ac.kr"]},
