@@ -22,7 +22,7 @@ jobs:
 
     # 3. 서버에서 스크립트 실행
     - name: Run backup script
-      run: ssh -o StrictHostKeyChecking=no ubuntu@15.165.203.242 "/home/ubuntu/scripts/backup_db.sh"
+      run: ssh -o StrictHostKeyChecking=no ubuntu@15.165.203.242 "/home/ubuntu/backup_db.sh"
 
     #- name: Redeploy Docker Stack
       #run: ssh -o StrictHostKeyChecking=no ubuntu@15.165.203.242 "docker stack deploy -c /home/ubuntu/docker-compose.yml mongles"
