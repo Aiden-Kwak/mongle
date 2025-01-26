@@ -39,7 +39,7 @@ function Policy() {
       <ul>
         <li>이름: 곽병혁</li>
         <li>직책: 운영 및 개발자</li>
-        <li>연락처: 01090044993, dev.mongle@gmail.com</li>
+        <li>연락처: dev.mongle@gmail.com</li>
       </ul>
     </div>
   );

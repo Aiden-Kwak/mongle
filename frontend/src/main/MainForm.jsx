@@ -11,6 +11,9 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { UserContext } from '../UserContext';
 
 import chatbot from '../static/img/chatbot.svg';
+import kakaotalk from '../static/contact/kakaotalk.png';
+import instagram from '../static/contact/instagram.png';
+
 import { SEOMetaTag } from '../snippets';
 
 function MainForm() {
@@ -142,12 +145,31 @@ function MainForm() {
                     <p className='start-p'>시작하기</p>
                 </Link>
             </div>
+            {/* 
             <div className='chatbot'>
                 <a href="http://pf.kakao.com/_fYEaG/chat"
                     target='_blank'
                     rel='noreferrer noopener'
                 >
                     <img src={chatbot} alt="chatbot" />
+                </a>
+            </div>*/}
+            <div className="fixed-buttons">
+                <a
+                    href="http://pf.kakao.com/_fYEaG/chat"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="fixed-button button-1"
+                >
+                    <img src={kakaotalk} alt="채널 1" />
+                </a>
+                <a
+                    href="https://www.instagram.com/mongles_com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="fixed-button button-2"
+                >
+                    <img src={instagram} alt="채널 2" />
                 </a>
             </div>
         </div>

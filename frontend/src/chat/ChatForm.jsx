@@ -7,6 +7,7 @@ import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
 import { URLManagement } from '../snippets';
 import { OnlineUser } from '../snippets';
+import FlappyGame from './FlappyGame';
 
 function ChatForm() {
     const [message, setMessage] = useState('');
@@ -281,7 +282,10 @@ function ChatForm() {
                 </div>
                 {tempMessage && <div className="temp-message">{tempMessage}</div>}
                 <div className="chat-header">
-                    {isLoading && <p className='status'>매칭중...</p>}
+                    <div className='loadDiv'>
+                    {isLoading && <p className='status'>매칭되는 동안 방향키 또는 터치해서 점수를 높히세요...</p>}
+                    {isLoading && <FlappyGame isActive={isLoading} />}
+                    </div>   
                     {friendRequestReceived && (
                     <div className='friend-request-box'>
                             <div>

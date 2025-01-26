@@ -361,3 +361,60 @@
         padding-bottom: 3px;
     }
 }
+
+
+/* 우측 하단 고정 버튼 컨테이너 */
+.fixed-buttons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000; /* 항상 위에 표시 */
+  }
+  
+  /* 각 버튼 스타일 */
+  .fixed-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: #7e3b98;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    text-decoration: none;
+  }
+  
+  /* 버튼 hover 효과 */
+  .fixed-button:hover {
+    background-color: #5a2973;
+    transform: scale(0.9);
+  }
+  
+  /* 개별 버튼 위치 조정 (필요시) */
+  .button-1 {
+    background-color: #ffcc00; /* 버튼 1 배경색 */
+  }
+  
+  .button-2 {
+    background-color: #7e3b98; /* 버튼 2 배경색 */
+  }
+  
+  .fixed-button img {
+    width: 30px;
+    height: 30px;
+  }
+  
+  @media (max-width: 485px) {
+    .fixed-button {
+      width: 40px;
+      height: 40px;
+    }
+  }
