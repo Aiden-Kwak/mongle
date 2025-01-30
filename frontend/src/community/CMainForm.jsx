@@ -17,7 +17,7 @@ function CMainForm() {
     const [offset, setOffset] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const limit = 10;
+    const limit = 20;
     //화면너비
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     // 화면 너비 감지 및 업데이트
@@ -63,6 +63,7 @@ function CMainForm() {
         fetchInitialPosts(); // 초기 게시물 로드
     }, [selectedType]);
 
+    /*
     useEffect(() => {
         const handleScroll = () => {
             if (window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight && !isLoading && hasMore) {
@@ -72,6 +73,7 @@ function CMainForm() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isLoading, hasMore, selectedType, offset]);
+    */
 
     const fetchInitialPosts = async () => {
         setIsLoading(true);
@@ -155,7 +157,7 @@ function CMainForm() {
             {/*<p className='online-user'>접속자: {onlineUser}명</p>*/}
             {user&&<OnlineUser/>}
             <div className='total'>
-                {posts.length > 0 ? (
+                {posts.length > 0 ? (<>
                     <ul className="commu-container__post-list">
                         {posts.map((post) => (
                             <li key={post.id} className="commu-container__post-list-item">
@@ -181,6 +183,16 @@ function CMainForm() {
                             </li>
                         ))}
                     </ul>
+
+                    {hasMore && (
+                        <div className="load-more-container">
+                            <button onClick={fetchMorePosts} disabled={isLoading} className="load-more-button">
+                                {isLoading ? "불러오는 중..." : "더 불러오기"}
+                            </button>
+                        </div>
+                    )}
+                </>
+
                 ) : (
                     <p>등록된 게시물이 없습니다</p>
                 )}
