@@ -70,15 +70,25 @@ function CreateGroupChat() {
             <input
                 type="number"
                 min="2"
-                max="15"
-                value={maxUsers}
+                max="19"
+                value={maxUsers || ""}
                 onChange={(e) => {
-                    const value = parseInt(e.target.value);
-                    if (value >= 2 && value <= 15) {
+                    const value = e.target.value === "" ? "" : Number(e.target.value);
+
+                    // 빈 값("") 허용 (사용자가 입력을 지울 수 있도록)
+                    if (e.target.value === "") {
+                        setMaxUsers("");
+                        return;
+                    }
+
+                    // 숫자가 1자리씩 입력될 때 (ex. "1" 입력 후 "10"으로 변경 가능하도록)
+                    if (!isNaN(value) && value >= 1 && value <= 19) {
                         setMaxUsers(value);
                     }
                 }}
             />
+
+
             <button onClick={handleCreateRoom}>방 만들기</button>
         </div>
     );
