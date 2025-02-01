@@ -8,6 +8,7 @@ import { FriendListForm } from './friend';
 import { NotFoundForm, FooterForm, PrepareForm, Policy } from './snippets';
 import { CMainForm, CCreateForm, CDetailForm } from './community';
 import { E1I5Stream } from './e1i5';
+import { GroupChatForm, GroupChatList, CreateGroupChat } from './chat';
 
 import { UserProvider } from './UserContext';
 
@@ -23,6 +24,9 @@ function App() {
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/logout" element={<LogoutForm />} />
                     <Route path="/chat" element={<ChatForm />} />
+                    <Route path="/group-chat" element={<GroupChatList />} />
+                    <Route path="/group-chat/create" element={<CreateGroupChat />} />
+                    <Route path="/group-chat/:roomName" element={<GroupChatForm />} />
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/friend" element={<FriendListForm />} />
                     <Route path="/dm/:id" element={<DMForm />} />

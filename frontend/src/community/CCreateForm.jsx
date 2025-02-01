@@ -27,6 +27,10 @@ function CCreateForm() {
         { value: '8', label: '유머' },
         { value: '9', label: '군대' },
         { value: '10', label: '팀원모집/프로젝트' },
+        { value: '11', label: '만화/애니/영화' },
+        { value: '12', label: '일상' },
+        { value: '13', label: '연예인' },
+        { value: '14', label: '인생 꿀팁' }
     ];
 
     const [images, setImages] = useState([]);

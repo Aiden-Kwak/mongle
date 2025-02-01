@@ -11,6 +11,7 @@ import os
 import uuid
 
 
+
 class ChatConsumer(AsyncWebsocketConsumer):
     lock = asyncio.Lock()
 
@@ -618,3 +619,222 @@ class VideoConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'action': 'play_sound'
             }))
+
+
+class GroupChatConsumer(AsyncWebsocketConsumer):
+    
+    async def connect(self):
+        if "url_route" in self.scope and "kwargs" in self.scope["url_route"]:
+            self.room_name = self.scope['url_route']['kwargs'].get('room_name', None)
+        else:
+            self.room_name = None
+        #self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.user = self.scope["user"]
+
+        if self.user.is_authenticated:
+            await self.accept()
+            redis_url = os.environ.get('REDIS_URL')
+            if redis_url != "redis://redis":
+                redis_url = "redis://localhost"
+            self.redis = await aioredis.from_url(redis_url, encoding="utf-8", decode_responses=True)
+
+            # 방 참여
+            if self.room_name:
+                await self.channel_layer.group_add(self.room_name, self.channel_name)
+            #await self.channel_layer.group_add(self.room_name, self.channel_name)
+                await self.redis.sadd(f"{self.room_name}_members", self.user.username)
+
+                await self.send(text_data=json.dumps({
+                    "type": "joined_group_chat",
+                    "room_name": self.room_name
+                }))
+        else:
+            await self.close()
+
+
+    async def disconnect(self, close_code):
+        if hasattr(self, 'redis'):
+            await self.channel_layer.group_discard(self.room_name, self.channel_name)
+            await self.redis.srem(f"{self.room_name}_members", self.user.username)
+
+            # 참여자 수 업데이트
+            remaining_users = await self.redis.scard(f"{self.room_name}_members")
+            await self.redis.hset(self.room_name, "current_users", remaining_users)
+
+            await self.send_participant_list()
+
+            # 참여자 목록을 모든 사용자에게 전송
+            participants = await self.redis.smembers(f"{self.room_name}_members")
+            await self.channel_layer.group_send(
+                self.room_name,
+                {
+                    "type": "update_participants",
+                    "participants": list(participants),
+                }
+            )
+
+            # 방 삭제 조건 추가 (방이 비었을 경우)
+            if remaining_users == 0:
+                await self.redis.delete(f"{self.room_name}_members")
+                await self.redis.srem("group_chat_rooms", self.room_name)
+                await self.redis.delete(self.room_name)
+
+            await self.redis.close()
+    
+    
+    async def update_participants(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "participant_list",
+            "participants": event["participants"]
+        }))
+    
+    async def send_participant_list(self):
+        from accountapp.models import Profile
+        members = await self.redis.smembers(f"{self.room_name}_members")
+
+        participants = []
+        for username in members:
+            try:
+                user=self.user
+                profile = await database_sync_to_async(Profile.objects.get)(user=user)
+                nickname = profile.nickname
+                school_name = await database_sync_to_async(user.get_school_display)()
+                participants.append(f"{nickname}({school_name})")  # 닉네임(학교명) 형태로 변환
+            except Profile.DoesNotExist:
+                continue
+
+        # 모든 참여자 목록을 브로드캐스트
+        await self.channel_layer.group_send(
+            self.room_name,
+            {
+                "type": "update_participants",
+                "participants": participants,
+            }
+        )
+
+    async def receive(self, text_data):
+        from accountapp.models import Profile
+        text_data_json = json.loads(text_data)
+        message_type = text_data_json.get('type')
+
+        if message_type == 'join_group_chat':
+            await self.join_group_chat(text_data_json)
+            await self.send_participant_list() #테스트
+
+        elif message_type == 'group_chat_message':
+            message = text_data_json['message']
+            message_id = text_data_json.get('message_id', str(uuid.uuid4()))  # 메시지에 고유 ID 추가
+
+            
+            user_profile = await database_sync_to_async(Profile.objects.get)(user=self.user)
+            user_nickname = user_profile.nickname
+            school_name = await database_sync_to_async(self.user.get_school_display)()
+
+            sender_display_name = f"{user_nickname}({school_name})"
+
+            # 메시지 중복 확인 (Redis에 존재하는지 검사)
+            is_duplicate = await self.redis.sismember(f"{self.room_name}_message_ids", message_id)
+            if is_duplicate:
+                print(f"중복된 메시지 감지: {message_id}")
+                return  # 중복 메시지라면 무시
+
+            # 메시지 ID 저장 (중복 방지)
+            await self.redis.sadd(f"{self.room_name}_message_ids", message_id)
+            await self.redis.expire(f"{self.room_name}_message_ids", 10)  # 메시지 ID는 60초 후 자동 삭제
+
+            # 메시지 그룹 브로드캐스트
+            await self.channel_layer.group_send(self.room_name, {
+                'type': 'group_chat_message',
+                'message': message,
+                'sender_nick': user_nickname,
+                'sender': self.user.username,
+                'sender_school': school_name,
+                'message_id': message_id
+            })
+
+
+    async def group_chat_message(self, event):
+        message = event['message']
+        sender = event['sender']
+        sender_nick = event['sender_nick']
+        sender_school = event['sender_school']
+        message_id = event.get('message_id', str(uuid.uuid4()))  # 메시지 ID가 없으면 랜덤 ID 생성
+
+        await self.send(text_data=json.dumps({
+            'type': 'group_chat',
+            'message': message,
+            'sender': sender,
+            'sender_nick': sender_nick,
+            'sender_school': sender_school,
+            'message_id': message_id
+        }))
+    
+    async def create_group_chat(self, data):
+        room_title = data.get("room_title")
+        max_users = int(data.get("max_users", 15))
+
+        if not room_title:
+            await self.send(text_data=json.dumps({
+                "type": "error",
+                "message": "방 제목을 입력하세요."
+            }))
+            return
+
+        room_name = f"group_{uuid.uuid4().hex[:8]}"  # 랜덤한 고유 방 ID 생성
+        room_data = {
+            "room_title": room_title,
+            "max_users": max_users,
+            "current_users": 0
+        }
+
+        await self.redis.hmset_dict(room_name, room_data)
+        await self.redis.sadd("group_chat_rooms", room_name)
+
+        # 생성된 방 정보를 클라이언트로 전송
+        await self.send(text_data=json.dumps({
+            "type": "group_chat_created",
+            "room_name": room_name,
+            "room_title": room_title,
+            "max_users": max_users
+        }))
+
+    async def join_group_chat(self, data):
+        room_name = data.get("room_name")
+        room_info = await self.redis.hgetall(room_name)
+
+        if not room_info:
+            await self.send(text_data=json.dumps({
+                "type": "error",
+                "message": "방을 찾을 수 없습니다."
+            }))
+            return
+
+        max_users = int(room_info["max_users"])
+
+        # 현재 사용자가 이미 입장한 경우 방지
+        is_member = await self.redis.sismember(f"{room_name}_members", self.user.username)
+        if is_member:
+            print(f"사용자 {self.user.username} 는 이미 {room_name} 방에 참여 중")
+            return  # 기존 참여자는 다시 추가하지 않음
+
+        # 사용자 추가
+        await self.redis.sadd(f"{room_name}_members", self.user.username)
+        await self.channel_layer.group_add(room_name, self.channel_name)
+
+        # 참여자 수를 직접 조회하여 설정 (중복 방지)
+        participants = await self.redis.smembers(f"{room_name}_members")
+        await self.redis.hset(room_name, "current_users", len(participants))
+
+        # 클라이언트에 새로운 유저 리스트 전송
+        await self.channel_layer.group_send(
+            room_name,
+            {
+                "type": "update_participants",
+                "participants": list(participants),
+            }
+        )
+
+        await self.send(text_data=json.dumps({
+            "type": "joined_group_chat",
+            "room_name": room_name
+        }))

@@ -18,10 +18,10 @@ function OnlineUser() {
 
         websocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log("data: ", data);
+            //console.log("data: ", data);
             if (data.type === 'online_users_count') {
                 setOnlineUser(data.count);
-                console.log("onlineUser: ", data.count);
+                //console.log("onlineUser: ", data.count);
             }
         };
 

@@ -1,0 +1,27 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Redis 데이터 관리</h1>
+
+{% for category, items in categorized_data.items %}
+    {% if items %}
+        <h2>{{ category | title }} Keys</h2>
+        <table border="1">
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Actions</th>
+            </tr>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.key }}</td>
+                <td>{{ item.value }}</td>
+                <td>
+                    <a href="{% url 'admin:redis_delete' item.key %}">삭제</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

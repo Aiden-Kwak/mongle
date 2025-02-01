@@ -1,0 +1,159 @@
+.create-group-chat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto;
+    padding: 20px;
+    background: #ffffff;
+    transition: all 0.3s ease-in-out;
+}
+
+.create-group-chat input {
+    width: 92%;
+    padding: 12px;
+    margin: 5px 0;
+    font-size: 1rem!important;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.create-group-chat button{
+    margin-top: 5px;
+    font-size: 1rem!important;
+}
+
+.create-group-chat input:focus {
+    border-color: #e75474;
+}
+
+.create-group-chat button {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    color: white;
+    background: #F07489;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.create-group-chat button:hover {
+    background: #e75474;
+}
+
+.group-chat-list .room-list-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    margin: 0 20px;
+    transition: background 0.3s ease-in-out;
+    font-size: 1rem;
+}
+
+.group-chat-list .room-list-item:hover {
+    background: #f9f9f9;
+}
+
+.create-room-button {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    padding: 30px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* + 버튼 스타일 */
+.create-room-button .plus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;   /* 원 크기 */
+    height: 40px;  /* 원 크기 */
+    background-color: #F07489;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 50%;
+    margin-right: 10px; 
+    transition: background 0.3s ease-in-out;
+}
+
+/* "방 만들기" 텍스트 스타일 */
+.create-room-button span.text {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 호버 시 효과 */
+.create-room-button:hover .plus {
+    background-color: #e0526d;
+}
+
+
+.room-list-item p{
+    margin-right: auto;
+}
+.room-list-item .room-creator {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 1rem;
+}
+.room-list-item .room-creator .school{
+    font-size: 0.8rem;
+    border-radius: 20px;
+    background-color: #999;
+    color: white;
+    padding: 5px 10px;
+    margin-left: 10px;
+}
+
+
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+    .create-group-chat {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .create-group-chat input {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .create-group-chat button {
+        font-size: 16px;
+        padding: 10px;
+    }
+    .create-room-button span.text {
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    .create-room-button .plus {
+        width: 20px;   /* 원 크기 */
+        height: 20px;  /* 원 크기 */
+        font-size: 1rem;
+    }
+    .group-chat-list .room-list-item {
+        font-size: 0.8rem;
+    }
+    .create-group-chat button{
+        margin-top: 5px;
+        font-size: 0.8rem!important;
+    }
+    .create-group-chat input{
+        font-size: 0.75rem!important;
+    }
+}

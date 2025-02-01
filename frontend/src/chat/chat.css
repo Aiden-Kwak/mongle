@@ -187,6 +187,7 @@
     font-size: 1rem;
     margin: .5rem .8rem;
     font-family: Dovemayo_gothic;
+    user-select: none;
 }
 
 /* DM.css */
@@ -256,4 +257,43 @@
     background-color: #f9f9f9;
     text-align: center;
     font-size: .9rem;
+}
+
+.chat-messages .sender_nick{
+    font-size: .8rem;
+    color: #888;
+    margin-bottom: .5rem;
+}
+
+.my-message .sender_school {
+    color: #fff;
+    border-radius: 15px;
+    padding: 2px 5px;
+    background-color: #0a5c0a;
+    margin-left: 5px;
+}
+
+.their-message .sender_school {
+    color: #fff;
+    border-radius: 15px;
+    padding: 2px 5px;
+    background-color: #F07489;
+    margin-left: 5px;
+}
+.participants {
+    margin-left: auto;
+    font-size: .8rem;
+    color: #888;
+    margin-bottom: .5rem;
+}
+
+.participants p {
+    padding-right: 10px;
+}
+
+.groupchat-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    padding: 10px;
 }

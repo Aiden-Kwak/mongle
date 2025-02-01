@@ -149,7 +149,7 @@ function CDetailForm() {
       //console.error("Error adding a comment: ", error);
     }
   };
-  console.log(post);
+  //console.log(post);
   const SEOImage = post && post.images && post.images.length > 0 ? post.images[0].image : 'https://mongles.com/og_image.png';
   const SEOUrl = `https://mongles.com/community/post/${pk}`;
   const SEOKeywords = extractSEOKeywords(post ? post.title : '');

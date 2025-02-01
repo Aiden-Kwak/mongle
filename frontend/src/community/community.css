@@ -541,3 +541,25 @@ textarea {
         margin-right: 3.5rem;
     }
 }
+
+.commu-container__post-list .advertise{
+    background-color: #ffd6da;
+    border-radius: 1rem;
+    margin-right: 10rem;
+    width: 96%;
+    padding: 10px;
+}
+.commu-container__post-list .advertise p{
+    background-color: #ffd6da;
+}
+
+.commu-container__post-list .manager-notice{
+    background-color: #d1eaf5;
+    border-radius: 1rem;
+    margin-right: 10rem;
+    width: 96%;
+    padding: 10px;
+}
+.commu-container__post-list .manager-notice p{
+    background-color: #d1eaf5;
+}

@@ -84,6 +84,7 @@ function CMainForm() {
             setOffset(response.data.results.length);
             setHasMore(!!response.data.next); // 데이터 구조에 따라 조정 필요
             setIsLoading(false);
+            console.log("POST:",posts);
         } catch (error) {
             //console.error(error);
             setIsLoading(false);
@@ -159,8 +160,19 @@ function CMainForm() {
             <div className='total'>
                 {posts.length > 0 ? (<>
                     <ul className="commu-container__post-list">
-                        {posts.map((post) => (
-                            <li key={post.id} className="commu-container__post-list-item">
+                        {posts
+                        .slice() // 원본 배열을 수정하지 않도록 복사
+                        .sort((a, b) => {
+                            const priorityA = a.type === "15" ? 2 : a.type === "16" ? 1 : 0;
+                            const priorityB = b.type === "15" ? 2 : b.type === "16" ? 1 : 0;
+                            return priorityB - priorityA; // 높은 우선순위를 먼저 정렬
+                        })
+                        .map((post) => (
+                            <li key={post.id} 
+                            className={`commu-container__post-list-item 
+                                ${post.type === "15" ? "advertise" : ""} 
+                                ${post.type === "16" ? "manager-notice" : ""}`}
+                            >
                                 <Link to={`/community/posts/${post.id}`} className="commu-container__post-link">
                                     <p className='commu-container__post-list-item-type'>{post.type_display}</p>
                                     <p className='commu-container__post-list-item-title'>{conditionalTruncate(post.title)}</p>

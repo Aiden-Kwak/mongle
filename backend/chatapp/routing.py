@@ -7,6 +7,8 @@ websocket_urlpatterns = [
     path('ws/chat/dm/', consumers.ChatConsumer.as_asgi()),
     path('ws/count-online/', consumers.CountConsumer.as_asgi()),
     path('ws/e1i5/stream/', consumers.VideoConsumer.as_asgi()),
+    path('ws/chat/group/', consumers.GroupChatConsumer.as_asgi()),
+    path('ws/chat/group/<str:room_name>/', consumers.GroupChatConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter({
