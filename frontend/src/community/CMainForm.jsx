@@ -166,7 +166,7 @@ function CMainForm() {
                             const priorityA = a.type === "15" ? 2 : a.type === "16" ? 1 : 0;
                             const priorityB = b.type === "15" ? 2 : b.type === "16" ? 1 : 0;
                             return priorityB - priorityA; // 높은 우선순위를 먼저 정렬
-   1                     })
+                        })
                         .map((post) => (
                             <li key={post.id} 
                             className={`commu-container__post-list-item 
