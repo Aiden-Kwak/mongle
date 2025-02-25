@@ -198,7 +198,7 @@
     {"id": 196, "name": "서울신학대학교", "domains": ["stu.ac.kr"]},
     {"id": 197, "name": "서울여자간호대학교", "domains": ["snjc.ac.kr"]},
     {"id": 198, "name": "서울여자대학교", "domains": ["swu.ac.kr", "swuo365.onmicrosoft.com"]},
-    {"id": 199, "name": "서울예술대학교", "domains": ["seoularts.ac.kr"]},
+    {"id": 199, "name": "서울예술대학교", "domains": ["student.seoularts.ac.kr"]},
     {"id": 200, "name": "서울장신대학교", "domains": ["sjs.ac.kr"]},
     {"id": 201, "name": "서울한영대학교", "domains": ["hytu.ac.kr"]},
     {"id": 202, "name": "서울현대전문학교", "domains": ["hyundai1990.ac.kr"]},
