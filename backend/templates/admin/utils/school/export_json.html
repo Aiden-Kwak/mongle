@@ -1,0 +1,36 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label='utils' %}">유틸리티 및 설정</a>
+&rsaquo; <a href="{% url 'admin:utils_school_changelist' %}">학교 목록</a>
+&rsaquo; JSON 내보내기
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>학교 및 도메인 데이터를 JSON 형식으로 내보내기</h1>
+    <div class="module">
+        <p>
+            아래의 JSON 데이터를 복사하여 파일로 저장하거나, 다른 용도로 사용할 수 있습니다.
+        </p>
+        <textarea id="export-data" style="width: 100%; height: 500px; font-family: monospace; white-space: pre; overflow: auto;">{{ export_data }}</textarea>
+        <div class="submit-row">
+            <button type="button" id="copy-button" class="default">클립보드에 복사</button>
+            <a href="{% url 'admin:utils_school_changelist' %}" class="button">돌아가기</a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById('copy-button').addEventListener('click', function() {
+        var exportData = document.getElementById('export-data');
+        exportData.select();
+        document.execCommand('copy');
+        alert('클립보드에 복사되었습니다.');
+    });
+</script>
+{% endblock %} 

@@ -8,9 +8,31 @@
 
 
 <url>
-  <loc>https://mongles.com:443/</loc>
-  <lastmod>2024-02-21T12:00:13+00:00</lastmod>
+  <loc>https://mongles.com/</loc>
+  <lastmod>2024-07-01T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>1.0</priority>
 </url>
 
+<url>
+  <loc>https://mongles.com/community</loc>
+  <lastmod>2024-07-01T00:00:00+00:00</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://mongles.com/chat</loc>
+  <lastmod>2024-07-01T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://mongles.com/groupchat</loc>
+  <lastmod>2024-07-01T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.7</priority>
+</url>
 
 </urlset>

@@ -127,9 +127,9 @@ function CMainForm() {
     return (
         <div className='commu-container'>
             <SEOMetaTag 
-                title='몽글몽글: 커뮤니티'
-                description='대학생 커뮤니티 몽글몽글에서 다른 학교의 친구들을 만나보세요'
-                keywords='몽글몽글, mongle, 랜덤채팅, 커뮤니티, mongles.com'
+                title='몽글몽글 | 대학생 커뮤니티'
+                description='대학생들의 다양한 이야기와 정보가 공유되는 몽글몽글 커뮤니티. 학교별 소식, 대학생활 꿀팁, 취업 정보까지 한곳에서.'
+                keywords='대학생 커뮤니티, 몽글몽글, 대학생 정보공유, 학교별 커뮤니티, 대학생 게시판'
                 image='https://mongles.com/og_image.png'
                 url='https://mongles.com/community/'
             />

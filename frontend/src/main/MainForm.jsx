@@ -131,9 +131,9 @@ function MainForm() {
     return (
         <div className='main-container'>
             <SEOMetaTag 
-                title='몽글몽글: 랜덤채팅'
-                description='대학생 커뮤니티 몽글몽글에서 다른 학교의 친구들을 만나보세요. 본인과 상대방의 대학교가 공개됩니다. 대학생들의 공간에서 더 안전하게 대화하세요!'
-                keywords='몽글몽글, mongle, 랜덤채팅, 커뮤니티'
+                title='몽글몽글 | 대학생 랜덤채팅 커뮤니티'
+                description='대학생 인증 랜덤채팅 몽글몽글에서 다른 학교 친구들과 소통하세요. 안전한 대학생 전용 소통 공간, 학교 인증으로 더 믿을 수 있는 채팅 서비스.'
+                keywords='대학생 랜덤채팅, 몽글몽글, 학교인증 채팅, 대학생 커뮤니티, 대학생 소개팅, 익명채팅'
                 image='https://mongles.com/og_image.png'
                 url='https://mongles.com/'
             />

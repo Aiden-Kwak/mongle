@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { URLManagement } from '../snippets';
+import { SEOMetaTag } from '../snippets';
 import CreateGroupChat from './CreateGroupChat';
 
 function GroupChatList() {
@@ -41,6 +42,13 @@ function GroupChatList() {
 
     return (
         <div className="group-chat-list">
+            <SEOMetaTag 
+                title='몽글몽글 | 대학생 그룹채팅'
+                description='대학생들과 함께하는 그룹채팅 서비스. 몽글몽글에서 다양한 주제로 여러 학교 친구들과 함께 대화하세요.'
+                keywords='대학생 그룹채팅, 단체채팅, 몽글몽글, 학교인증 채팅, 대학생 채팅방'
+                image='https://mongles.com/og_image.png'
+                url='https://mongles.com/groupchat'
+            />
             {isCreatingRoom ? (
                 <CreateGroupChat onCancel={() => setIsCreatingRoom(false)} />
             ) : (

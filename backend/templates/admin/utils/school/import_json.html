@@ -1,0 +1,42 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label='utils' %}">유틸리티 및 설정</a>
+&rsaquo; <a href="{% url 'admin:utils_school_changelist' %}">학교 목록</a>
+&rsaquo; JSON 가져오기
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>JSON 파일에서 학교 및 도메인 데이터 가져오기</h1>
+    <div class="module">
+        <p>
+            JSON 파일을 선택하여 학교 및 도메인 데이터를 가져옵니다. 파일 형식은 다음과 같아야 합니다:
+        </p>
+        <pre>
+[
+    {
+        "id": 0,
+        "name": "학교명",
+        "domains": ["도메인1", "도메인2"]
+    },
+    ...
+]
+        </pre>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+                <label>JSON 파일:</label>
+                <input type="file" name="json_file" accept=".json" required>
+            </div>
+            <div class="submit-row">
+                <input type="submit" value="가져오기" class="default">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

@@ -7,6 +7,7 @@ import { UserContext } from '../UserContext';
 import { BackButton } from '../snippets';
 import { URLManagement } from '../snippets';
 import { OnlineUser } from '../snippets';
+import { SEOMetaTag } from '../snippets';
 import FlappyGame from './FlappyGame';
 
 function ChatForm() {
@@ -275,89 +276,102 @@ function ChatForm() {
 
     return (
         <div className="total-chat-container">
+            <SEOMetaTag 
+                title='몽글몽글 | 대학생 랜덤채팅'
+                description='대학교 인증된 안전한 랜덤채팅 서비스. 몽글몽글에서 다른 학교 친구들과 소통하고 새로운 인연을 만나보세요.'
+                keywords='대학생 랜덤채팅, 학교인증 채팅, 몽글, 익명채팅, 대학생 소개팅, 대화'
+                image='https://mongles.com/og_image.png'
+                url='https://mongles.com/chat'
+                noindex={!user}
+            />
             <div className="chat-container">
                 <div className='back-and-onlineuser'>
                     <BackButton />
-                    <OnlineUser />
+                    {user && <OnlineUser />}
                 </div>
                 {tempMessage && <div className="temp-message">{tempMessage}</div>}
-                <div className="chat-header">
-                    <div className='loadDiv'>
-                    {isLoading && <p className='status'>매칭되는 동안 방향키 또는 터치해서 점수를 높히세요...</p>}
-                    {isLoading && <FlappyGame isActive={isLoading} />}
-                    </div>   
-                    {friendRequestReceived && (
-                    <div className='friend-request-box'>
-                            <div>
-                                <p>친구요청이 도착했습니다!</p>
-                                <p>
-                                    <button onClick={acceptFriendRequest}>
-                                        <img src={accept} alt="수락" />
-                                    </button>
-                                    <button onClick={rejectFriendRequest}>
-                                        <img src={reject} alt="거절" />
-                                    </button>
-                                </p>
-                            </div>
+                {!user ? (
+                    <div className="login-required-container">
+                        <h2>대학생 랜덤채팅</h2>
+                        <p>몽글몽글 랜덤채팅은 대학생 인증된 사용자만 이용할 수 있습니다.</p>
+                        <p>다른 대학교 학생들과 실시간으로 대화하고 새로운 인연을 만들어보세요!</p>
+                        <button onClick={() => navigate('/login')} className="start-chat-button">로그인하고 시작하기</button>
                     </div>
-                    )}
-                    {isMatched && <p className='friend-btn'><button onClick={sendFriendRequest}>친구 요청</button></p>}
-                </div>
-                <div className="chat-messages" ref={messagesEndRef}>
-                    {/*{isMatched &&
-                        <>
-                            <p className='first-message'>{`"${peerInfo.school}"의 누군가와 연결되었습니다!`}</p>
-                            <p className='first-message'>친구추가를 하면 다음에도 계속 대화할 수 있어요!</p>
-                        </>    
-                    }*/}
-                    {!isMatched &&
-                        <>
-                            <p className='first-message'>상대방에겐 자신의 학교명만이 노출됩니다.</p>
-                            <p className='first-message'>채팅 시작하기"를 눌러 다양한 학교의 친구들을 만나보세요.</p>
-                            <p className='first-message'>대화를 끝내거나, 페이지를 벗어날 경우 채팅이 종료됩니다.</p>
-                            <p className='first-message'>채팅이 여러번 전송될땐, 로그인을 다시 시도해보세요.</p>
-                        </>
-                    }
-                    {chat.map((msg, index) => (
-                        <div
-                            key={index}
-                            className={`message-bubble ${msg.sender === user.username ? 'my-message' : 'their-message'}`}
-                        >
-                            {msg.message}
+                ) : (
+                    <>
+                        <div className="chat-header">
+                            <div className='loadDiv'>
+                                {isLoading && <p className='status'>매칭되는 동안 방향키 또는 터치해서 점수를 높히세요...</p>}
+                                {isLoading && <FlappyGame isActive={isLoading} />}
+                            </div>   
+                            {friendRequestReceived && (
+                                <div className='friend-request-box'>
+                                    <div>
+                                        <p>친구요청이 도착했습니다!</p>
+                                        <p>
+                                            <button onClick={acceptFriendRequest}>
+                                                <img src={accept} alt="수락" />
+                                            </button>
+                                            <button onClick={rejectFriendRequest}>
+                                                <img src={reject} alt="거절" />
+                                            </button>
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+                            {isMatched && <p className='friend-btn'><button onClick={sendFriendRequest}>친구 요청</button></p>}
                         </div>
-                    ))}
-                </div>
-                {isTyping && (
-                <div className="loading">상대방이 입력중입니다...</div> // "..." 말풍선 표시
-                )}
-                <div className="chat-input">
-                    {isMatched && isConnected && (
-                        <>
-                            {isConnected &&
-                                (isConfirmingEndChat ? (
-                                    <button onClick={endChat}>정말?</button> // 사용자가 확인해야 하는 경우
-                                ) : (
-                                    <button onClick={confirmEndChat}>대화 끝</button> // 초기 상태
+                        <div className="chat-messages" ref={messagesEndRef}>
+                            {!isMatched &&
+                                <>
+                                    <p className='first-message'>상대방에겐 자신의 학교명만이 노출됩니다.</p>
+                                    <p className='first-message'>채팅 시작하기"를 눌러 다양한 학교의 친구들을 만나보세요.</p>
+                                    <p className='first-message'>대화를 끝내거나, 페이지를 벗어날 경우 채팅이 종료됩니다.</p>
+                                    <p className='first-message'>채팅이 여러번 전송될땐, 로그인을 다시 시도해보세요.</p>
+                                </>
+                            }
+                            {chat.map((msg, index) => (
+                                <div
+                                    key={index}
+                                    className={`message-bubble ${msg.sender === user.username ? 'my-message' : 'their-message'}`}
+                                >
+                                    {msg.message}
+                                </div>
                             ))}
-                            <input 
-                                ref={inputRef}
-                                type="text" 
-                                value={message} 
-                                onChange={(e) => setMessage(e.target.value)}
-                                onKeyUp={handleTyping}
-                                onKeyDown={handleKeyDown}
-                                placeholder="메시지를 입력하세요"
-                                onClick={setScreenSize2}
-                                onFocus={() => setIsKeyboardActive(true)} // 입력 필드에 포커스가 있을 때
-                                onBlur={() => setIsKeyboardActive(false)} // 입력 필드에서 포커스가 사라질 때
-                            />
-                            <button onClick={sendMessage}>보내기</button>
-                        </>
-                    )}
-                    {!isMatched && (
-                        <button onClick={startChat} className="start-chat-button">채팅 시작하기</button>
-                    )}
-                </div>
+                        </div>
+                        {isTyping && (
+                            <div className="loading">상대방이 입력중입니다...</div>
+                        )}
+                        <div className="chat-input">
+                            {isMatched && isConnected && (
+                                <>
+                                    {isConnected &&
+                                        (isConfirmingEndChat ? (
+                                            <button onClick={endChat}>정말?</button>
+                                        ) : (
+                                            <button onClick={confirmEndChat}>대화 끝</button>
+                                    ))}
+                                    <input 
+                                        ref={inputRef}
+                                        type="text" 
+                                        value={message} 
+                                        onChange={(e) => setMessage(e.target.value)}
+                                        onKeyUp={handleTyping}
+                                        onKeyDown={handleKeyDown}
+                                        placeholder="메시지를 입력하세요"
+                                        onClick={setScreenSize2}
+                                        onFocus={() => setIsKeyboardActive(true)}
+                                        onBlur={() => setIsKeyboardActive(false)}
+                                    />
+                                    <button onClick={sendMessage}>보내기</button>
+                                </>
+                            )}
+                            {!isMatched && (
+                                <button onClick={startChat} className="start-chat-button">채팅 시작하기</button>
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'channels',
     'channels_redis',
+    'utils.apps.UtilsConfig',  # 학교 도메인 관리용 앱 추가
     'accountapp',
     'chatapp',
     'friendapp',
