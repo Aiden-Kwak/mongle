@@ -1,5 +1,5 @@
 # Python 이미지를 기반으로 함
-FROM python:3.9.6
+FROM python:3.13.3
 
 # SSH 설정 (GitHub 비공개 리포지토리 클론을 위함)
 RUN mkdir /root/.ssh/
